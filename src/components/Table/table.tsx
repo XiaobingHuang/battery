@@ -13,25 +13,25 @@ function Table() {
       ]);
     
       const [columnDefs] = useState([
-        { field: "Name" },
-        { field: "Manufacturer" },
-        { field: "Grid" },
-        { field: "State" },
-        { field: "Utility" },
-        { field: "Load Zone" },
-        { field: "Capacity" },
-        { field: "C Rating" },
-        { field: "OP Mode" },
-        { field: "SOC" },
-        { field: "SOH" },
-        { field: "Alert" },
-        { field: "Cycle" },
-        { field: "Life" },
-        { field: "Certification" }
+        { field:"name", headerName: "Name", width:90 },
+        { field:"manufacturer",  headerName: "Manufacturer",  width:130 },
+        { field:"grid", headerName: "Grid",  width:80 },
+        { field:"state", headerName: "State",  width:90 },
+        { field: "utility", headerName: "Utility",  width:90 },
+        { field:"loadZone", headerName: "Load Zone", width:110 },
+        { field:"capacity", headerName: "Capacity", width:105 },
+        { field:"cRating", headerName: "C Rating", width:105 },
+        { field:"opMode", headerName: "OP Mode", width:105 },
+        { field:"soc", headerName: "SOC", width:78 },
+        { field:"soh", headerName: "SOH", width:78 },
+        { field:"alert", headerName: "Alert", width:80 },
+        { field:"cycle", headerName: "Cycle", width:85 },
+        { field:"life", headerName: "Life", width:75 },
+        { field:"certification", headerName: "Certifications", width:130 }
       ]);
     
       return (
-        <div className="ag-theme-alpine" style={{ height: 800, width: "100%", padding:15 }}>
+        <div className="ag-theme-alpine" style={{ height: 700, width: "100%", padding:15 }}>
           <AgGridReact rowData={rowData} columnDefs={columnDefs}></AgGridReact>
         </div>
       );
