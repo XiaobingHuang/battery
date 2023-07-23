@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+
+.r-font-mono,
+.r-font-mono *{
+  //font-family: 'Space Mono', monospace !important;
+}
+
+.r-tool-tip-indicator{
+  text-decoration-skip-ink: none;
+  //text-decoration: underline;
+  text-decoration:underline;
+  text-decoration-style: dotted !important;
+}
+
+.r-text-color-warn{
+  color: orange
+}
+.r-text-color-danger{
+  color: red
+}
+.r-brokers-app-container {
+  display: flex;
+  background: whitesmoke;
+  height: 100%;
+
+  .r-tooltip-color {
+    color: #3c28ff;
+  }
+}
+.r-relay-container .r-panel.r-panel-with-tabs > .r-panel-body {
+  display: flex;
+  flex-direction: column;
+}
+.r-relay-container .r-tabstrip-container.style-tabs .r-tab-titles-container {
+  background: none;
+}
+.r-relay-container
+  .r-tabstrip-container.style-tabs.r-state-discreet
+  .r-tab-titles-container
+  .r-tab.active,
+.r-relay-container
+  .r-tabstrip-container.style-tabs.r-state-discreet
+  .r-tab-titles-container
+  .r-tab {
+  color: #3455ad;
+}
+.r-relay-container
+  .r-tabstrip-container.style-tabs.r-state-discreet
+  .r-tab-titles-container
+  .r-tab.active:after {
+  background: #3455ad;
+}

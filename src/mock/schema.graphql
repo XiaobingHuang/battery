@@ -1,0 +1,366 @@
+enum SortOrder {
+  ASC
+  DESC
+}
+
+input Sort {
+  field: String!
+  sort: SortOrder
+}
+
+type BusinessEntity {
+  beId: Int
+  name: String
+}
+
+type AddressType {
+  address: String
+  addressAdditional: String
+  city: String
+  state: String
+  zipCode: String
+}
+
+type PaymentMethod {
+  id: String
+  institutionName: String
+  paymentMethodId: String
+  paymentMethodType: String
+  last4: String
+  expiry: String
+  isDefault: Boolean
+  isExpired: Boolean
+  isActive: Boolean
+}
+
+type Payment {
+  id: String
+  merchant: BusinessEntity
+  paymentMethod: PaymentMethod
+  amount: Float
+  isCompleted: Boolean
+  isErrored: Boolean
+  isAutopay: Boolean
+  dateInitiated: String
+  dateCompleted: String
+  dateErrored: String
+  errorMessage: String
+  transactionGuid: String
+}
+
+type InvoiceMeta {
+  fixed: String
+  aggregatable: String
+}
+
+type MetaType {
+  name: String
+  val: String
+}
+
+type DetailInvoiceMeta {
+  fixed: String
+  aggregatable: String
+  detail: String
+}
+
+type PDFFile {
+  fileName: String
+  file: String
+}
+
+type StatementInvoice {
+  customerName: String
+  serviceProvider: BusinessEntity
+  statementId: String
+  statementNumber: String
+  statementDate: String
+  statementDueDate: String
+  totalDue: Float
+  currentBalance: Float
+  completedPayments: Float
+  pendingPayments: Float
+  summaryInv: [SummaryInvoice]
+  pdfConsolidated: PDFFile
+}
+
+type SummaryInvoice {
+  summaryNumber: String
+  summarySubTotal: Float
+  summaryTotalFinanceCharges: Float
+  summaryTotalTax: Float
+  summaryTotal: Float
+  meta: InvoiceMeta
+  detailInv: [DetailInvoice]
+}
+
+type DetailInvoice {
+  invNumber: String
+  ldcName: String
+  serviceType: String
+  accountIdentifier: String
+  accountFlowPeriodStart: String
+  accountFlowPeriodEnd: String
+  hostFlowPeriodStart: String
+  hostFlowPeriodEnd: String
+  invSubTotal: Float
+  invTotalFinanceCharge: Float
+  invTotalTax: Float
+  invTotal: Float
+  invMsgs: [String]
+  payments: [Payment]
+  currentChargeLineItems: [InvoiceLineItem]
+  meta: DetailInvoiceMeta
+}
+
+type InvoiceLineItem {
+  seq: Int
+  subserviceType: String
+  lineItemName: String
+  volume: Float
+  rate: Float
+  rateUnit: String
+  total: Float
+  isTaxable: Boolean
+}
+
+type Autopay {
+  isAutopayDefault: Boolean
+  nextAutopayDate: String
+  nextAutopayAmount: Float
+}
+
+type PaymentMethodConfig {
+  stripeToken: String
+  plaidToken: String
+}
+
+type StatementPaymentProcessFees {
+  statementId: String
+  feeAmount: Float
+}
+type PaymentProcessFees {
+  totalFees: Float
+  feesByStatement: [StatementPaymentProcessFees]
+}
+
+type BillingGroupAttributesModel {
+  id: String
+}
+
+type Billing {
+  invoices(
+    dateStart: String
+    dateEnd: String
+    sorts: [Sort]
+    onlyWithBalance: Boolean
+  ): [StatementInvoice]
+  invoice(statementId: String): StatementInvoice
+  payments(
+    status: String
+    dateStart: String!
+    dateEnd: String!
+    sorts: [Sort]
+  ): [Payment!]
+  paymentMethods(includeInactive: Boolean): [PaymentMethod!]
+  paymentMethodConfig: PaymentMethodConfig
+  paymentProcessingFees(
+    paymentMethodId: String!
+    statementIds: [String]
+  ): PaymentProcessFees
+  autopay: Autopay
+  totalOutstanding: Float
+  totalOverdue: Float
+}
+
+type Customer {
+  beId: Int
+  name: String
+  billing: Billing
+}
+
+type Self {
+  userId: Int
+  userName: String
+  userFirstName: String
+  userLastName: String
+  userEmail: String
+  isVerified: Boolean
+  currentBeContextId: Int
+  currentBeContextName: String
+  availableBeContext: [BusinessEntity]
+}
+
+type InvoiceLineItemModel {
+  id: String
+}
+
+type PPAModel {
+  priorInvId: String
+  invNumber: String
+  version: Int
+  accountFlowPeriodStart: String
+  accountFlowPeriodEnd: String
+  hostFlowPeriodStart: String
+  hostFlowPeriodEnd: String
+  lineItems: [String]
+  priorInvFinanceCharge: Float
+  priorInvTotalTax: Float
+  priorInvTotal: Float
+  invMsgs: [String]
+}
+
+type DetailInvoiceType {
+  id: String
+  invTrackingId: String
+  version: Int
+  providerBeId: Int
+  customerBeId: Int
+  ldcIdentifier: String
+  accountIdentifier: String
+  scheduldedPostedDate: String
+  invoiceDate: String
+  accountFlowPeriodStart: String
+  accountFlowPeriodEnd: String
+  hostFlowPeriodStart: String
+  hostFlowPeriodEnd: String
+  serviceType: String
+  billingGroupAttributes: BillingGroupAttributesModel
+  statementGroupId: String
+  merchantAccountId: String
+  IsDefaultStatementGroup: Boolean
+  facilityAddress: AddressType
+  currentChargeLineItems: [InvoiceLineItemModel]
+  InvMsgs: [String]
+  attachedPriorAdjustments: [PPAModel]
+
+  invNumber: String
+  priorAdjustmentInvsTotalFinanceCharge: Float
+  priorAdjustmentInvsTotalTax: Float
+  priorAdjustmentInvsSubTotal: Float
+  priorAdjustmentInvsTotalCharges: Float
+
+  currentInvFinanceCharge: Float
+  currentInvTotalTax: Float
+  currentInvSubTotal: Float
+  currentInvTotalCharges: Float
+
+  invTotalFinanceCharge: Float
+  invTotalTax: Float
+  invSubTotal: Float
+  invTotalCharges: Float
+  invTotalDue: Float
+
+  invPriorBalance: Float
+  invPrevPayments: Float
+  invBalanceSinceLastPay: Float
+
+  postedDate: String
+  dueDate: String
+  pdfUrl: String
+
+  payments: [Payment]
+  invoiceMetas: [MetaType]
+}
+
+type SummaryInvoiceType {
+  id: String
+  billGroupKey: String
+  summaryInvRelativeNumber: String
+  summaryInvPdfUrl: String
+  detailInvs: [DetailInvoiceType]
+  summaryTotalFinanceCharge: Float
+  summaryTotalTax: Float
+  summarySubTotal: Float
+  summaryTotalCharges: Float
+  summaryPrevPayments: Float
+  summaryBalanceSinceLastPay: Float
+  summaryTotalDue: Float
+  aggregatableMeta: String
+}
+
+type DeliveryStatusesType {
+  deliveryType: String
+  deliveryStatus: String
+  statusDate: String
+  trackingId: String
+}
+
+enum DeliveryType {
+  Email
+  Physical
+  Mail
+}
+enum EmailDeliveryStatusType {
+  Pending
+  Send
+  Sent
+  Delivered
+  Opened
+}
+
+type StatementGroupAttributesModel {
+  providerBeId: Int
+  customerBeId: Int
+  clientAcctId: Int
+  billingGroupKey: String
+  billingContactId: Int
+  billingMethod: Int
+  billDeliveryMethod: [DeliveryType]
+  paymentDays: Int
+  invReleaseSchedule: String
+  version: Int
+}
+
+type StatementInvoice {
+  id: String
+  customerBeId: Int
+  customerName: String
+  providerBeId: Int
+  serviceProviderName: String
+  statementGroupId: String
+  statementQueueId: String
+  statementGroupAttributes: StatementGroupAttributesModel
+  statementNumber: String
+  summaryInvs: [SummaryInvoiceType]
+  postedDate: String
+  dueDate: String
+  deliveryType: [DeliveryType]
+  emailTrackingId: String
+  emailDeliveryStatus: EmailDeliveryStatusType
+  deliveryStatuses: [DeliveryStatusesType]
+  statementInvPdfUrl: String
+  statementTotalFinanceCharge: Float
+  statementTotalTax: Float
+  statementSubTotal: Float
+  statementTotalCharges: Float
+  statementPrevPayments: Float
+  statementBalanceSinceLastPay: Float
+  statementTotalDue: Float
+  aggregatableMeta: String
+  pendingPayments: Float
+  completedPayments: Float
+  currentBalance: Float
+}
+
+type Query {
+  customerStatements(
+    dateStart: String!
+    dateEnd: String!
+    dateType: String!
+    customerBeIds: [Int]!
+    sorts: [Sort]
+    withBalanceOnly: Boolean
+  ): [StatementInvoice]
+  customerStatement(statementId: String): StatementInvoice
+  customer(beId: Int): Customer
+  self: Self
+  invoice(statementId: String!): StatementInvoice
+  customerInvoicePdf(
+    type: String!
+    customerBeId: Int!
+    statementId: String
+    summaryId: String
+    detailId: String
+  ): PDFFile
+}

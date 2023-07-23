@@ -1,0 +1,38 @@
+.r-confirm-modal{
+  background: #33042a;
+  color: #fff;
+
+  .r-confirm-modal-icon{
+    font-size: 35px;
+    text-align: center;
+    width: 100%;
+  }
+  .r-confirm-modal-title{
+    font-size: 25px;
+    text-align: center;
+    width: 100%;
+  }
+  .r-confirm-modal-message{
+    font-size: 14px;
+    width: 100%;
+    opacity: 0.6;
+    text-align: center;
+  }
+  .r-button-wrapper.r-color-primary.r-discreet .r-button {
+    border-color: transparent;
+    background: #760961;
+    color: #760961;
+    padding: 11px 15px;
+    background: #ebd8fc;
+    font-size: 13px;
+  }
+ .r-button-wrapper.r-color-primary.r-discreet .r-button:hover{
+    background: #cdbcdd !important;
+  }
+  a{
+    width: 100%;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+  }
+}

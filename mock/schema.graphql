@@ -1,0 +1,3472 @@
+"""
+The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`.
+"""
+directive @defer(
+  """
+  If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to.
+  """
+  label: String
+
+  """
+  Deferred when true.
+  """
+  if: Boolean
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+The `@stream` directive may be provided for a field of `List` type so that the backend can leverage technology such as asynchronous iterators to provide a partial list in the initial response, and additional list items in subsequent responses. `@include` and `@skip` take precedence over `@stream`.
+"""
+directive @stream(
+  """
+  If this argument label has a value other than null, it will be passed on to the result of this stream directive. This label is intended to give client applications a way to identify to which fragment a streamed result belongs to.
+  """
+  label: String
+
+  """
+  The initial elements that shall be send down to the consumer.
+  """
+  initialCount: Int! = 0
+
+  """
+  Streamed when true.
+  """
+  if: Boolean
+) on FIELD
+
+"""
+The `@oneOf` directive is used within the type system definition language
+to indicate:
+
+- an Input Object is a Oneof Input Object, or
+- an Object Type's Field is a Oneof Field.
+"""
+directive @oneOf on INPUT_OBJECT
+
+directive @authorize(
+  """
+  The name of the authorization policy that determines access to the annotated resource.
+  """
+  policy: String
+
+  """
+  Roles that are allowed to access the annotated resource.
+  """
+  roles: [String!]
+
+  """
+  Defines when when the resolver shall be executed.By default the resolver is executed after the policy has determined that the current user is allowed to access the field.
+  """
+  apply: ApplyPolicy! = BEFORE_RESOLVER
+) repeatable on SCHEMA | OBJECT | FIELD_DEFINITION
+
+type DERAllocationHistory {
+  contract: DERContract
+  allocationPerc: Decimal!
+  startDate: DateTime!
+  endDate: DateTime
+  modifiedBy: String
+  lastModified: DateTime!
+}
+
+type DERAllocation {
+  project: [DERProject]
+  isHeldDueToBanking: Boolean!
+  currentAllocationPerc: Float!
+  updatedBy: String
+  lastUpdated: DateTime!
+  allocationHistory: [DERAllocationHistory]
+}
+
+type DERBillGroup {
+  subscriber: DERSubscriber
+  project: [DERProject]
+  accounts: [DERLdcAccount]
+  id: String
+  subscriberId: String
+  billGroupName: String
+  statementGroupId: String
+  projectId: String
+  dersAccounts: [String]
+  billingGroupAttributes: DERBillingGroupAttributes
+}
+
+type DERBillingGroupAttributes {
+  contact: [CRMContact]
+  providerBeId: Int!
+  customerBeId: Int!
+  clientAcctId: Long!
+  billingGroupKey: String
+  billingContactId: Int!
+  billingMethod: Int!
+  billDeliveryMethods: [String]
+  paymentDays: Int!
+  invReleaseSchedule: String
+  merchantAccountId: String
+  contactFieldId: Int!
+  version: Int!
+}
+
+type DERBill {
+  contract: DERContract
+  subscriber: DERSubscriber
+  ldcAccount: DERLdcAccount
+  credit: DERCredit
+  billGroup: DERBillGroup
+  id: String
+  billRecGuid: String
+  providerBeId: Int!
+  subscriberId: String
+  projectType: Int!
+  contractId: String
+  billGroupId: String
+  creditsAppliedId: String
+  creditsAppliedVersion: Int!
+  ldc: BillLdc
+  ldcDersAcctId: String
+  hostFlowPeriodStart: DateTime!
+  hostFlowPeriodEnd: DateTime!
+  accountFlowPeriodStart: DateTime!
+  accountFlowPeriodEnd: DateTime!
+  billingLineItem: [BillLineItem]
+  billSubtotal: Float!
+  merchantAccountId: String
+  billMessages: [String]
+  meta: [BillMeta]
+  created: DateTime!
+}
+
+type DERContractDocument {
+  finishedDocument: ContractDocument
+  customerSignedDocument: ContractDocument
+  counterSignedDocument: ContractDocument
+  unsignedDocument: ContractDocument
+  contractId: String
+}
+
+type DERContract {
+  project: [DERProject]
+  ldcAccount: DERLdcAccount
+  subscriber: DERSubscriber
+  provider: DERProvider
+  id: String
+  contractNumber: String
+  created: DateTime!
+  lastUpdate: DateTime!
+  promoCode: String
+  discount: Float!
+  isCustomerSignatureRequired: Boolean!
+  isCounterSignRequired: Boolean!
+  isCustomerSigned: Boolean!
+  isCounterSigned: Boolean!
+  customerSignedDocumentUrl: String
+  counterSignedDocumentUrl: String
+  status: String
+  serviceStatus: String
+  serviceStatusLastUpdated: DateTime!
+  originalStartDate: DateTime!
+  originalEndDate: DateTime!
+  actualStartDate: DateTime!
+  actualEndDate: DateTime!
+  eSignatureMethod: String
+  sentForSignatureDate: DateTime!
+  eSignRequestId: String
+  firstCreditDate: DateTime
+  lastCreditDate: DateTime
+  dropRequestDate: DateTime
+  term: Int
+  dropReason: String
+  paymentDays: Int!
+  financeChargePercent: Float!
+  billingLineItemMapId: String
+  signupGuid: String
+  statusLastUpdated: DateTime!
+  statusBy: String
+  addedToProjectDate: DateTime
+  contractName: String
+  brokers: [ContractBrokerRet]
+  ldcDersAccountIdentifier: String
+  ldcId: String
+  allocations: [DERAllocation]
+  latestCredit: DERCredit
+}
+
+type DERCredit {
+  contract: DERContract
+  subscriber: DERSubscriber
+  ldcAccount: DERLdcAccount
+  project: [DERProject]
+  id: String
+  fileId: String
+  subscriberId: String
+  ldcDersAccountIdentifier: String
+  ldcAcctId: String
+  projectId: String
+  contractId: String
+  isHostAccount: Boolean!
+  hostBillPeriodStart: DateTime!
+  hostBillPeriodEnd: DateTime!
+  hostCycleMonth: String
+  kwhAllocation: Float!
+  percAllocation: Float!
+  creditsGenerated: Float!
+  creditsApplied: Float!
+  satelliteDiscount: Float!
+  ldcFee: Float!
+  hostRealizedCredit: Float!
+  cancelRebill: Float!
+  creditComponents: [CreditComponent]
+  banking: CreditBanking
+  satelliteCycleMonth: String
+  version: Int!
+  generatedDate: DateTime!
+  isFinalCreditStatement: Boolean!
+  satelliteFinaledAmountAddedToHost: Float!
+  finaledAccountTransferCreditDiff: Float!
+}
+
+type DERHistoricalBilling {
+  provider: DERProvider
+  ldcAccount: DERLdcAccount
+  historicalBillingHistory: [DERHistoricalBillingRecord]
+  firstBillingAfterDate(date: DateTime!): DERHistoricalBillingRecord
+}
+
+type DERHistoricalUsage {
+  historicalUsage(
+    annualOnly: Boolean! = true
+    latestOnly: Boolean! = false
+  ): [DERHistoricalUsageRecord]
+  provider: DERProvider
+  ldcDersAccount: DERLdcAccount
+}
+
+type DERLdcAccount {
+  contracts(isCurrent: Boolean! = true, serviceStatus: [String]): [DERContract]
+  provider: DERProvider
+  subscriber: DERSubscriber
+  id: String
+  created: DateTime!
+  lastUpdate: DateTime!
+  acquisition: LdcAccountAcquisition
+  attributes: LdcAccountAttributes
+  facilityAddress: Address
+  ldc: LdcAccountLdc
+  historicalUsage: DERHistoricalUsage
+  historicalBilling: DERHistoricalBilling
+}
+
+type DERProjectOwner {
+  projects: [DERProject]
+  id: String
+  created: DateTime!
+  lastUpdate: DateTime!
+  name: String
+  beId: Int!
+  state: String
+  markets: [LDCMarket]
+}
+
+type DERProjectStagingStatsByProject {
+  accountAnnualKwhMassMarketAssigned: Float!
+  accountAnnualKwhMassMarketStaged: Float!
+  accountAnnualKwhLargeCommercialAssigned: Float!
+  accountAnnualKwhLargeCommercialStaged: Float!
+  accountAnnualKwhTotalAssigned: Float!
+  accountAnnualKwhTotalStaged: Float!
+  totalMassMarketKwhNeeded: Float!
+  totalUnrestrictedKwhNeeded: Float!
+  accountAnnualBillingMassMarketAssigned: Float!
+  accountAnnualBillingMassMarketStaged: Float!
+  accountAnnualBillingLargeCommercialAssigned: Float!
+  accountAnnualBillingLargeCommercialStaged: Float!
+  accountAnnualBillingTotalAssigned: Float!
+  accountAnnualBillingTotalStaged: Float!
+  totalMassMarketBillCreditsNeeded: Float!
+  totalUnrestrictedBillCreditsNeeded: Float!
+  totalAccountsAssigned: Int!
+  totalAccountsStaged: Int!
+  totalMassMarketAccountsAssigned: Int!
+  totalCommercialAccountsAssigned: Int!
+  totalMassMarketAccountsStaged: Int!
+  totalCommercialAccountsStaged: Int!
+  project: DERProject
+  kwhAllocatableToUnrestricted: Float!
+  kwhAllocatableToMassMarket: Float!
+  billCreditsAllocatableToUnrestricted: Float!
+  billCreditsAllocatableToMassMarket: Float!
+}
+
+type DERProject {
+  totalSubscribers: Int!
+  currentAllocations: [DERProjectAllocations]
+  id: String
+  created: DateTime!
+  lastUpdate: DateTime!
+  projectId: String
+  name: String
+  projectType: Int!
+  provider: DERProvider
+  projectOwner: DERProjectOwner
+  ldc: ProjectLdc
+  address: Address
+  attributes: ProjectAttributes
+}
+
+type DERProviderProjectOwner {
+  projectOwner: DERProjectOwner
+  clientAccountId: Long!
+}
+
+type DERSubscriber {
+  provider: DERProvider
+  accounts: [DERLdcAccount]
+  contacts: [CRMContact]
+  id: String
+  created: DateTime!
+  lastUpdate: DateTime!
+  name: String
+  beId: Int!
+  clientAcctId: Long!
+  customerSegment: Int!
+  address: Address
+  isLmi: Boolean!
+  subscriberAcquisitionMethod: String
+  subscriberAcquisitionDate: DateTime
+}
+
+type DERWaitlistStatsByLdc {
+  kwhNeededMassMarket: Float!
+  kwhNeededUnrestricted: Float!
+  totalKwhWaitlist: Float!
+  totalKwhWaitlistMassMarket: Float!
+  totalKwhWaitlistLargeCommercial: Float!
+  billCreditsNeededMassMarket: Float!
+  billCreditsNeededUnrestricted: Float!
+  totalBillCreditsWaitlist: Float!
+  totalBillCreditsWaitlistMassMarket: Float!
+  totalBillCreditsWaitlistLargeCommercial: Float!
+  totalAccountsWaitlist: Int!
+  totalMassMarketAccountsWaitlist: Int!
+  totalCommercialAccountsWaitlist: Int!
+  ldc: SolarLDC
+}
+
+type DERWaitlist {
+  projectStagingStatsByProject(
+    ldcId: String = ""
+    projectId: String = ""
+    projectOwnerId: String = ""
+  ): [DERProjectStagingStatsByProject]
+  waitlistStatsByLdc(ldcId: String = ""): [DERWaitlistStatsByLdc]
+}
+
+type ContractDocument {
+  fileName: String
+  fileData: String
+}
+
+type ElectricityContractCustomQuoteRelation {
+  dealSize(unit: EnergyUnit): Decimal
+  electricityContract: ElectricityContract
+  quoteAccountGroup: QuoteAccountGroup
+  contractPrice: Decimal!
+  hasEvergreen: Boolean!
+  productLines: [ElectricityContractProductLine]
+  evergreenDetail: ElectricityContractEvergreenDetail
+}
+
+type ElectricityContractEvergreenDetail {
+  evergreenType: ElectricityContractEvergreenType
+  evergreenMarket: ElectricityContractEvergreenMarketType!
+}
+
+type Ldc {
+  shortName: String
+  identifier: String
+  businessEntity: BusinessEntity
+  logoImageUrl: String
+  isSyncViaPortalCredentialsAvailable: Boolean!
+  isSyncViaAccountNumberAvailable: Boolean!
+  id: Int!
+  iso: Iso
+}
+
+type LoadProfile {
+  id: Int!
+  name: String
+}
+
+type RateClass {
+  id: Int!
+  name: String
+  subClass: String
+}
+
+type BusinessEntity {
+  guid: UUID
+  name: String
+  primaryState: String
+  primaryPostCode: String
+  id: Int!
+}
+
+type ElectricityAppliedInvoice {
+  ldcAccount: ElectricityLdcAccount
+  invoiceNumber: String
+  totalAmount: Decimal!
+  invoices: [ElectricityInvoice]
+}
+
+type ElectricityInvoiceMeterChannelUsageInterval {
+  HE01: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE02: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE03: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE04: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE05: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE06: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE07: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE08: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE09: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE10: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE11: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE12: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE13: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE14: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE15: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE16: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE17: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE18: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE19: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE20: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE21: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE22: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE23: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE24: ElectricityInvoiceMeterChannelUsageIntervalValue
+  HE2X: ElectricityInvoiceMeterChannelUsageIntervalValue
+
+  """
+  An array representing HE interval values in a day.
+  index at 0 represents HE01,
+  index at 23 represents HE24,
+  index at 24 represents HE2X.
+  """
+  hourEndingIntervalValues: [ElectricityInvoiceMeterChannelUsageIntervalValue]
+  meterNumber: String
+  meterChannelType: MeterChannelType!
+  flowDate: Date
+  intervalMinutes: Int!
+  quality: UsageQuality!
+}
+
+type ElectricityInvoiceMeterUsage {
+  meter: Meter
+  usageQuantity: Decimal!
+  quantityUnitOfMeasure: EnergyUnit!
+  startDate: DateTime!
+  endDate: DateTime!
+  numberOfCycleDays: Int!
+  startReading: Decimal
+  endReading: Decimal
+  multiplier: Decimal
+  meterChannelUsageIntervals: [ElectricityInvoiceMeterChannelUsageInterval]
+}
+
+type ElectricityInvoiceStatement {
+  clientAccount: ClientAccount
+  statementNumber: String
+  postedDate: DateTime!
+  dueDate: DateTime!
+  paymentTerms: Int!
+  interestRate: Decimal!
+  totalAmount: Decimal!
+  appliedInvoices: [ElectricityAppliedInvoice]
+}
+
+type ElectricityInvoice {
+  invoiceNumber: String
+  lineItems: [ElectricityInvoiceLineItem]
+  adjustments: [ElectricityInvoiceAdjustment]
+  taxTotalAmount: Decimal!
+  invoiceTotalCurrentChargesAmount: Decimal!
+  meterUsages: [ElectricityInvoiceMeterUsage]
+}
+
+type CustomerLdcAccount {
+  espAccountId: String
+  clientAccount: ClientAccount!
+  electricityLdcAccount: ElectricityLdcAccount!
+  billingGroup: ElectricityBillingGroup
+  invoiceStatements: [ElectricityInvoiceStatement]
+}
+
+type ElectricityLdcAccount {
+  ldc: Ldc
+  accountIdentifier: String
+  facility: Facility
+  customerLdcAccount: CustomerLdcAccount
+  id: Int!
+  meters(
+    allowDemandOnly: Boolean! = true
+    allowInActive: Boolean! = true
+    where: MeterFilterInput
+  ): [Meter]
+}
+
+type MeterChannelProjectedUsageInterval {
+  HE01: MeterChannelProjectedUsageIntervalValue
+  HE02: MeterChannelProjectedUsageIntervalValue
+  HE03: MeterChannelProjectedUsageIntervalValue
+  HE04: MeterChannelProjectedUsageIntervalValue
+  HE05: MeterChannelProjectedUsageIntervalValue
+  HE06: MeterChannelProjectedUsageIntervalValue
+  HE07: MeterChannelProjectedUsageIntervalValue
+  HE08: MeterChannelProjectedUsageIntervalValue
+  HE09: MeterChannelProjectedUsageIntervalValue
+  HE10: MeterChannelProjectedUsageIntervalValue
+  HE11: MeterChannelProjectedUsageIntervalValue
+  HE12: MeterChannelProjectedUsageIntervalValue
+  HE13: MeterChannelProjectedUsageIntervalValue
+  HE14: MeterChannelProjectedUsageIntervalValue
+  HE15: MeterChannelProjectedUsageIntervalValue
+  HE16: MeterChannelProjectedUsageIntervalValue
+  HE17: MeterChannelProjectedUsageIntervalValue
+  HE18: MeterChannelProjectedUsageIntervalValue
+  HE19: MeterChannelProjectedUsageIntervalValue
+  HE20: MeterChannelProjectedUsageIntervalValue
+  HE21: MeterChannelProjectedUsageIntervalValue
+  HE22: MeterChannelProjectedUsageIntervalValue
+  HE23: MeterChannelProjectedUsageIntervalValue
+  HE24: MeterChannelProjectedUsageIntervalValue
+  HE2X: MeterChannelProjectedUsageIntervalValue
+
+  """
+  An array representing HE interval values in a day.
+  index at 0 represents HE01,
+  index at 23 represents HE24,
+  index at 24 represents HE2X.
+  """
+  hourEndingIntervalValues: [MeterChannelProjectedUsageIntervalValue]
+  flowDate: Date
+  intervalMinutes: Int!
+  quality: UsageQuality!
+}
+
+type MeterChannelProjectedUsageIntervalValue {
+  value(unit: EnergyUnit): Decimal
+  isIdr: Boolean!
+}
+
+type MeterChannel {
+  type: MeterChannelType!
+  isActive: Boolean!
+  isDemandOnly: Boolean!
+  rateClass: RateClass
+  lossFactor: LossFactor
+  loadProfile: LoadProfile
+  usageStart: DateTime
+  usageEnd: DateTime
+  id: Int!
+  usages(where: MeterChannelUsageFilterInput): [MeterChannelUsage]
+  usagesWithPaging(
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+    where: MeterChannelUsageFilterInput
+    order: [MeterChannelUsageSortInput!]
+  ): UsagesWithPagingConnection
+  usageIntervals(
+    periodBegin: DateTime
+    periodEnd: DateTime
+    usageRanks: [UsageRank!]!
+  ): [MeterChannelUsageInterval]
+  projectedUsageIntervals(
+    oneOfInput: ProjectedUsageIntervalsOneOfInput
+  ): [MeterChannelProjectedUsageInterval]
+}
+
+type MeterChannelUsageInterval {
+  HE01: MeterChannelUsageIntervalValue
+  HE02: MeterChannelUsageIntervalValue
+  HE03: MeterChannelUsageIntervalValue
+  HE04: MeterChannelUsageIntervalValue
+  HE05: MeterChannelUsageIntervalValue
+  HE06: MeterChannelUsageIntervalValue
+  HE07: MeterChannelUsageIntervalValue
+  HE08: MeterChannelUsageIntervalValue
+  HE09: MeterChannelUsageIntervalValue
+  HE10: MeterChannelUsageIntervalValue
+  HE11: MeterChannelUsageIntervalValue
+  HE12: MeterChannelUsageIntervalValue
+  HE13: MeterChannelUsageIntervalValue
+  HE14: MeterChannelUsageIntervalValue
+  HE15: MeterChannelUsageIntervalValue
+  HE16: MeterChannelUsageIntervalValue
+  HE17: MeterChannelUsageIntervalValue
+  HE18: MeterChannelUsageIntervalValue
+  HE19: MeterChannelUsageIntervalValue
+  HE20: MeterChannelUsageIntervalValue
+  HE21: MeterChannelUsageIntervalValue
+  HE22: MeterChannelUsageIntervalValue
+  HE23: MeterChannelUsageIntervalValue
+  HE24: MeterChannelUsageIntervalValue
+  HE2X: MeterChannelUsageIntervalValue
+  rank: UsageRank!
+
+  """
+  An array representing HE interval values in a day.
+  index at 0 represents HE01,
+  index at 23 represents HE24,
+  index at 24 represents HE2X.
+  """
+  hourEndingIntervalValues: [MeterChannelUsageIntervalValue]
+  flowDate: Date
+  intervalMinutes: Int!
+  quality: UsageQuality!
+}
+
+type MeterChannelUsageIntervalValue {
+  value(unit: EnergyUnit): Decimal
+  isIdr: Boolean!
+}
+
+type MeterChannelUsage {
+  quantity(unit: EnergyUnit): Decimal
+  id: Long!
+  startDate: Date
+  startDateString: String
+  endDate: Date
+  unitOfMeasure: UsageMeasurementUnit!
+  quality: UsageQuality!
+  rank: UsageRank!
+  transactionDate: Date
+  isCanceled: Boolean
+  lastUpdated: DateTime!
+  usageIntervals: [MeterChannelUsageInterval]
+}
+
+type Meter {
+  id: Int!
+  meterNumber: String
+  activationDate: DateTime
+  deactivationDate: DateTime
+  isActive: Boolean!
+
+  """
+  Determines whether this meter is interval or not.
+  """
+  isIdr: Boolean!
+  isNetMetering: Boolean!
+  meterChannels(where: MeterChannelFilterInput): [MeterChannel]
+}
+
+enum EnergyUnit {
+  MWH
+  KWH
+}
+
+enum PriceUnit {
+  DOLLARS_PER_MWH
+  CENTS_PER_KWH
+  DOLLARS_PER_KWH
+}
+
+enum ElectricityContractEvergreenType {
+  EVERGREEN_MARKET_INDEX
+  EVERGREEN_FIXED_NON_PASSTHROUGH
+}
+
+enum ElectricityInvoiceDeliveryMethod {
+  PHYSICAL_DELIVERY
+  EMAIL
+  BOTH
+}
+
+enum MeterChannelType {
+  LOAD
+  GENERATION
+}
+
+enum UsageMeasurementUnit {
+  KH
+  K1
+  K2
+  K3
+  K4
+  K5
+  K6
+  K7
+  KW
+  U_4A
+  U_4B
+  U_4C
+  U_4D
+  U_99
+  AF
+  EA
+  MO
+  NA
+  NB
+  NC
+  ND
+  RA
+  RB
+  RC
+  RD
+  TD
+  USD
+  KWM
+  KWD
+  DPM
+}
+
+enum UsageQuality {
+  NOT_SET
+  LDC_ESTIMATED
+  LDC_CALCULATED
+  LDC_ACTUAL
+  LDC_BILLING
+  ESCO_PROJECTED
+  LDC_INCOMPLETE
+  LDC_UNAVAILABLE
+  ESCO_MODIFIED
+  ESCO_ESTIMATED
+}
+
+enum UsageRank {
+  HISTORICAL
+  BILLING
+}
+
+type ElectricityInvoiceMeterChannelUsageIntervalValue {
+  isIdr: Boolean!
+  value: Float
+}
+
+"""
+The `Date` scalar represents an ISO-8601 compliant date type.
+"""
+scalar Date
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+}
+
+type Query {
+  customerLdcAccounts(clientBeId: Int!): [CustomerLdcAccount]
+  clientAccount(
+    input: ClientAccountInput
+
+    """
+    Prefer using input.id instead
+    """
+    id: Long
+  ): ClientAccount
+  electricityLdcAccount(id: Int!): ElectricityLdcAccount
+  electricityLdcAccountByLdcAccountIdentifier(
+    ldcShortName: String
+    accountIdentifier: String
+  ): ElectricityLdcAccount
+  electricityLdcAccountByLdcAccountIdentifierV2(
+    ldcIdentifier: String
+    accountIdentifier: String
+  ): ElectricityLdcAccount
+  ldcAccountValidationByCredentials(
+    ldcIdentifier: String
+    userName: String
+    password: String
+    consumerBeId: String
+  ): LdcAccountValidationByCredentials
+  ldc(ldcInput: LdcInput): Ldc
+  ldcsByZipCode(zipCode: String, providerBeId: Int): [LdcWithSpecificProvider]
+  utilitySyncs(
+    ldcIdentifier: String
+    consumerBeId: Int!
+    ldcAcctNumber: String
+  ): UtilitySync
+  ldcAccountIdentifierFormatValidation(
+    ldcAccountIdentifier: String
+    ldcIdentifier: String
+  ): LdcAccountIdentifierFormatValidation
+  consumerPaymentMethods(
+    includeInactive: Boolean
+    isMock: Boolean
+    providerBeIds: [Int!]
+    consumerBeIds: [Int!]
+  ): [PaymentAttributes]
+  payments(
+    providerBeIds: [Int!]
+    consumerBeIds: [Int!]
+    dateStart: DateTime
+    dateEnd: DateTime
+    paymentIds: [String]
+    paymentRequestIds: [String]
+    isMock: Boolean
+    isAutoPayOnly: Boolean
+  ): [Payment]
+  bulkPaymentImportTemplate: BulkPaymentTemplate
+  paymentProcessingFee(
+    consumerBeId: Int!
+    paymentMethodId: String
+    statementIds: [String]
+    paymentAmount: Decimal
+    isMock: Boolean
+    paymentAllocationMethod: PaymentAllocationMethod
+    isFullyPaid: Boolean!
+  ): PaymentProcessingFees
+  customerBalanceSummary(
+    consumerBeId: Int!
+    isMock: Boolean
+  ): CustomerBalanceSummary
+  customerStatements(
+    dateStart: DateTime
+    dateEnd: DateTime
+    ldcIdentifier: String
+    dataType: String
+    providerBeIds: [Int!]
+    consumerBeIds: [Int!]
+    statementIds: [String]
+    withBalanceOnly: Boolean!
+    balanceRangeMin: Int
+    balanceRangeMax: Int
+    isMock: Boolean
+  ): [CustomerStatementDetail]
+  customerDetailInvoicesById(
+    detailInvsId: [String]
+    providerBeIds: [Int!]
+    consumerBeIds: [Int!]
+    isMock: Boolean
+  ): [CustomerDetailInvoice]
+  invoicePdf(
+    consumerBeId: Int
+    providerBeId: Int
+    type: InvoicePdfType!
+    statementId: String
+    summaryId: String
+    detailId: String
+    isMock: Boolean
+  ): InvoicePdf
+  contractByContractGuid(
+    contractGuid: String
+    consumerBeId: Int!
+  ): SolarContract
+  consumerLdcAccounts(consumerBeId: Int, providerBeId: Int): SolarAccount
+  embeddedSignUrl(
+    providerBeId: Int
+    consumerBeId: Int!
+    signatureRequestGuid: String
+    signerType: SignerType!
+  ): EmbeddedSignUrl
+  cfs_ImportFileHistories(
+    fileIds: [String]
+    fileTypeIds: [String]
+    fileUrls: [String]
+    beId: Int!
+    status: String
+    sortBy: String
+    importDateStart: DateTime
+    importDateEnd: DateTime
+    page: Int
+    pageSize: Int
+    sortOrder: SortOrder! = ASC
+    viewFileRecords: Boolean! = false
+  ): ImportFileHistories
+  cfs_ImportFileRows(
+    fileId: String
+    rowNums: [Int!]
+    beId: Int!
+    status: String
+    page: Int
+    pageSize: Int
+  ): [ImportFileRow]
+  brk_GlobalBrokers(providerBeId: Int!, nameQueryString: String): GlobalBrokers
+  brk_CommissionPlanToBrokerMap(
+    providerBeId: Int!
+    brokerId: String
+    commissionPlanId: String
+    includeCustomized: Boolean
+  ): [CommissionPlansBrkMapRet]
+  brk_brokerDocument(
+    providerBeId: Int!
+    brokerId: String
+    brokerDocumentId: String
+  ): BrokerDocumentFile
+  brk_provider(providerBeId: Int!): ProviderRet
+  brk_commissionPayments(
+    providerBeId: Int!
+    dateStart: String
+    dateEnd: String
+    dateType: String
+    brokerId: String
+    isCommissionPendingReview: Boolean
+    isStatementPosted: Boolean
+    isStatementPaid: Boolean
+    customerBeId: Int
+    serviceType: String
+    commissionType: String
+    sortBy: String
+    sortOrder: String
+  ): [CommissionPaymentRet]
+  brk_CommissionStatements(
+    providerBeId: Int!
+    dateStart: String
+    dateEnd: String
+    dateType: String
+    statementId: String
+    statementType: String
+    brokerId: String
+    isPosted: Boolean
+    isPaid: Boolean
+    sortBy: String
+    sortOrder: String
+    statementIds: [String]
+  ): [BrokerStatementRet]
+  brk_Commissions(
+    providerBeId: Int!
+    dateStart: String
+    dateEnd: String
+    dateType: String
+    brokerId: String
+    customerBeId: Int
+    serviceType: String
+    commissionType: String
+    sortBy: String
+    sortOrder: String
+    isPendingReview: Boolean
+    isReleased: Boolean
+    commissionIds: [String]
+    brokerConfirmIds: [String]
+    releaseTrigger: String
+  ): [CommissionRet]
+  brk_BrokerConfirms(
+    providerBeId: Int!
+    brokerId: String
+    customerBeId: Int
+    ldcId: String
+    accountIdentifier: String
+    serviceType: String
+    contractId: String
+    agentId: String
+    hasPrepay: Boolean
+    brokerConfirmId: String
+  ): [BrokerConfirmRet]
+  brk_ProviderBrokers(
+    providerBeId: Int!
+    brokerId: String
+    nameQueryString: String
+  ): [ProviderBrokerRet]
+  brk_CommissionPlans(
+    providerBeId: Int!
+    brokerId: String
+    commissionPlanId: String
+    includeCustomized: Boolean
+  ): [CommissionPlanRet]
+  brk_Campaigns(
+    providerBeId: Int!
+    campaignId: String
+    serviceType: String
+    commissionPlanId: String
+  ): [CampaignRet]
+  brk_ReferralLinks(
+    providerBeId: Int!
+    referrerBeId: Int
+    campaignId: String
+    referrerType: String
+  ): [ReferralLinkRet]
+  brk_ValidateReferralCode(referralCode: String): ValidateReferralWithSessionRet
+  customerByNameandStatecode(
+    providerBeId: Int!
+    clientName: String
+    addressState: String
+    sortBy: String
+    sortOrder: String
+  ): [Customer]
+  templatePDFFile(providerBeId: Int!, templateTypeId: String): TemplateFileRet
+  ldcAccountServiceConfigs(
+    ldcIdentifier: String
+    serviceType: String
+  ): [LdcAccountServiceConfigRet]
+  der_projects(
+    callerBeId: Int!
+    ldcId: String
+    providerId: String
+    projectOwnerId: String
+    projectId: String
+    page: Int! = 1
+    pageSize: Int! = 20
+    sortBy: ProjectSortBy! = PROJECT_NAME
+    sortOrder: SortOrder! = ASC
+  ): DERProjects
+  der_subscriber(
+    callerBeId: Int!
+    subscriberId: String
+    where: DERSubscriberFilterInput
+  ): DERSubscriber
+  der_accounts(
+    ldcId: String
+    projectId: String
+    ldcDersAccountIdentifier: String
+    serviceStatus: [String]
+    subscriberId: String
+    isLargeCommercial: Boolean
+    dateStart: String
+    dateEnd: String
+    dateType: String
+    providerBeId: Int! = 0
+    consumerBeId: Int! = 0
+    page: Int! = 1
+    pageSize: Int! = 20
+    sortBy: AccountSortBy! = LDC_DERS_ACCOUNT_IDENTIFIER
+    sortOrder: SortOrder! = ASC
+  ): DERLdcAccounts
+  der_accountsHistoricalBilling(
+    callerBeId: Int!
+    consumerBeId: Int!
+    ldcId: String
+    ldcDersAccountIdentifier: String
+    ldcDersAccountIdentifiers: [String]
+    dateStart: String
+    dateEnd: String
+    billingType: String
+    interval: String
+    latestOnly: Boolean
+    isEstimated: Boolean
+    dateType: String
+    sortBy: String
+    page: Int! = 1
+    pageSize: Int! = 20
+    sortOrder: SortOrder! = ASC
+  ): DERHistoricalBillings
+  der_contractDocuments(
+    callerBeId: Int!
+    contractIds: [String]
+  ): [DERContractDocument]
+  der_contracts(
+    callerBeId: Int!
+    ldcId: String
+    projectId: String
+    ldcDersAccountIdentifier: String
+    subscriberId: String
+    brokerId: String
+    status: [String]
+    serviceStatus: [String]
+    dateStart: String
+    dateEnd: String
+    dateType: String
+    page: Int! = 1
+    pageSize: Int! = 20
+    sortBy: ContractSortBy! = LDC_NAME
+    sortOrder: SortOrder! = ASC
+  ): DERContracts
+  der_Waitlist(callerBeId: Int!): DERWaitlist
+  der_accountHistoricalUsage(
+    callerBeId: Int!
+    ldcId: String
+    ldcDersAccountIdentifier: String
+    ldcDersAccountIdentifiers: [String]
+    dateStart: String
+    dateEnd: String
+    usageType: String
+    latestOnly: Boolean
+    dateType: String
+    sortBy: String
+    page: Int! = 1
+    pageSize: Int! = 20
+    sortOrder: SortOrder! = ASC
+  ): DERHistoricalUsages
+  der_bills(
+    subscriberId: String
+    ldcDersAccountIdentifier: String
+    dateStart: DateTime
+    dateEnd: DateTime
+    dateType: BillDateType! = CREATED
+    providerBeId: Int! = 0
+    consumerBeId: Int! = 0
+    page: Int! = 1
+    pageSize: Int! = 20
+    sortBy: BillSortBy! = CREATED
+    sortOrder: SortOrder! = ASC
+  ): DERBills
+  der_billGroups(
+    subscriberId: String
+    ldcDersAccountIdentifier: String
+    projectId: String
+    providerBeId: Int! = 0
+    consumerBeId: Int! = 0
+    page: Int! = 1
+    pageSize: Int! = 20
+    sortBy: BillGroupSortBy! = NAME
+    sortOrder: SortOrder! = ASC
+  ): DERBillGroups
+}
+
+"""
+The built-in `Decimal` scalar type.
+"""
+scalar Decimal
+
+"""
+The `DateTime` scalar represents an ISO-8601 compliant date time type.
+"""
+scalar DateTime
+
+type CRMContact {
+  crmContactId: Int!
+  contactTypes: [ContactType]
+  title: String
+  firstName: String
+  middleName: String
+  lastName: String
+  contactFields: [CRMContactFields]
+}
+
+"""
+The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1.
+"""
+scalar Long
+
+type BillLdc {
+  ldcId: String
+  ldcName: String
+}
+
+type BillLineItem {
+  seq: Int!
+  projectType: Int!
+  serviceChargeId: String
+  lineItemName: String
+  volume: Float!
+  volumeUnit: String
+  rate: Float!
+  rateUnit: String
+  total: Float!
+  isTaxable: Boolean!
+}
+
+type BillMeta {
+  name: String
+  val: String
+  type: String
+  created: DateTime!
+}
+
+type DERProvider {
+  id: String
+  name: String
+  created: DateTime!
+  lastUpdate: DateTime!
+  beId: Int!
+  projectOwners: [DERProviderProjectOwner]
+  markets: [LDCMarket]
+}
+
+type ContractBrokerRet {
+  brokerId: String
+  brokerBeId: Int!
+  name: String
+  comissionPlanId: String
+  referralLinkId: String
+  agent: [AgentsModel]
+}
+
+type CreditComponent {
+  name: String
+  rate: Float!
+  total: Float!
+}
+
+type CreditBanking {
+  bankedDate: DateTime!
+  bankingType: String
+  bankBeginningBalanceKWh: Float!
+  usedFromSubscriberBankKwh: Float!
+  usedFromHostBankKwh: Float!
+  addedToBankkWh: Float!
+  finaledAmountAddedToHostKwh: Float!
+  bankEndBalanceKWh: Float!
+  bankBeginningBalanceDollar: Float!
+  usedFromSubscriberBankDollar: Float!
+  usedFromHostBankDollar: Float!
+  addedToBankDollar: Float!
+  finaledAmountAddedToHostDollar: Float!
+  bankEndBalanceDollar: Float!
+}
+
+type DERHistoricalBillingRecord {
+  isEstimated: Boolean!
+  interval: String
+  beginTime: DateTime!
+  endTime: DateTime!
+  transmissionCharges: Float!
+  supplyCharges: Float!
+  totalBillingAmt: Float!
+  totalBillingUsage: Float!
+  billingType: String
+  charges: [Charge]
+  created: DateTime
+}
+
+type DERHistoricalUsageRecord {
+  usageSource: String
+  usageType: String
+  interval: String
+  beginTime: DateTime!
+  endTime: DateTime!
+  usages: [Float!]
+  created: DateTime!
+}
+
+type LdcAccountAcquisition {
+  source: String
+  method: String
+  date: DateTime!
+}
+
+type LdcAccountAttributes {
+  rateClass: String
+  allowAutoAllocationCalc: Boolean!
+  isAnchorAccount: Boolean!
+  isFinaled: Boolean!
+  canWaitlist: Boolean!
+  ineligibleForService: Boolean
+  ineligibleForServiceReason: String
+  accountKw: Float!
+  serviceClass: String
+  isLargeCommercial: Boolean!
+  readCycle: String
+}
+
+type Address {
+  streetAddress: String
+  streetAddressAdditional: String
+  city: String
+  state: String
+  zipCode: String
+  address: String @deprecated(reason: "Please use StreetAddress instead")
+  addressAdditional: String
+  @deprecated(reason: "Please use StreetAddressAdditional instead")
+}
+
+type LdcAccountLdc {
+  ldcId: String
+  ldcName: String
+  loadZoneId: Int
+  loadZoneName: String
+  lDCAccountName: String
+  ldcAccountIdentifier: String
+  ldcDersAccountIdentifier: String
+  ldclzId: Int!
+  state: String
+}
+
+type LDCMarket {
+  loadZoneId: Int!
+  iso: String
+  zoneId: String
+  zoneName: String
+  symbol: String
+  ldcId: String
+  ldcName: String
+  ldclzId: Int!
+  state: String
+  settlPointId: Int!
+  hubId: Int!
+  zonePointId: Int!
+  name: String
+  nameSymbol: String
+  stLz: String
+  shortName: String
+}
+
+type DERProjectAllocations {
+  ldcAccount: DERLdcAccount
+  allocation: DERAllocation
+  currentBankDollar: Decimal!
+  currentBankKwh: Decimal!
+  lastCreditApplied: Decimal!
+}
+
+type ProjectLdc {
+  ldcId: String
+  ldcName: String
+  loadZoneId: Int
+  loadZoneName: String
+  ldclzId: Int!
+  state: String
+  facilityAccountNumber: String
+  facilityAccountName: String
+  caseNumber: String
+  readCycle: String
+  portalCredentialId: String
+  stateProgramId: String
+  cycleEndDate: DateTime!
+  vendorId: String
+}
+
+type ProjectAttributes {
+  discount: Float!
+  lmiDiscount: Float!
+  anchorDiscount: Float
+  contractTerm: Int!
+  codDate: DateTime
+  maxSubscribers: Int!
+  totalSizekWDC: Float!
+  targetLmi: Float!
+  serviceZipCodes: [ServiceZipCodes]
+  subscriberMaxAllocation: Float!
+  ldcHuRequestEmail: String
+  huRequestMethod: Int!
+  applyRejectedSatelliteAllocationsToHost: Boolean!
+  estimatedAnnualGenKwh: Int!
+  loaRequired: Boolean!
+  billingMethodAnchor: Int!
+  billingMethodNonAnchor: Int!
+  merchantPayoutAccountNonAnchor: String
+  merchantPayoutAccountAnchor: String
+  interConnectionDate: DateTime
+  eligibilityMapType: Int!
+  maxAllocatableUsage: MaxAllocatableUsage
+  estimatedAnnualGenCredits: Float!
+  maxUnrestrictedPerc: Float
+  billingRateEstimateMassMarket: Float!
+  billingRateEstimateCommercial: Float!
+}
+
+type SolarLDC {
+  ldcId: String
+  ldcName: String
+  loadZoneId: Int!
+  loadZoneName: String
+  ldclzId: Int!
+  state: String
+}
+
+type ElectricityContract {
+  id: Long!
+  contractNumber: String
+  status: RskContractVersionStatusEnum!
+  statusUpdateUtcTime: DateTime!
+  originalContractStartDate: DateTime!
+  originalContractEndDate: DateTime!
+  termMonths: Int!
+  pricingPlanRelation: ElectricityContractPricingPlanRelation
+  customQuoteRelation: ElectricityContractCustomQuoteRelation
+  ldcLoadZone: LdcLoadZone
+  ldcAccountRelations: [ElectricityContractLdcAccountRelation]
+}
+
+type QuoteAccountGroup {
+  name: String
+}
+
+enum ElectricityContractEvergreenMarketType {
+  RT
+  DA
+}
+
+scalar UUID
+
+type ClientAccount {
+  id: Long!
+  ownerEntity: BusinessEntity
+  clientEntity: BusinessEntity
+  assignedAccountId: String
+  customerLdcAccounts: [CustomerLdcAccount]
+  masterAgreements: [MasterAgreement]
+  electricityContracts(input: ContractInput): [ElectricityContract]
+}
+
+type ElectricityInvoiceLineItem {
+  name: String
+  quantity: Decimal
+  quantityUnitOfMeasure: String
+  rate: Decimal!
+  rateUnitOfMeasure: String
+  amount: Decimal!
+}
+
+type ElectricityInvoiceAdjustment {
+  name: String
+  amount: Decimal!
+  note: String
+}
+
+type Facility {
+  address: Address
+}
+
+type LossFactor {
+  id: Int!
+  lossClass: String
+}
+
+input DERSubscriberFilterInput {
+  and: [DERSubscriberFilterInput!]
+  or: [DERSubscriberFilterInput!]
+  id: StringOperationFilterInput
+  created: ComparableDateTimeOperationFilterInput
+  lastUpdate: ComparableDateTimeOperationFilterInput
+  name: StringOperationFilterInput
+  beId: ComparableInt32OperationFilterInput
+  clientAcctId: ComparableInt64OperationFilterInput
+  provider: DERProviderFilterInput
+  customerSegment: ComparableInt32OperationFilterInput
+  address: AddressFilterInput
+  isLmi: BooleanOperationFilterInput
+  subscriberAcquisitionMethod: StringOperationFilterInput
+  subscriberAcquisitionDate: ComparableNullableOfDateTimeOperationFilterInput
+  accounts: ListFilterInputTypeOfDERLdcAccountFilterInput
+  contacts: ListFilterInputTypeOfCRMContactFilterInput
+}
+
+input MeterFilterInput {
+  and: [MeterFilterInput!]
+  or: [MeterFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  meterNumber: StringOperationFilterInput
+  activationDate: ComparableNullableOfDateTimeOperationFilterInput
+  deactivationDate: ComparableNullableOfDateTimeOperationFilterInput
+  isActive: BooleanOperationFilterInput
+
+  """
+  Determines whether this meter is interval or not.
+  """
+  isIdr: BooleanOperationFilterInput
+  isNetMetering: BooleanOperationFilterInput
+}
+
+input MeterChannelUsageFilterInput {
+  and: [MeterChannelUsageFilterInput!]
+  or: [MeterChannelUsageFilterInput!]
+  id: ComparableInt64OperationFilterInput
+  startDate: ComparableDateTimeOperationFilterInput
+  startDateString: StringOperationFilterInput
+  endDate: ComparableDateTimeOperationFilterInput
+  unitOfMeasure: UsgMeasurementUnitTypeOperationFilterInput
+  quality: UsgUsageQualityOperationFilterInput
+  rank: UsgUsageRankOperationFilterInput
+  transactionDate: ComparableDateTimeOperationFilterInput
+  isCanceled: BooleanOperationFilterInput
+  lastUpdated: ComparableDateTimeOperationFilterInput
+}
+
+input MeterChannelUsageSortInput {
+  id: SortEnumType
+  startDate: SortEnumType
+  startDateString: SortEnumType
+  endDate: SortEnumType
+  unitOfMeasure: SortEnumType
+  quality: SortEnumType
+  rank: SortEnumType
+  transactionDate: SortEnumType
+  isCanceled: SortEnumType
+  lastUpdated: SortEnumType
+}
+
+"""
+A connection to a list of items.
+"""
+type UsagesWithPagingConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  A list of edges.
+  """
+  edges: [UsagesWithPagingEdge!]
+
+  """
+  A flattened list of the nodes.
+  """
+  nodes: [MeterChannelUsage]
+}
+
+input MeterChannelFilterInput {
+  and: [MeterChannelFilterInput!]
+  or: [MeterChannelFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  type: UsgMeterChannelTypeOperationFilterInput
+  isActive: BooleanOperationFilterInput
+  isDemandOnly: BooleanOperationFilterInput
+  rateClass: RateClassFilterInput
+  lossFactor: LossFactorFilterInput
+  loadProfile: LoadProfileFilterInput
+  usageStart: ComparableNullableOfDateTimeOperationFilterInput
+  usageEnd: ComparableNullableOfDateTimeOperationFilterInput
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input ComparableDateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime!]
+  nin: [DateTime!]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+input ComparableInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int!]
+  nin: [Int!]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ComparableInt64OperationFilterInput {
+  eq: Long
+  neq: Long
+  in: [Long!]
+  nin: [Long!]
+  gt: Long
+  ngt: Long
+  gte: Long
+  ngte: Long
+  lt: Long
+  nlt: Long
+  lte: Long
+  nlte: Long
+}
+
+input DERProviderFilterInput {
+  and: [DERProviderFilterInput!]
+  or: [DERProviderFilterInput!]
+  id: StringOperationFilterInput
+  name: StringOperationFilterInput
+  created: ComparableDateTimeOperationFilterInput
+  lastUpdate: ComparableDateTimeOperationFilterInput
+  beId: ComparableInt32OperationFilterInput
+  projectOwners: ListFilterInputTypeOfDERProviderProjectOwnerFilterInput
+  markets: ListFilterInputTypeOfLDCMarketFilterInput
+}
+
+input AddressFilterInput {
+  and: [AddressFilterInput!]
+  or: [AddressFilterInput!]
+  streetAddress: StringOperationFilterInput
+  streetAddressAdditional: StringOperationFilterInput
+  city: StringOperationFilterInput
+  state: StringOperationFilterInput
+  zipCode: StringOperationFilterInput
+  address: StringOperationFilterInput
+  addressAdditional: StringOperationFilterInput
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input ComparableNullableOfDateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime]
+  nin: [DateTime]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+input ListFilterInputTypeOfDERLdcAccountFilterInput {
+  all: DERLdcAccountFilterInput
+  none: DERLdcAccountFilterInput
+  some: DERLdcAccountFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfCRMContactFilterInput {
+  all: CRMContactFilterInput
+  none: CRMContactFilterInput
+  some: CRMContactFilterInput
+  any: Boolean
+}
+
+input UsgMeasurementUnitTypeOperationFilterInput {
+  eq: UsageMeasurementUnit
+  neq: UsageMeasurementUnit
+  in: [UsageMeasurementUnit!]
+  nin: [UsageMeasurementUnit!]
+}
+
+input UsgUsageQualityOperationFilterInput {
+  eq: UsageQuality
+  neq: UsageQuality
+  in: [UsageQuality!]
+  nin: [UsageQuality!]
+}
+
+input UsgUsageRankOperationFilterInput {
+  eq: UsageRank
+  neq: UsageRank
+  in: [UsageRank!]
+  nin: [UsageRank!]
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+"""
+Information about pagination in a connection.
+"""
+type PageInfo {
+  """
+  Indicates whether more edges exist following the set defined by the clients arguments.
+  """
+  hasNextPage: Boolean!
+
+  """
+  Indicates whether more edges exist prior the set defined by the clients arguments.
+  """
+  hasPreviousPage: Boolean!
+
+  """
+  When paginating backwards, the cursor to continue.
+  """
+  startCursor: String
+
+  """
+  When paginating forwards, the cursor to continue.
+  """
+  endCursor: String
+}
+
+"""
+An edge in a connection.
+"""
+type UsagesWithPagingEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: MeterChannelUsage
+}
+
+input UsgMeterChannelTypeOperationFilterInput {
+  eq: MeterChannelType
+  neq: MeterChannelType
+  in: [MeterChannelType!]
+  nin: [MeterChannelType!]
+}
+
+input RateClassFilterInput {
+  and: [RateClassFilterInput!]
+  or: [RateClassFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  name: StringOperationFilterInput
+  subClass: StringOperationFilterInput
+}
+
+input LossFactorFilterInput {
+  and: [LossFactorFilterInput!]
+  or: [LossFactorFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  lossClass: StringOperationFilterInput
+}
+
+input LoadProfileFilterInput {
+  and: [LoadProfileFilterInput!]
+  or: [LoadProfileFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  name: StringOperationFilterInput
+}
+
+input ListFilterInputTypeOfDERProviderProjectOwnerFilterInput {
+  all: DERProviderProjectOwnerFilterInput
+  none: DERProviderProjectOwnerFilterInput
+  some: DERProviderProjectOwnerFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfLDCMarketFilterInput {
+  all: LDCMarketFilterInput
+  none: LDCMarketFilterInput
+  some: LDCMarketFilterInput
+  any: Boolean
+}
+
+input DERLdcAccountFilterInput {
+  and: [DERLdcAccountFilterInput!]
+  or: [DERLdcAccountFilterInput!]
+  id: StringOperationFilterInput
+  created: ComparableDateTimeOperationFilterInput
+  lastUpdate: ComparableDateTimeOperationFilterInput
+  subscriber: DERSubscriberFilterInput
+  provider: DERProviderFilterInput
+  acquisition: LdcAccountAcquisitionFilterInput
+  attributes: LdcAccountAttributesFilterInput
+  facilityAddress: AddressFilterInput
+  ldc: LdcAccountLdcFilterInput
+  historicalUsage: DERHistoricalUsageFilterInput
+  historicalBilling: DERHistoricalBillingFilterInput
+}
+
+input CRMContactFilterInput {
+  and: [CRMContactFilterInput!]
+  or: [CRMContactFilterInput!]
+  crmContactId: ComparableInt32OperationFilterInput
+  contactTypes: ListFilterInputTypeOfContactTypeFilterInput
+  title: StringOperationFilterInput
+  firstName: StringOperationFilterInput
+  middleName: StringOperationFilterInput
+  lastName: StringOperationFilterInput
+  contactFields: ListFilterInputTypeOfCRMContactFieldsFilterInput
+}
+
+input DERProviderProjectOwnerFilterInput {
+  and: [DERProviderProjectOwnerFilterInput!]
+  or: [DERProviderProjectOwnerFilterInput!]
+  clientAccountId: ComparableInt64OperationFilterInput
+  projectOwner: DERProjectOwnerFilterInput
+}
+
+input LDCMarketFilterInput {
+  and: [LDCMarketFilterInput!]
+  or: [LDCMarketFilterInput!]
+  loadZoneId: ComparableInt32OperationFilterInput
+  iso: StringOperationFilterInput
+  zoneId: StringOperationFilterInput
+  zoneName: StringOperationFilterInput
+  symbol: StringOperationFilterInput
+  ldcId: StringOperationFilterInput
+  ldcName: StringOperationFilterInput
+  ldclzId: ComparableInt32OperationFilterInput
+  state: StringOperationFilterInput
+  settlPointId: ComparableInt32OperationFilterInput
+  hubId: ComparableInt32OperationFilterInput
+  zonePointId: ComparableInt32OperationFilterInput
+  name: StringOperationFilterInput
+  nameSymbol: StringOperationFilterInput
+  stLz: StringOperationFilterInput
+  shortName: StringOperationFilterInput
+}
+
+input LdcAccountAcquisitionFilterInput {
+  and: [LdcAccountAcquisitionFilterInput!]
+  or: [LdcAccountAcquisitionFilterInput!]
+  source: StringOperationFilterInput
+  method: StringOperationFilterInput
+  date: ComparableDateTimeOperationFilterInput
+}
+
+input LdcAccountAttributesFilterInput {
+  and: [LdcAccountAttributesFilterInput!]
+  or: [LdcAccountAttributesFilterInput!]
+  rateClass: StringOperationFilterInput
+  allowAutoAllocationCalc: BooleanOperationFilterInput
+  isAnchorAccount: BooleanOperationFilterInput
+  isFinaled: BooleanOperationFilterInput
+  canWaitlist: BooleanOperationFilterInput
+  ineligibleForService: BooleanOperationFilterInput
+  ineligibleForServiceReason: StringOperationFilterInput
+  accountKw: ComparableDoubleOperationFilterInput
+  serviceClass: StringOperationFilterInput
+  isLargeCommercial: BooleanOperationFilterInput
+  readCycle: StringOperationFilterInput
+}
+
+input LdcAccountLdcFilterInput {
+  and: [LdcAccountLdcFilterInput!]
+  or: [LdcAccountLdcFilterInput!]
+  ldcId: StringOperationFilterInput
+  ldcName: StringOperationFilterInput
+  loadZoneId: ComparableNullableOfInt32OperationFilterInput
+  loadZoneName: StringOperationFilterInput
+  lDCAccountName: StringOperationFilterInput
+  ldcAccountIdentifier: StringOperationFilterInput
+  ldcDersAccountIdentifier: StringOperationFilterInput
+  ldclzId: ComparableInt32OperationFilterInput
+  state: StringOperationFilterInput
+}
+
+input DERHistoricalUsageFilterInput {
+  and: [DERHistoricalUsageFilterInput!]
+  or: [DERHistoricalUsageFilterInput!]
+  ldcDersAccount: DERLdcAccountFilterInput
+  provider: DERProviderFilterInput
+}
+
+input DERHistoricalBillingFilterInput {
+  and: [DERHistoricalBillingFilterInput!]
+  or: [DERHistoricalBillingFilterInput!]
+  ldcAccount: DERLdcAccountFilterInput
+  provider: DERProviderFilterInput
+  historicalBillingHistory: ListFilterInputTypeOfDERHistoricalBillingRecordFilterInput
+}
+
+input ListFilterInputTypeOfContactTypeFilterInput {
+  all: ContactTypeFilterInput
+  none: ContactTypeFilterInput
+  some: ContactTypeFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfCRMContactFieldsFilterInput {
+  all: CRMContactFieldsFilterInput
+  none: CRMContactFieldsFilterInput
+  some: CRMContactFieldsFilterInput
+  any: Boolean
+}
+
+input DERProjectOwnerFilterInput {
+  and: [DERProjectOwnerFilterInput!]
+  or: [DERProjectOwnerFilterInput!]
+  id: StringOperationFilterInput
+  created: ComparableDateTimeOperationFilterInput
+  lastUpdate: ComparableDateTimeOperationFilterInput
+  name: StringOperationFilterInput
+  beId: ComparableInt32OperationFilterInput
+  state: StringOperationFilterInput
+  markets: ListFilterInputTypeOfLDCMarketFilterInput
+  projects: ListFilterInputTypeOfDERProjectFilterInput
+}
+
+input ComparableDoubleOperationFilterInput {
+  eq: Float
+  neq: Float
+  in: [Float!]
+  nin: [Float!]
+  gt: Float
+  ngt: Float
+  gte: Float
+  ngte: Float
+  lt: Float
+  nlt: Float
+  lte: Float
+  nlte: Float
+}
+
+input ComparableNullableOfInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int]
+  nin: [Int]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ListFilterInputTypeOfDERHistoricalBillingRecordFilterInput {
+  all: DERHistoricalBillingRecordFilterInput
+  none: DERHistoricalBillingRecordFilterInput
+  some: DERHistoricalBillingRecordFilterInput
+  any: Boolean
+}
+
+input ContactTypeFilterInput {
+  and: [ContactTypeFilterInput!]
+  or: [ContactTypeFilterInput!]
+  crmContactTypeId: ComparableInt32OperationFilterInput
+  crmContactTypeName: StringOperationFilterInput
+}
+
+input CRMContactFieldsFilterInput {
+  and: [CRMContactFieldsFilterInput!]
+  or: [CRMContactFieldsFilterInput!]
+  businessPhone: StringOperationFilterInput
+  mobilePhone: StringOperationFilterInput
+  otherPhone: StringOperationFilterInput
+  businessPhoneV2: StringOperationFilterInput
+  mobilePhoneV2: StringOperationFilterInput
+  otherPhoneV2: StringOperationFilterInput
+  email: StringOperationFilterInput
+  altEmail: StringOperationFilterInput
+  address: AddressFilterInput
+  isVerified: BooleanOperationFilterInput
+  isPublic: BooleanOperationFilterInput
+}
+
+input ListFilterInputTypeOfDERProjectFilterInput {
+  all: DERProjectFilterInput
+  none: DERProjectFilterInput
+  some: DERProjectFilterInput
+  any: Boolean
+}
+
+input DERHistoricalBillingRecordFilterInput {
+  and: [DERHistoricalBillingRecordFilterInput!]
+  or: [DERHistoricalBillingRecordFilterInput!]
+  isEstimated: BooleanOperationFilterInput
+  interval: StringOperationFilterInput
+  beginTime: ComparableDateTimeOperationFilterInput
+  endTime: ComparableDateTimeOperationFilterInput
+  transmissionCharges: ComparableDoubleOperationFilterInput
+  supplyCharges: ComparableDoubleOperationFilterInput
+  totalBillingAmt: ComparableDoubleOperationFilterInput
+  totalBillingUsage: ComparableDoubleOperationFilterInput
+  billingType: StringOperationFilterInput
+  charges: ListFilterInputTypeOfChargeFilterInput
+  created: ComparableNullableOfDateTimeOperationFilterInput
+}
+
+input DERProjectFilterInput {
+  and: [DERProjectFilterInput!]
+  or: [DERProjectFilterInput!]
+  id: StringOperationFilterInput
+  created: ComparableDateTimeOperationFilterInput
+  lastUpdate: ComparableDateTimeOperationFilterInput
+  projectId: StringOperationFilterInput
+  name: StringOperationFilterInput
+  projectType: ComparableInt32OperationFilterInput
+  provider: DERProviderFilterInput
+  projectOwner: DERProjectOwnerFilterInput
+  ldc: ProjectLdcFilterInput
+  address: AddressFilterInput
+  attributes: ProjectAttributesFilterInput
+  totalSubscribers: ComparableInt32OperationFilterInput
+  currentAllocations: ListFilterInputTypeOfDERProjectAllocationsFilterInput
+}
+
+input ListFilterInputTypeOfChargeFilterInput {
+  all: ChargeFilterInput
+  none: ChargeFilterInput
+  some: ChargeFilterInput
+  any: Boolean
+}
+
+input ProjectLdcFilterInput {
+  and: [ProjectLdcFilterInput!]
+  or: [ProjectLdcFilterInput!]
+  ldcId: StringOperationFilterInput
+  ldcName: StringOperationFilterInput
+  loadZoneId: ComparableNullableOfInt32OperationFilterInput
+  loadZoneName: StringOperationFilterInput
+  ldclzId: ComparableInt32OperationFilterInput
+  state: StringOperationFilterInput
+  facilityAccountNumber: StringOperationFilterInput
+  facilityAccountName: StringOperationFilterInput
+  caseNumber: StringOperationFilterInput
+  readCycle: StringOperationFilterInput
+  portalCredentialId: StringOperationFilterInput
+  stateProgramId: StringOperationFilterInput
+  cycleEndDate: ComparableDateTimeOperationFilterInput
+  vendorId: StringOperationFilterInput
+}
+
+input ProjectAttributesFilterInput {
+  and: [ProjectAttributesFilterInput!]
+  or: [ProjectAttributesFilterInput!]
+  discount: ComparableDoubleOperationFilterInput
+  lmiDiscount: ComparableDoubleOperationFilterInput
+  anchorDiscount: ComparableNullableOfDoubleOperationFilterInput
+  contractTerm: ComparableInt32OperationFilterInput
+  codDate: ComparableNullableOfDateTimeOperationFilterInput
+  maxSubscribers: ComparableInt32OperationFilterInput
+  totalSizekWDC: ComparableDoubleOperationFilterInput
+  targetLmi: ComparableDoubleOperationFilterInput
+  serviceZipCodes: ListFilterInputTypeOfServiceZipCodesFilterInput
+  subscriberMaxAllocation: ComparableDoubleOperationFilterInput
+  ldcHuRequestEmail: StringOperationFilterInput
+  huRequestMethod: ComparableInt32OperationFilterInput
+  applyRejectedSatelliteAllocationsToHost: BooleanOperationFilterInput
+  estimatedAnnualGenKwh: ComparableInt32OperationFilterInput
+  loaRequired: BooleanOperationFilterInput
+  billingMethodAnchor: ComparableInt32OperationFilterInput
+  billingMethodNonAnchor: ComparableInt32OperationFilterInput
+  merchantPayoutAccountNonAnchor: StringOperationFilterInput
+  merchantPayoutAccountAnchor: StringOperationFilterInput
+  interConnectionDate: ComparableNullableOfDateTimeOperationFilterInput
+  eligibilityMapType: ComparableInt32OperationFilterInput
+  maxAllocatableUsage: MaxAllocatableUsageFilterInput
+  estimatedAnnualGenCredits: ComparableDoubleOperationFilterInput
+  maxUnrestrictedPerc: ComparableNullableOfDoubleOperationFilterInput
+  billingRateEstimateMassMarket: ComparableDoubleOperationFilterInput
+  billingRateEstimateCommercial: ComparableDoubleOperationFilterInput
+}
+
+input ListFilterInputTypeOfDERProjectAllocationsFilterInput {
+  all: DERProjectAllocationsFilterInput
+  none: DERProjectAllocationsFilterInput
+  some: DERProjectAllocationsFilterInput
+  any: Boolean
+}
+
+input ChargeFilterInput {
+  and: [ChargeFilterInput!]
+  or: [ChargeFilterInput!]
+  name: StringOperationFilterInput
+  category: StringOperationFilterInput
+  rate: ComparableDoubleOperationFilterInput
+  rateUnit: StringOperationFilterInput
+  quantity: ComparableInt32OperationFilterInput
+  quantityUnit: StringOperationFilterInput
+  total: ComparableDoubleOperationFilterInput
+}
+
+input ComparableNullableOfDoubleOperationFilterInput {
+  eq: Float
+  neq: Float
+  in: [Float]
+  nin: [Float]
+  gt: Float
+  ngt: Float
+  gte: Float
+  ngte: Float
+  lt: Float
+  nlt: Float
+  lte: Float
+  nlte: Float
+}
+
+input ListFilterInputTypeOfServiceZipCodesFilterInput {
+  all: ServiceZipCodesFilterInput
+  none: ServiceZipCodesFilterInput
+  some: ServiceZipCodesFilterInput
+  any: Boolean
+}
+
+input MaxAllocatableUsageFilterInput {
+  and: [MaxAllocatableUsageFilterInput!]
+  or: [MaxAllocatableUsageFilterInput!]
+  residential: ComparableNullableOfDoubleOperationFilterInput
+  smallCI: ComparableNullableOfDoubleOperationFilterInput
+  largeCI: ComparableNullableOfDoubleOperationFilterInput
+}
+
+input DERProjectAllocationsFilterInput {
+  and: [DERProjectAllocationsFilterInput!]
+  or: [DERProjectAllocationsFilterInput!]
+  ldcAccount: DERLdcAccountFilterInput
+  allocation: DERAllocationFilterInput
+  currentBankDollar: ComparableDecimalOperationFilterInput
+  currentBankKwh: ComparableDecimalOperationFilterInput
+  lastCreditApplied: ComparableDecimalOperationFilterInput
+}
+
+input ServiceZipCodesFilterInput {
+  and: [ServiceZipCodesFilterInput!]
+  or: [ServiceZipCodesFilterInput!]
+  zipCode: StringOperationFilterInput
+  county: StringOperationFilterInput
+  isAutoLmi: BooleanOperationFilterInput
+}
+
+input DERAllocationFilterInput {
+  and: [DERAllocationFilterInput!]
+  or: [DERAllocationFilterInput!]
+  project: DERProjectFilterInput
+  isHeldDueToBanking: BooleanOperationFilterInput
+  currentAllocationPerc: ComparableDoubleOperationFilterInput
+  updatedBy: StringOperationFilterInput
+  lastUpdated: ComparableDateTimeOperationFilterInput
+  allocationHistory: ListFilterInputTypeOfDERAllocationHistoryFilterInput
+}
+
+input ComparableDecimalOperationFilterInput {
+  eq: Decimal
+  neq: Decimal
+  in: [Decimal!]
+  nin: [Decimal!]
+  gt: Decimal
+  ngt: Decimal
+  gte: Decimal
+  ngte: Decimal
+  lt: Decimal
+  nlt: Decimal
+  lte: Decimal
+  nlte: Decimal
+}
+
+input ListFilterInputTypeOfDERAllocationHistoryFilterInput {
+  all: DERAllocationHistoryFilterInput
+  none: DERAllocationHistoryFilterInput
+  some: DERAllocationHistoryFilterInput
+  any: Boolean
+}
+
+input DERAllocationHistoryFilterInput {
+  and: [DERAllocationHistoryFilterInput!]
+  or: [DERAllocationHistoryFilterInput!]
+  contract: DERContractFilterInput
+  allocationPerc: ComparableDecimalOperationFilterInput
+  startDate: ComparableDateTimeOperationFilterInput
+  endDate: ComparableNullableOfDateTimeOperationFilterInput
+  modifiedBy: StringOperationFilterInput
+  lastModified: ComparableDateTimeOperationFilterInput
+}
+
+input DERContractFilterInput {
+  and: [DERContractFilterInput!]
+  or: [DERContractFilterInput!]
+  id: StringOperationFilterInput
+  contractNumber: StringOperationFilterInput
+  ldcAccountId: StringOperationFilterInput
+  created: ComparableDateTimeOperationFilterInput
+  lastUpdate: ComparableDateTimeOperationFilterInput
+  subscriberId: StringOperationFilterInput
+  providerBeId: ComparableInt32OperationFilterInput
+  promoCode: StringOperationFilterInput
+  projectId: StringOperationFilterInput
+  discount: ComparableDoubleOperationFilterInput
+  isCustomerSignatureRequired: BooleanOperationFilterInput
+  isCounterSignRequired: BooleanOperationFilterInput
+  isCustomerSigned: BooleanOperationFilterInput
+  isCounterSigned: BooleanOperationFilterInput
+  customerSignedDocumentUrl: StringOperationFilterInput
+  counterSignedDocumentUrl: StringOperationFilterInput
+  status: StringOperationFilterInput
+  serviceStatus: StringOperationFilterInput
+  serviceStatusLastUpdated: ComparableDateTimeOperationFilterInput
+  originalStartDate: ComparableDateTimeOperationFilterInput
+  originalEndDate: ComparableDateTimeOperationFilterInput
+  actualStartDate: ComparableDateTimeOperationFilterInput
+  actualEndDate: ComparableDateTimeOperationFilterInput
+  eSignatureMethod: StringOperationFilterInput
+  sentForSignatureDate: ComparableDateTimeOperationFilterInput
+  eSignRequestId: StringOperationFilterInput
+  firstCreditDate: ComparableNullableOfDateTimeOperationFilterInput
+  lastCreditDate: ComparableNullableOfDateTimeOperationFilterInput
+  dropRequestDate: ComparableNullableOfDateTimeOperationFilterInput
+  term: ComparableNullableOfInt32OperationFilterInput
+  dropReason: StringOperationFilterInput
+  paymentDays: ComparableInt32OperationFilterInput
+  financeChargePercent: ComparableDoubleOperationFilterInput
+  billingLineItemMapId: StringOperationFilterInput
+  signupGuid: StringOperationFilterInput
+  statusLastUpdated: ComparableDateTimeOperationFilterInput
+  statusBy: StringOperationFilterInput
+  addedToProjectDate: ComparableNullableOfDateTimeOperationFilterInput
+  contractName: StringOperationFilterInput
+  brokers: ListFilterInputTypeOfContractBrokerRetFilterInput
+  ldcDersAccountIdentifier: StringOperationFilterInput
+  ldcId: StringOperationFilterInput
+  ldcAccount: DERLdcAccountFilterInput
+  subscriber: DERSubscriberFilterInput
+  provider: DERProviderFilterInput
+  project: DERProjectFilterInput
+  allocations: ListFilterInputTypeOfDERAllocationFilterInput
+}
+
+input ListFilterInputTypeOfContractBrokerRetFilterInput {
+  all: ContractBrokerRetFilterInput
+  none: ContractBrokerRetFilterInput
+  some: ContractBrokerRetFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfDERAllocationFilterInput {
+  all: DERAllocationFilterInput
+  none: DERAllocationFilterInput
+  some: DERAllocationFilterInput
+  any: Boolean
+}
+
+input ContractBrokerRetFilterInput {
+  and: [ContractBrokerRetFilterInput!]
+  or: [ContractBrokerRetFilterInput!]
+  brokerId: StringOperationFilterInput
+  brokerBeId: ComparableInt32OperationFilterInput
+  name: StringOperationFilterInput
+  comissionPlanId: StringOperationFilterInput
+  referralLinkId: StringOperationFilterInput
+}
+
+enum RskContractVersionStatusEnum {
+  NOT_SET
+  SENT
+  REJECTED
+  APPROVED
+  PENDING
+  PENDING_QC_APPROVAL
+  PENDING_COOLING_EXPIRATION
+  NEEDS_FURTHER_REVIEW
+  CANCELLED
+  PENDING_AUTO_RENEWAL
+}
+
+type MaxAllocatableUsage {
+  residential: Float
+  smallCI: Float
+  largeCI: Float
+}
+
+type ServiceZipCodes {
+  zipCode: String
+  county: String
+  isAutoLmi: Boolean!
+}
+
+type Charge {
+  name: String
+  category: String
+  rate: Float!
+  rateUnit: String
+  quantity: Int!
+  quantityUnit: String
+  total: Float!
+}
+
+type CRMContactFields {
+  businessPhone: String
+  mobilePhone: String
+  otherPhone: String
+  businessPhoneV2: String
+  mobilePhoneV2: String
+  otherPhoneV2: String
+  email: String
+  altEmail: String
+  address: Address
+  isVerified: Boolean!
+  isPublic: Boolean!
+}
+
+type ContactType {
+  crmContactTypeId: Int!
+  crmContactTypeName: String
+}
+
+input ProjectedUsageIntervalsOneOfInput {
+  datePeriod: DatePeriodInput
+}
+
+type ElectricityBillingGroup {
+  contact: BusinessEntityContact
+  deliveryMethod: ElectricityInvoiceDeliveryMethod!
+  ldcAccounts: [ElectricityBillGroupLdcAccountRelation]
+}
+
+type AgentsModel {
+  id: String
+  agentCode: String
+  firstName: String
+  lastName: String
+  email: String
+  phonenumber: String
+  secuUserId: Int!
+  secuUserName: String
+  created: String
+  isActive: Boolean!
+  inactiveDate: String
+  inactivatedBy: String
+  emailAlt: String
+  phoneNumberAlt: String
+}
+
+type BrokerRet {
+  id: String
+  beId: Int!
+  name: String
+  isBrokerClaimed: Boolean!
+}
+
+input ContractInput {
+  ldcLoadZone: ContractLdcLoadZoneInput
+}
+
+type MasterAgreement {
+  agreementNumber: String
+  status: RskContractVersionStatusEnum!
+  statusUpdateUtcTime: DateTime!
+  effectiveDate: DateTime
+  endDate: DateTime
+}
+
+type PaymentMethod {
+  institutionName: String
+  paymentMethodId: String
+  paymentMethodType: PaymentMethodType!
+  last4: String
+  expMonth: Long
+  expYear: Long
+  expiry: String
+  isDefault: Boolean!
+  isExpired: Boolean!
+  isActive: Boolean!
+  dateAdded: DateTime
+  processor: PaymentProcessorType!
+  description: String
+}
+
+type PendingPayment {
+  paymentId: String
+  paymentStatus: String
+  paymentMethodType: PaymentMethodType!
+  paymentMethodIdentifier: String
+  paymentAmount: Decimal
+  processingFee: Decimal
+  paymentTotal: Decimal
+}
+
+type Iso {
+  name: String
+  timeZoneName: String
+}
+
+type ElectricityContractLdcAccountRelation {
+  electricityContract: ElectricityContract
+  electricityLdcAccount: ElectricityLdcAccount
+  originalStartDate: DateTime!
+  originalEndDate: DateTime!
+  servicePeriods: [ElectricityContractLdcAccountServicePeriod]
+}
+
+type LdcLoadZone {
+  id: Int!
+  state: String
+  code: String
+  fullName: String
+}
+
+type ElectricityContractProductLine {
+  name: String
+  priceOption: ElectricityContractProductPriceOption!
+  rate: Decimal!
+  unitOfMeasure: String
+}
+
+enum BillGroupSortBy {
+  NAME
+}
+
+type DERBillGroups {
+  billGroups: [DERBillGroup]
+  totalCount: Long!
+}
+
+enum BillSortBy {
+  BILL_SUBTOTAL
+  HOST_FLOW_PERIOD_END
+  CREATED
+}
+
+enum BillDateType {
+  CREATED
+  HOST_FLOW_PERIOD_END
+}
+
+type DERBills {
+  bills: [DERBill]
+  totalCount: Long!
+}
+
+type DERHistoricalUsages {
+  historicalUsages: [DERHistoricalUsage]
+  totalCount: Long!
+}
+
+enum ContractSortBy {
+  LDC_NAME
+  PROJECT_NAME
+  SUBSCRIBER_NAME
+  LDC_ACCOUNT_ACQUISITION_DATE
+  DROP_REQUEST_DATE
+  FIRST_CREDIT_DATE
+  LAST_CREDIT_DATE
+  LDC_ACCOUNT_KW
+  ANNUAL_KWH
+  ANNUAL_BILLING
+}
+
+type DERContracts {
+  contracts: [DERContract]
+  totalCount: Long!
+}
+
+type DERHistoricalBillings {
+  historicalBillings: [DERHistoricalBilling]
+  totalCount: Long!
+}
+
+enum AccountSortBy {
+  LDC_DERS_ACCOUNT_IDENTIFIER
+}
+
+type DERLdcAccounts {
+  ldcAccounts: [DERLdcAccount]
+  totalCount: Long!
+}
+
+enum ProjectSortBy {
+  LDC_NAME
+  LOAD_ZONE_NAME
+  STATE
+  PROJECT_NAME
+  PROJECT_OWNER_NAME
+}
+
+type DERProjects {
+  projects: [DERProject]
+  totalCount: Long!
+}
+
+type LdcAccountServiceConfigRet {
+  ldcName: String
+  ldcIdentifier: String
+  serviceType: String
+  utilityAccountIdentifierGlobalName: String
+  serviceInternalName: String
+  regexIdPattern: String
+  isServicePrimary: Boolean
+  isServiceRequired: Boolean
+}
+
+type TemplateFileRet {
+  payload: String
+}
+
+type Customer {
+  businessEntityId: Int!
+  businessEntityIdentifier: String
+  businessEntityName: String
+  parentEntityId: Int!
+  clientAcctId: Long!
+  stateCode: String
+  isExistedCustomer: Boolean
+}
+
+type ValidateReferralWithSessionRet {
+  referralCode: String
+  referralLinkId: String
+  referrerBeId: Int!
+  referrerType: String
+  brokerSalesAgentId: String
+  commissionPlanId: String
+  commissionPlanGuid: String
+  campaign: ValidateReferralCampaignRet
+  status: String
+}
+
+type ReferralLinkRet {
+  id: String
+  referralCode: String
+  referrer: ReferrerRet
+  referrerType: String
+  active: Boolean!
+  referralEncryptedPayload: String
+  payloadValidityPeriodDays: Int!
+  agent: AgentsModel
+  campaign: CampaignRet
+}
+
+type CampaignRet {
+  id: String
+  campaignName: String
+  campaignCode: String
+  serviceType: String
+  campaignUI: CampaignUIRet
+  startDate: DateTime!
+  endDate: DateTime
+  commissionPlan: CommissionPlanRet
+  provider: ProviderRet
+}
+
+type CommissionPlanRet {
+  id: String
+  guid: String
+  providerBeId: Int!
+  name: String
+  description: String
+  planCode: String
+  startDate: String
+  endDate: String
+  status: String
+  serviceType: String
+  isLocked: Boolean!
+  marketRestrictionISO: String
+  marketRestrictionState: String
+  marketRestrictionLDC: String
+  marketRestrictionCustomerSegment: String
+  marketRestrictionLMIOnly: Boolean!
+  commissionBase: String
+  commissionRate: Float
+  commissionDurationType: String
+  commissionDuration: Int!
+  prepayResidualPayoutMethod: String
+  prepayTrueUpMethod: String
+  prepayTrueUpDelay: Int!
+  residualTrigger: String
+  clawbackEnabled: Boolean!
+  clawbackMinServiceDurationType: String
+  clawbackMinAmt: Float
+  clawbackMaxAmt: Float
+  customizable: Boolean!
+  prepayTranches: [PrepayTranch]
+  residualTranches: [ResidualTrancheRet]
+  commissionPlanMapBrokers: [BrokerRet]
+}
+
+type ProviderBrokerRet {
+  id: String
+  name: String
+  address: ProviderAddress
+  beId: Int!
+  referralChain: String
+  agents: [AgentsModel]
+  created: String
+  isBrokerClaimed: Boolean!
+  providerBrokerConfig: ProviderBrokerConfig
+  stateRegistrations: [BrokerStateRegistration]
+  documents: [BrokerDocument]
+  statementCommissionIds: [String]
+  clientAcctId: Long
+  totalCommissionsGenerated: Float!
+  totalCommissionsPendingRelease: Float!
+  totalCommissionsReviewNeeded: Float!
+  totalCommissionsPaid: Float!
+  totalCommissionsPendingStatement: Float!
+}
+
+type BrokerConfirmRet {
+  id: String
+  provider: ConfirmBusinessEntity
+  customer: ConfirmBusinessEntity
+  broker: BrokerRet
+  agents: [AgentsModel]
+  serviceType: String
+  contractId: String
+  serviceContractStart: String
+  serviceContractEnd: String
+  ldcId: String
+  ldcName: String
+  accountIdentifier: String
+  estimatedTotalCommission: Float!
+  forecastedVolume: Float!
+  forecastedVolumeUnit: String
+  prepayBalance: Float!
+  prepayTotal: Float!
+  prepayBalanceTracking: [PrepayBalanceTrackRet]
+  prepayTrueUpKey: String
+  isPrepayTruedUp: Boolean!
+  commissionPlans: [CommissionPlanRet]
+}
+
+type CommissionRet {
+  id: String
+  guid: String
+  flowPeriodStart: String
+  flowPeriodEnd: String
+  accountIdentifier: String
+  commissionAmount: Float!
+  commissionBalance: Float!
+  commissionCalcMeta: MetaModel
+  isPrepay: Boolean!
+  invoice: Invoice
+  release: Release
+  review: Review
+  eventLegder: [EventLegder]
+  created: String
+  isPrepayCapped: Boolean!
+  isCancelled: Boolean!
+  cancelledBy: String
+  cancelledDate: DateTime
+  cancelledNote: String
+  usageType: String
+  isTrueUp: Boolean
+  providerBeId: Int!
+  isAdjustment: Boolean
+  adjustmentNote: String
+  brokerConfirm: BrokerConfirmRet
+  payments: [CommissionPaymentRet]
+}
+
+type BrokerStatementRet {
+  id: String
+  guid: String
+  created: String
+  statementType: String
+  isPosted: Boolean!
+  postedDate: String
+  postedBy: String
+  commissionAmt: Float!
+  paymentAmt: Float!
+  isPaid: Boolean!
+  paidDate: String
+  markedPaidBy: String
+  paymentTransactionInfo: String
+  summaryPdfUrl: String
+  detailPdfUrl: String
+  summaryPdf: SummaryPdf
+  broker: ProviderBrokerRet
+  commissionIdsPendingReview: [CommissionRet]
+  commissionIdsPendingRelease: [CommissionRet]
+  commissionPaymentIdsToPay: [CommissionPaymentRet]
+  commissionAmtPendingRelease: Float!
+  commissionBalancePendingRelease: Float!
+  commissionAmtPendingReview: Float!
+  provider: ProviderRet
+}
+
+type CommissionPaymentRet {
+  id: String
+  commissionId: String
+  commissionAmt: Float!
+  commissionToPay: Float!
+  prepayAppliedAmt: Float!
+  paymentAmt: Float!
+  commissionBalance: Float!
+  prepayBalance: Float!
+  isStatementPosted: Boolean!
+  postedDate: String
+  created: String
+  isStatementPaid: Boolean!
+  isCancelled: Boolean!
+  cancelledBy: String
+  cancelledDate: DateTime
+  cancelledNote: String
+  statementPaidDate: String
+  statementId: String
+  commission: CommissionRet
+}
+
+type ProviderRet {
+  id: String
+  providerBeId: Int!
+  providerName: String
+  statementDeliveryEmailAddresses: [String]
+  autoStatementPostMax: Float!
+  autoSendCommissionForReviewThreshold: Float!
+  emailSendFromAddress: String
+}
+
+type BrokerDocumentFile {
+  data: String
+  fileName: String
+  note: String
+  documentType: String
+  addedBy: String
+  addedByDate: String
+  typeName: String
+}
+
+type CommissionPlansBrkMapRet {
+  isEnabled: Boolean!
+  added: String
+  addedBy: String
+  status: String
+  statusDate: String
+  broker: BrokerRet
+  commissionPlan: CommissionPlanRet
+}
+
+type GlobalBrokers {
+  globalBrokers: [GlobalBroker]
+}
+
+type ImportFileRow {
+  fileId: String
+  date: DateTime!
+  rowNum: Int!
+  status: String
+  metaStr: String
+  importMessages: [CFSFileRowMessage]
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+type ImportFileHistories {
+  importFileHistory: [ImportFileHistory]
+  totalCount: Long!
+}
+
+enum SignerType {
+  CUSTOMER
+  PROVIDER
+}
+
+type EmbeddedSignUrl {
+  signUrl: String
+  status: String
+}
+
+type SolarAccount {
+  ldcAcctInfosActiveSub: [LdcAcctInfo]
+  ldcAcctInfosInactiveSub: [LdcAcctInfo]
+}
+
+type SolarContract {
+  base64StringPdf: String
+}
+
+enum InvoicePdfType {
+  CONSOLIDATED
+  STATEMENT
+  SUMMARY
+  DETAIL
+}
+
+type InvoicePdf {
+  fileName: String
+  file: String
+}
+
+type CustomerDetailInvoice {
+  id: String
+  invTrackingId: String
+  invNumber: String
+  providerBeId: Int!
+  version: Int!
+  providerName: String
+  customerBeId: Int!
+  customerName: String
+  ldcName: String
+  ldcIdentifier: String
+  accountIdentifier: String
+  invoiceDate: DateTime
+  serviceType: String
+  accountFlowPeriodStart: DateTime
+  accountFlowPeriodEnd: DateTime
+  hostFlowPeriodStart: DateTime
+  hostFlowPeriodEnd: DateTime
+  facilityAddress: FacilityAddress
+  currentChargeLineItems: [InvoiceLineItem]
+  meta: Metas
+  attachedPriorAjustments: [AttachedPriorAdjustmentInv]
+  priorInvsTotalFinanceCharge: Decimal
+  priorInvsTotalTax: Decimal
+  priorInvsSubTotal: Decimal
+  priorInvsTotal: Decimal
+  currentInvSubTotal: Decimal
+  currentInvTotalFinanceCharge: Decimal
+  currentInvTotalTax: Decimal
+  currentInvTotal: Decimal
+  invSubTotal: Decimal
+  invTotalFinanceCharge: Decimal
+  invTotalTax: Decimal
+  invTotal: Decimal
+  postedDate: DateTime
+  dueDate: DateTime
+  invMsgs: [String]
+  billGroupAttributes: BillingGroupAttributes
+  statementGroupId: String
+  merchantAccountId: String
+  isDefaultStatementGroup: Boolean!
+  isBeIdOwnershipValidated: Boolean!
+  invTotalCharges: Decimal
+  invTotalDue: Decimal
+  invPriorBalance: Decimal
+  invPrevPayments: Decimal
+  invBalanceSinceLastPay: Decimal
+  payments(
+    providerBeIds: [Int!]
+    consumerBeIds: [Int!]
+    isMock: Boolean
+  ): [Payment]
+}
+
+type CustomerStatementDetail {
+  customerName: String
+  serviceProviderName: String
+  statementId: String
+  statementDate: DateTime
+  statementDueDate: DateTime
+  statementNumber: String
+  statementTotalDue: Decimal
+  currentBalance: Decimal!
+  pendingPayments: Int!
+  completedPayments: Int!
+  statementTotalFinanceCharge: Decimal
+  statementTotalTax: Decimal
+  statementSubTotal: Decimal
+  statementTotalCharges: Decimal
+  metas: Metas
+  summaryInvs: [SummaryInvDetail]
+  customerBeId: Int!
+  providerBeId: Int!
+  statementGroupId: String
+  statementQueueId: String
+  statementGroupAttributes: StatementGroupAttributes
+  postedDate: DateTime
+  dueDate: DateTime
+  deliveryStatuses: [DeliveryStatusInfo]
+  statementInvPdfUrl: String
+  statementPriorBalance: Decimal
+  statementPrevPayments: Decimal
+  statementBalanceSinceLastPay: Decimal
+}
+
+type CustomerBalanceSummary {
+  totalOutstanding: Decimal!
+  totalOverdue: Decimal!
+  lastStatementAmount: Decimal
+  lastStatementDate: DateTime
+  lastPaymentDate: DateTime
+  lastPaymentAmount: Decimal
+  isAutopay: Boolean!
+  comingAutopayStatements: [ComingAutopayStatement]
+  pendingPayments(
+    providerBeIds: [Int!]
+    consumerBeIds: [Int!]
+    isMock: Boolean
+  ): [PendingPayment]
+}
+
+enum PaymentAllocationMethod {
+  OLDEST_INVOICE_FIRST
+  NEWEST_INVOICE_FIRST
+}
+
+type PaymentProcessingFees {
+  isSuccessful: Boolean!
+  message: String
+  paymentDists: [PaymentDistributionObject]
+  transIntents: [StripeTransIntentObject]
+  totalProviderProcessingFee: Decimal!
+  totalPaymentAmount: Decimal!
+}
+
+type BulkPaymentTemplate {
+  fileName: String
+  file: String
+}
+
+type Payment {
+  id: String
+  providerBeId: Int!
+  payeeBeId: Int!
+  merchant: Merchant
+  statementIds: [String]
+  merchantAccountId: String
+  stripePaymentIntentId: String
+  paymentAmount: Decimal
+  providerProcessingFee: Decimal
+  paymentTotal: Decimal
+  processorProcessedFee: Decimal
+  processedNetPayment: Decimal
+  isAutopay: Boolean!
+  status: PaymentStatus!
+  dateInitiated: DateTime
+  dateCompleted: DateTime
+  dateErrored: DateTime
+  dateCancelled: DateTime
+  errorMessage: String
+  paymentRequestId: String
+  transactionGuid: String
+  transactionRef: String
+  scheduledAutoPayDate: DateTime
+  description: String
+  lastModifiedDate: DateTime
+  createdDate: DateTime!
+  detailInvChargeInfos: [DetailInvChargeInfo]
+  paymentStatuses: [PaymentStatusEntity]
+  dateManualModification: DateTime
+  isManualModification: Boolean!
+  isAutoPayCancel: Boolean
+  paymentMethod(providerBeIds: [Int!], consumerBeIds: [Int!]): PaymentMethod
+}
+
+type PaymentAttributes {
+  isAutopay: Boolean!
+  autopayDays: Int!
+  paymentMethods: [PaymentMethod]
+}
+
+type LdcAccountIdentifierFormatValidation {
+  ldcAccountIdentifier: String!
+  ldc: Ldc!
+  isValid: Boolean
+}
+
+type UtilitySync {
+  accountIdentifier: String
+  utilitySyncLdcAccounts: [UtilitySyncLdcAccountInfo]
+  status: UtilitySyncStatus!
+  statusDateTime: DateTime!
+}
+
+type LdcWithSpecificProvider {
+  providerBeId: Int
+  isProviderEnabled: Boolean
+  id: Int!
+  shortName: String
+  identifier: String
+  businessEntity: BusinessEntity
+  logoImageUrl: String
+  isSyncViaPortalCredentialsAvailable: Boolean!
+  isSyncViaAccountNumberAvailable: Boolean!
+  iso: Iso
+}
+
+input LdcInput {
+  shortName: String
+  identifier: String
+  id: Int
+}
+
+type LdcAccountValidationByCredentials {
+  valid: Boolean!
+}
+
+input ClientAccountInput {
+  id: Long
+  childEntityName: String
+}
+
+type ElectricityContractPricingPlanRelation {
+  pricingPlan: PricingPlan
+}
+
+type PricingPlan {
+  id: Long!
+  code: String
+  planType: PrcPricingPlanPlanType!
+  termMonths: Int!
+  renewalPlan: PricingPlan
+}
+
+enum UtilitySyncStatus {
+  INITIATED
+  ACCESS_GRANTED
+  PENDING
+  COMPLETE
+  ERROR
+}
+
+type UtilitySyncLdcAccountInfo {
+  acctNumber: String
+  acctFirstName: String
+  acctLastName: String
+  acctOwner: String
+  serviceAddress: String
+  serviceAddressAdditional: String
+  serviceAddressCity: String
+  serviceAddressState: String
+  serviceAddressZip: String
+  mailingAddress: String
+  mailingAddressAdditional: String
+  mailingAddressCity: String
+  mailingAddressState: String
+  mailingAddressZip: String
+  acctType: String
+  acctStatus: String
+  contactEmail: String
+  contactPhone: String
+}
+
+type PaymentStatusEntity {
+  status: PaymentStatus!
+  date: DateTime!
+  message: String
+}
+
+type DetailInvChargeInfo {
+  detailInvId: String
+  invTrackingId: String
+  chargeAmount: Decimal!
+}
+
+enum PaymentStatus {
+  CHARGE_BACK
+  ERRORED
+  COMPLETED
+  CANCELLED
+  REQUIRED_ACTIONS
+  PENDING
+  INITIATED
+}
+
+type Merchant {
+  beId: Int!
+  name: String
+}
+
+type StripeTransIntentObject {
+  payeeBeId: Int!
+  providerBeId: Int!
+  paymentMethodId: String
+  merchantAccountId: String
+  statementIds: [String]
+  paymentAmount: Decimal!
+  providerProcessingFee: Decimal!
+  paymentTotal: Decimal!
+  transactionGuid: String
+  unit: CurrencyUnit!
+}
+
+type PaymentDistributionObject {
+  statementId: String
+  paymentAmount: Decimal!
+  isFullyPaid: Boolean!
+}
+
+type ComingAutopayStatement {
+  statementId: String
+  scheduledDate: DateTime!
+}
+
+type DeliveryStatusInfo {
+  deliveryType: InvoiceDeliveryType!
+  trackingId: String
+  deliveryStatus: InvoiceDeliveryStatus!
+  statusDate: DateTime!
+}
+
+type StatementGroupAttributes {
+  providerBeId: Int!
+  customerBeId: Int!
+  clientAcctId: Long!
+  billingGroupKey: String
+  billingContactId: Int!
+  billingMethod: String
+  billDeliveryMethods: [String]
+  paymentDays: Int!
+  invReleaseSchedule: String
+  merchantAccountId: String
+  version: Int!
+}
+
+type SummaryInvDetail {
+  summaryInvRelativeNumber: String
+  summarySubTotal: Decimal
+  summaryTotalFinanceCharge: Decimal
+  summaryTotalTax: Decimal
+  summaryTotalDue: Decimal
+  metas: Metas
+  summaryId: String
+  billGroupKey: String
+  summaryInvPdfUrl: String
+  detailInvs: [String]
+  summaryTotalCharges: Decimal
+  summaryPriorBalance: Decimal
+  summaryPrevPayments: Decimal
+  summaryBalanceSinceLastPay: Decimal
+  customerDetailInvoicesById(
+    providerBeIds: [Int!]
+    consumerBeIds: [Int!]
+    isMock: Boolean
+  ): [CustomerDetailInvoice]
+}
+
+type BillingGroupAttributes {
+  providerBeId: Int!
+  customerBeId: Int!
+  clientAcctId: Long!
+  billingGroupKey: String
+  billingContactId: Int!
+  billingMethod: String
+  billDeliveryMethods: [String]
+  paymentDays: Int!
+  invReleaseSchedule: String
+  merchantAccountId: String
+  version: Int!
+}
+
+type AttachedPriorAdjustmentInv {
+  priorInvId: String
+  invTrackingId: String
+  serviceProviderName: String
+  serviceProviderBeId: Int!
+  customerName: String
+  customerBeId: Int!
+  accountFlowPeriodStart: DateTime
+  accountFlowPeriodEnd: DateTime
+  hostFlowPeriodStart: DateTime
+  hostFlowPeriodEnd: DateTime
+  lineItems: [InvoiceLineItem]
+  priorInvFinanceCharge: Decimal
+  priorInvTotalTax: Decimal
+  priorInvSubTotal: Decimal
+  priorInvTotal: Decimal
+  facilityAddress: FacilityAddress
+  invMsgs: [String]
+}
+
+type Metas {
+  detail: [Meta]
+  fix: [Meta]
+  aggregatable: [Meta]
+}
+
+type InvoiceLineItem {
+  seq: Int!
+  serviceType: String
+  serviceChargeId: String
+  lineItemName: String
+  volume: Decimal!
+  volumeUnit: String
+  rate: Decimal!
+  rateUnit: String
+  total: Decimal!
+  isTaxable: Boolean!
+}
+
+type FacilityAddress {
+  address: String
+  addressAdditional: String
+  city: String
+  state: String
+  zipCode: String
+}
+
+type LdcAcctInfo {
+  ldcAcctIdentifier: String
+  serviceAddress: String
+  utility: Utility
+  projectNames: [String]
+  contract: Contract
+}
+
+type ImportFileHistory {
+  fileId: String
+  fileName: String
+  fileUrl: String
+  fileTypeId: String
+  generationType: String
+  date: DateTime!
+  currentUser: String
+  importStatus: String
+  totalRecords: Int!
+  totalRecordsProcessed: Int!
+  importMessages: [ImportHistoryErrorMessage]
+  reviewedBy: String
+  completedBy: String
+  note: String
+  lastUpdated: DateTime
+  metaStr: String
+}
+
+type CFSFileRowMessage {
+  type: String
+  message: String
+}
+
+type GlobalBroker {
+  id: String
+  name: String
+  beId: Int!
+  addressState: String
+}
+
+type SummaryPdf {
+  data: String
+  fileName: String
+}
+
+type EventLegder {
+  name: String
+  description: String
+  date: String
+  meta: CommissionMeta
+}
+
+type Review {
+  isReviewNeeded: Boolean!
+  isReviewed: Boolean!
+  reviewedBy: String
+  reviewedDate: String
+  reviewNote: String
+}
+
+type Release {
+  trigger: String
+  releaseMeta: [ReleaseMeta]
+  isReleased: Boolean!
+  isReleasedDate: String
+}
+
+type Invoice {
+  id: String
+  invNumber: String
+  postedDate: String
+  fullPaymentDate: String
+  invoiceNumber: String
+  invoiceAmt: Float!
+}
+
+type MetaModel {
+  rate: Float!
+  rateUnit: String
+  volume: Float!
+  volumeUnit: String
+}
+
+type PrepayBalanceTrackRet {
+  prepayStartBalance: Float!
+  paymentAmount: Float!
+  prepayAppliedAmt: Float!
+  commissionAmt: Float!
+  prepayEndBalance: Float!
+  isAddToBalance: Boolean!
+  isTrueUp: Boolean
+  addedDate: DateTime!
+  commissionPayment: CommissionPaymentRet
+  commission: CommissionRet
+}
+
+type ConfirmBusinessEntity {
+  beId: Int!
+  name: String
+}
+
+type BrokerDocument {
+  id: String
+  documentType: String
+  fileName: String
+  note: String
+  addedDate: DateTime!
+  addedBy: String
+  addedByBeId: Int!
+}
+
+type BrokerStateRegistration {
+  id: String
+  state: String
+  startDate: DateTime
+  endDate: DateTime
+  addedDate: DateTime!
+  addedBy: String
+  addeByBeId: Int!
+  registrationNumber1: String
+  registrationNumber1Type: String
+  registrationNumber2: String
+  registrationNumber2Type: String
+  registrationNumber3: String
+  registrationNumber3Type: String
+  notes: [StateRegistrationNote]
+}
+
+type ProviderBrokerConfig {
+  commissionPlanMap: [CommissionPlanMapModel]
+  isProviderBrokerConfigValid: Boolean!
+  minPayoutAmount: Float!
+  residualPayoutFrequency: String
+  prepayPayoutFrequency: String
+  statementDeliveryEmailAddresses: [String]
+  brokerShortName: String
+  brokerInternalId: String
+}
+
+type ProviderAddress {
+  address: String
+  addressAdditional: String
+  city: String
+  state: String
+  zipcode: String
+}
+
+type ResidualTrancheRet {
+  trancheNum: Int!
+  durationDays: Int!
+  percentage: Float!
+}
+
+type PrepayTranch {
+  prepayPercentage: Float!
+  prepayMax: Float!
+  prepayMin: Float!
+  prepayTrigger: String
+}
+
+type CampaignUIRet {
+  img: String
+  imgWidth: String
+  title: String
+  body: String
+}
+
+type ReferrerRet {
+  beId: Int!
+  name: String
+}
+
+type ValidateReferralCampaignRet {
+  serviceType: String
+  campaignUI: CampaignUIRet
+}
+
+enum ElectricityContractProductPriceOption {
+  FIXED
+  ADDER
+  PASS_THROUGH
+}
+
+type ElectricityContractLdcAccountServicePeriod {
+  electricityContract: ElectricityContract
+  electricityLdcAccount: ElectricityLdcAccount
+  actualServiceStartDate: DateTime!
+  actualServiceEndDate: DateTime!
+}
+
+enum PaymentProcessorType {
+  STRIPE
+}
+
+enum PaymentMethodType {
+  ACH
+  CREDIT_CARD
+}
+
+input ContractLdcLoadZoneInput {
+  ldcShortName: String
+  loadZoneCode: String
+}
+
+type ElectricityBillGroupLdcAccountRelation {
+  ldcAccount: ElectricityLdcAccount
+  billType: PrcBillingCode!
+}
+
+type BusinessEntityContact {
+  id: Long!
+  businessEntity: BusinessEntity
+  firstName: String
+  lastName: String
+  department: String
+  publicField: BusinessEntityContactField
+  privateFields: [BusinessEntityContactField]
+}
+
+input DatePeriodInput {
+  """
+  Start date is inclusive (the period includes start date itself)
+  """
+  startDate: DateTime!
+
+  """
+  End date is exclusive (the period does not include end date itself)
+  """
+  endDate: DateTime!
+}
+
+type BusinessEntityContactField {
+  id: Long!
+  contact: BusinessEntityContact!
+  businessPhone: String
+  mobilePhone: String
+  otherPhone: String
+  email: String!
+  altEmail: String
+  address: Address!
+}
+
+enum PrcBillingCode {
+  NS
+  DU
+  RR
+  BR
+  EC
+}
+
+type CommissionPlanMapModel {
+  commissionPlanId: String
+  added: String
+  addedBy: String
+  status: String
+  statusDate: String
+}
+
+type StateRegistrationNote {
+  id: String
+  message: String
+  addedDate: DateTime!
+  addedBy: String
+}
+
+type ReleaseMeta {
+  key: String
+  value: String
+}
+
+type CommissionMeta {
+  reviewRequestedBy: String
+}
+
+type ImportHistoryErrorMessage {
+  rowNum: Int!
+  message: [CFSFileRowMessage]
+}
+
+type Contract {
+  isCustomerSigned: Boolean!
+  signatureRequestGuid: String
+  status: String
+}
+
+type Utility {
+  name: String
+  guid: String
+}
+
+type Meta {
+  val: String
+  name: String
+}
+
+enum InvoiceDeliveryStatus {
+  INITIATED
+  ERROR
+  OPENED
+  PENDING
+  DELIVERED
+}
+
+enum InvoiceDeliveryType {
+  EMAIL
+  PHYSICAL_MAIL
+}
+
+enum CurrencyUnit {
+  DOLLAR
+  CENT
+}
+
+enum PrcPricingPlanPlanType {
+  NOT_SET
+  FIXED_TERM_FIXED_RATE
+  MARKET_INDEX
+  MONTHLY_VARIABLE_INDEX
+  MONTHLY_VARIABLE
+  FIXED_BLOCK_VARIABLE_RATE
+}
