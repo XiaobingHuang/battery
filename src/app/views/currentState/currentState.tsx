@@ -1,10 +1,9 @@
 import React from 'react'
+import Table from '@/components/Table/table';
 
 const CurrentState = () => {
     return (
-      <div >
-        CurrentState
-      </div>
+      <Table/>
     );
   };
   export default CurrentState;
