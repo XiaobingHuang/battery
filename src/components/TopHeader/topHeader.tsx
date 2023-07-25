@@ -61,7 +61,7 @@ function TopHeader() {
             items={headerMenue.map((item) => {
             return {
               key: item.key,
-              label: <Link to={item.path}>{item.label}</Link>,
+              label: <Link to={item.path} style={{ color: 'inherit', textDecoration: 'inherit'}}>{item.label}</Link>,
             };
           })}
         />
