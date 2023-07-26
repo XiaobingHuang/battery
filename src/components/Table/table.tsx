@@ -106,23 +106,6 @@ function TableComp() {
 
   const [open, setOpen] = useState(false);
   const [rawData, setRawdata] = useState(data);
-  const [addData, setAddData] = useState({
-    name: "",
-    manufacturer: "",
-    grid: "",
-    state: "",
-    utility: "",
-    loadZone: "",
-    capacity: "",
-    cRating: "",
-    opMode: "",
-    soc: "",
-    soh: "",
-    alert: "",
-    cycle: "",
-    life: "",
-    certification: "",
-  });
 
   useEffect(() => {
     rawData.forEach((item, index) => {
@@ -137,7 +120,7 @@ function TableComp() {
     setOpen(false);
   };
   const handleAdd = 
-  (name:string,
+  async (name:string,
     manufacturer:string,
     grid:string,
     state:string,
@@ -152,8 +135,8 @@ function TableComp() {
     cycle:string, 
     life:string,
     certification:string) => {
-    console.log("in the parent handleAdd");
-    setAddData({
+    console.log("in the parent handleAdd, name is:",name );
+    const newData={
       name: name,
       manufacturer: manufacturer,
       grid: grid,
@@ -169,8 +152,8 @@ function TableComp() {
       cycle: cycle,
       life: life,
       certification: certification,
-    });
-    setRawdata([...rawData, addData])
+    }
+    setRawdata([...rawData, newData ])
 
   };
 
