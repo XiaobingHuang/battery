@@ -15,7 +15,9 @@ import {
 
 function ModalCom(props) {
   const [batteryName, setBatteryName] = useState("");
-  const [COD, setCOD] = useState<Dayjs | null>(null);
+  const [CODDay, setCODDay] = useState("");
+  const [CODMonth, setCODMonth] = useState("");
+  const [CODYear, setCODYear] = useState("");
   const [grid, setGrid] = useState("");
   const [utility, setUtility] = useState("");
   const [state, setState] = useState("");
@@ -79,9 +81,8 @@ function ModalCom(props) {
     setDischargeModeChargeScheduleToValue,
   ] = useState<Dayjs | null>(null);
 
-  const onChangeDate = (date, dateString) => {
-    setCOD(dateString);
-  };
+  // -------------------------
+
   const chargeModeChargeScheduleFromOnChange = (
     time: Dayjs,
     timeString: string
@@ -108,7 +109,11 @@ function ModalCom(props) {
   };
 
   const handleAddChild = () => {
-    console.log("chid component handleAddChild  ", "batteryName: ",batteryName)
+    console.log(
+      "chid component handleAddChild  ",
+      "batteryName: ",
+      batteryName
+    );
     props.handleAdd(
       batteryName,
       manufacteraerName,
@@ -118,14 +123,61 @@ function ModalCom(props) {
       loadZone,
       capacity,
       cRating,
-      "Charging",
-      "50%",
-      "50%",
-      "None",
-      "200/6500",
+      "NULL",
+      "NULL",
+      "NULL",
+      "NULL",
+      "NULL",
       lifeSpan,
-      "yes"
+      "NULL",
+      (CODDay&&CODMonth&&CODYear)?`${CODMonth}/${CODDay}/${CODYear}`:""
     );
+    cancel();
+  };
+
+  const cancel = () => {
+    setBatteryName("");
+    setCODDay("");
+    setCODMonth("");
+    setCODYear("");
+    setGrid("");
+    setUtility("");
+    setState("");
+    setLoadZone("");
+    setManufacteraerName("");
+    setModel("");
+    setCapacity("");
+    setAttributeModel("");
+    setCRating("");
+    setLifeSpan("");
+
+    setChargeMode("");
+    setChargePowerLimitUpper("");
+    setChargePowerLimitLower("");
+    setMaxChargeLevel("");
+    setChargeRate("");
+
+    setDischargeMode("");
+    setDiscahrgePowerLimitUpper("");
+    setDiscahrgePowerLimitLower("");
+    setDiscahrgeMaxChargeLevel("");
+    setDiscahrgeChargeRate("");
+
+    setChargeForCurrentUpper("");
+    setChargeForCurrentLower("");
+    setAlertSettingTempUpper("");
+    setAlertSettingTempLower("");
+    setChargeVoltageMax("");
+    setDischargeForCurrentUpper("");
+    setDischargeForCurrentLower("");
+    setDischargeTempUpper("");
+    setDischargeTempLower("");
+    setDischargeVoltageMax("");
+
+    setChargeModeChargeScheduleFromValue(null);
+    setChargeModeChargeScheduleToValue(null);
+    setDischargeModeChargeScheduleFromValue(null);
+    setDischargeModeChargeScheduleToValue(null);
   };
 
   return (
@@ -150,13 +202,34 @@ function ModalCom(props) {
         <Space>
           <label>Name:</label>
           <Input
+            style={{ width: 150 }}
             value={batteryName}
             onChange={(e) => {
               setBatteryName(e.target.value);
             }}
           ></Input>
           <label>COD:</label>
-          <DatePicker onChange={onChangeDate} value={COD}></DatePicker>
+          <Space.Compact>
+            <Input
+              placeholder="Month"
+              value={CODMonth}
+              onChange={(e) => {
+                setCODMonth(e.target.value);
+              }}
+            />
+            <Input
+              placeholder="Day"
+              onChange={(e) => {
+                setCODDay(e.target.value);
+              }}
+            />
+            <Input
+              placeholder="Year"
+              onChange={(e) => {
+                setCODYear(e.target.value);
+              }}
+            />
+          </Space.Compact>
         </Space>
       </Space>
 
@@ -186,7 +259,7 @@ function ModalCom(props) {
             ]}
             value={grid}
             onChange={setGrid}
-            style={{width:100}}
+            style={{ width: 100 }}
           ></Select>
           <label>Utility:</label>
           <Select
@@ -207,7 +280,7 @@ function ModalCom(props) {
             ]}
             value={utility}
             onChange={setUtility}
-            style={{width:100}}
+            style={{ width: 100 }}
           ></Select>
         </Space>
         <Space>
@@ -422,7 +495,7 @@ function ModalCom(props) {
             ]}
             value={state}
             onChange={setState}
-            style={{width:100}}
+            style={{ width: 100 }}
           ></Select>
           <label>Load Zone:</label>
           <Select
@@ -443,7 +516,7 @@ function ModalCom(props) {
             ]}
             value={loadZone}
             onChange={setLoadZone}
-            style={{width:100}}
+            style={{ width: 100 }}
           ></Select>
         </Space>
       </Space>
@@ -472,7 +545,7 @@ function ModalCom(props) {
             ]}
             value={manufacteraerName}
             onChange={setManufacteraerName}
-            style={{width:100}}
+            style={{ width: 100 }}
           ></Select>
           <label>Model:</label>
           <Select
@@ -493,7 +566,7 @@ function ModalCom(props) {
             ]}
             value={model}
             onChange={setModel}
-            style={{width:100}}
+            style={{ width: 100 }}
           ></Select>
         </Space>
       </Space>
@@ -558,7 +631,7 @@ function ModalCom(props) {
               ]}
               value={chargeMode}
               onChange={setChargeMode}
-              style={{width:100}}
+              style={{ width: 100 }}
             ></Select>
             <Divider />
             <label>Power Limit:</label>
@@ -634,7 +707,7 @@ function ModalCom(props) {
               ]}
               value={dischargeMode}
               onChange={setDischargeMode}
-              style={{width:100}}
+              style={{ width: 100 }}
             ></Select>
             <Divider />
             <label>Power Limit:</label>
