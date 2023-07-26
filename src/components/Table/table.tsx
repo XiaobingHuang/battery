@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { render } from "react-dom";
 import {
   Table,
@@ -106,6 +106,10 @@ function TableComp() {
   const [open, setOpen] = useState(false);
   const [rawData, setRawdata] = useState(data);
 
+  useEffect(() => {
+    rawData.map((item, index)=>{return localStorage.setItem(`${item.name}`, JSON.stringify(rawData[index])); })
+  }, [rawData]);
+
   const openModal = () => {
     setOpen(true);
   };
@@ -124,7 +128,7 @@ function TableComp() {
       <ModalCom open={open} handleCancel={handleCancel} handleAdd={handleAdd} />
       <Table
         columns={columns}
-        dataSource={data}
+        dataSource={rawData}
         pagination={false}
         onRow={(record) => {
           return {

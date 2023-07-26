@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Link } from "react-router-dom";
-import type { MenuProps } from 'antd';
+import type { Dayjs } from 'dayjs';
 
 import {
     Button,
@@ -15,6 +15,70 @@ import {
   } from "antd";
 
 function ModalCom(props) {
+
+    const[batteryName, setBatteryName] = useState("");
+    const[COD, setCOD] = useState<Dayjs | null>(null);
+    const[grid,setGrid] = useState("");
+    const[utility, setUtility] = useState("");
+    const [state, setState] = useState("");
+    const [loadZone, setLoadZone] = useState("");
+    const [manufacteraerName, setManufacteraerName] = useState("");
+    const[model, setModel] = useState("");
+    const [capacity, setCapacity] = useState("");
+    const [attributeModel, setAttributeModel] = useState("");
+    const [cRating, setCRating] = useState("");
+    const [lifeSpan, setLifeSpan] = useState("");
+
+    {/* ------------------Charge Settings--------------------*/}
+
+    const[chargeMode, setChargeMode] = useState("");
+    const [chargePowerLimitUpper, setChargePowerLimitUpper] = useState("");
+    const[chargePowerLimitLower, setChargePowerLimitLower] = useState("");
+    const[maxChargeLevel, setMaxChargeLevel] = useState("");
+    const [chargeRate, setChargeRate] = useState("");
+
+     {/* ------------------Discharge Settings--------------------*/}
+     const[dischargeMode, setDischargeMode] = useState("");
+     const[discahrgePowerLimitUpper, setDiscahrgePowerLimitUpper] = useState("");
+     const[discahrgePowerLimitLower, setDiscahrgePowerLimitLower] = useState("");
+     const[discahrgeMaxChargeLevel, setDiscahrgeMaxChargeLevel] = useState("");
+     const[discahrgeChargeRate, setDiscahrgeChargeRate] = useState("");
+
+    {/* ------------------Alarm for exceed Threshold Settings--------------------*/}
+
+    const[] = useState("");
+    const[chargeForCurrentUpper, setChargeForCurrentUpper] = useState("");
+    const[chargeForCurrentLower, setChargeForCurrentLower] = useState("");
+    const[alertSettingTempUpper,setAlertSettingTempUpper] = useState("");
+    const[alertSettingTempLower, setAlertSettingTempLower] = useState("");
+    const[chargeVoltageMax, setChargeVoltageMax] = useState("");
+    const[dischargeForCurrentUpper, setDischargeForCurrentUpper] = useState("");
+    const[dischargeForCurrentLower, setDischargeForCurrentLower] = useState("");
+    const[dischargeTempUpper,setDischargeTempUpper] = useState("");
+    const[dischargeTempLower, setDischargeTempLower] = useState("");
+    const[dischargeVoltageMax, setDischargeVoltageMax] = useState("");
+
+  {/* ------------------charge and discharge settings--------------------*/}
+    const[chargeModeChargeScheduleFromValue, setChargeModeChargeScheduleFromValue] = useState<Dayjs | null>(null);
+    const[chargeModeChargeScheduleToValue, setChargeModeChargeScheduleToValue] = useState<Dayjs | null>(null);
+    const [dischargeModeChargeScheduleFromValue, setDischargeModeChargeScheduleFromValue] = useState<Dayjs | null>(null);
+    const [ dischargeModeChargeScheduleToValue,setDischargeModeChargeScheduleToValue] =useState<Dayjs | null>(null);
+
+    const onChangeDate = (date, dateString) => {
+        setCOD(dateString);
+      };
+    const chargeModeChargeScheduleFromOnChange = (time:Dayjs, timeString: string) => {
+        setChargeModeChargeScheduleFromValue(time);
+      };
+    const chargeModeChargeScheduleToOnChange=(time:Dayjs, timeString: string)=>{
+        setChargeModeChargeScheduleToValue(time);
+    }
+    const dischargeModeChargeScheduleFromOnChange = (time:Dayjs, timeString: string) => {
+        setDischargeModeChargeScheduleFromValue(time);
+      };
+    const dischargeModeChargeScheduleToOnChange = (time:Dayjs, timeString: string) => {
+        setDischargeModeChargeScheduleToValue(time);
+      };
    
     return (
         <Modal
@@ -37,12 +101,14 @@ function ModalCom(props) {
           </Space>
           <Space>
             <label>Name:</label>
-            <Input></Input>
+            <Input value={batteryName} onChange={(e)=>{setBatteryName(e.target.value)}}></Input>
             <label>COD:</label>
-            <DatePicker></DatePicker>
+            <DatePicker onChange={onChangeDate } value={COD}></DatePicker>
           </Space>
         </Space>
+
         <Divider />
+
         <Space direction="vertical">
           <Space>
             <strong>Market</strong>
@@ -65,6 +131,8 @@ function ModalCom(props) {
                   label: "NYISO",
                 },
               ]}
+              value={grid}
+             onChange={setGrid}
             ></Select>
             <label>Utility:</label>
             <Select
@@ -83,6 +151,8 @@ function ModalCom(props) {
                   label: "NYSEG",
                 },
               ]}
+              value={utility}
+              onChange={setUtility}
             ></Select>
           </Space>
           <Space>
@@ -295,6 +365,8 @@ function ModalCom(props) {
                   label: "WY",
                 },
               ]}
+              value={state}
+              onChange={setState}
             ></Select>
             <label>Load Zone:</label>
             <Select
@@ -313,6 +385,8 @@ function ModalCom(props) {
                   label: "Zone F",
                 },
               ]}
+              value={loadZone}
+              onChange={setLoadZone}
             ></Select>
           </Space>
         </Space>
@@ -339,6 +413,8 @@ function ModalCom(props) {
                   label: "Megapack",
                 },
               ]}
+              value={manufacteraerName}
+              onChange={setManufacteraerName}
             ></Select>
             <label>Model:</label>
             <Select
@@ -357,25 +433,29 @@ function ModalCom(props) {
                   label: "C",
                 },
               ]}
+              value={model}
+              onChange={setModel}
             ></Select>
           </Space>
         </Space>
+
         <Divider />
+
         <Space direction="vertical">
           <Space>
             <strong>Attributes</strong>
           </Space>
           <Space>
             <label>Capacity(kW):</label>
-            <Input></Input>
+            <Input value={capacity} onChange={(e)=>{setCapacity(e.target.value)}}></Input>
             <label>Model:</label>
-            <Input></Input>
+            <Input value={attributeModel} onChange={(e)=>{setAttributeModel(e.target.value)}}></Input>
           </Space>
           <Space>
             <label>C rating:</label>
-            <Input></Input>
-            <label>Life span(year)</label>
-            <Input></Input>
+            <Input value={cRating} onChange={(e)=>{setCRating(e.target.value)}}></Input>
+            <label>Life span(year):</label>
+            <Input value={lifeSpan} onChange={(e)=>{setLifeSpan(e.target.value)}}></Input>
           </Space>
         </Space>
         <Divider />
@@ -397,36 +477,37 @@ function ModalCom(props) {
                     label: "Off",
                   },
                 ]}
+                value={chargeMode}
+                onChange={setChargeMode}
               ></Select>
               <Divider />
               <label>Power Limit:</label>
               <Space>
                 <label>Upper:</label>
-                <Input></Input>
+                <Input value={chargePowerLimitUpper} onChange={(e)=>{setChargePowerLimitUpper(e.target.value)}}></Input>
               </Space>
 
               <Space>
                 <label>Lower:</label>
-                <Input></Input>
+                <Input  value={chargePowerLimitLower} onChange={(e)=>{setChargePowerLimitLower(e.target.value)}}></Input>
               </Space>
               <Divider />
               <label>Max Charge Level(%):</label>
-              <Input></Input>
+              <Input  value={maxChargeLevel} onChange={(e)=>{setMaxChargeLevel(e.target.value)}}></Input>
               <Divider />
               <label>Charge Rate:</label>
-              <Input></Input>
+              <Input value={chargeRate} onChange={(e)=>{setChargeRate(e.target.value)}}></Input>
               <Divider />
               <Space direction="vertical">
                 <label>Charge Schedule:</label>
                 <Space>
                   <label>From:</label>
-                  <TimePicker format="HH:mm"></TimePicker>
+                  <TimePicker format="HH:mm" onChange={chargeModeChargeScheduleFromOnChange} value={chargeModeChargeScheduleFromValue}></TimePicker>
                   <label>To:</label>
-                  <TimePicker format="HH:mm"></TimePicker>
+                  <TimePicker format="HH:mm" onChange={chargeModeChargeScheduleToOnChange} value={chargeModeChargeScheduleToValue}></TimePicker>
                 </Space>
               </Space>
             </Space>
-            <Space></Space>
           </Space>
           <Space>
             <Space direction="vertical">
@@ -443,32 +524,34 @@ function ModalCom(props) {
                     label: "Load Management",
                   },
                 ]}
+                value={dischargeMode}
+                onChange={setDischargeMode}
               ></Select>
               <Divider />
               <label>Power Limit:</label>
               <Space>
                 <label>Upper:</label>
-                <Input></Input>
+                <Input value={discahrgePowerLimitUpper} onChange={(e)=>{setDiscahrgePowerLimitUpper(e.target.value)}}></Input>
               </Space>
 
               <Space>
                 <label>Lower:</label>
-                <Input></Input>
+                <Input value={discahrgePowerLimitLower} onChange={(e)=>{setDiscahrgePowerLimitLower(e.target.value)}}></Input>
               </Space>
               <Divider />
               <label>Max Charge Level(%):</label>
-              <Input></Input>
+              <Input value={discahrgeMaxChargeLevel} onChange={(e)=>{setDiscahrgeMaxChargeLevel(e.target.value)}}></Input>
               <Divider />
               <label>Charge Rate:</label>
-              <Input></Input>
+              <Input value={discahrgeChargeRate} onChange={(e)=>{setDiscahrgeChargeRate(e.target.value)}}></Input>
               <Divider />
               <Space direction="vertical">
                 <label>Charge Schedule:</label>
                 <Space>
                   <label>From:</label>
-                  <TimePicker format="HH:mm"></TimePicker>
+                  <TimePicker format="HH:mm" onChange={dischargeModeChargeScheduleFromOnChange} value={dischargeModeChargeScheduleFromValue}></TimePicker>
                   <label>To:</label>
-                  <TimePicker format="HH:mm"></TimePicker>
+                  <TimePicker format="HH:mm" onChange={dischargeModeChargeScheduleToOnChange} value={dischargeModeChargeScheduleToValue}></TimePicker>
                 </Space>
               </Space>
             </Space>
@@ -485,11 +568,11 @@ function ModalCom(props) {
             Charge for current:
             <Space>
                 <label>Upper:</label>
-                <Input></Input>
+                <Input value={chargeForCurrentUpper} onChange={(e)=>{setChargeForCurrentUpper(e.target.value)}}></Input>
             </Space>
             <Space>
                 <label>Lower:</label>
-                <Input></Input>
+                <Input value={chargeForCurrentLower} onChange={(e)=>{setChargeForCurrentLower(e.target.value)}}></Input>
             </Space>
           </Space>
 
@@ -499,11 +582,11 @@ function ModalCom(props) {
             Temp:
             <Space>
                 <label>Upper:</label>
-                <Input></Input>
+                <Input value={alertSettingTempUpper} onChange={(e)=>{setAlertSettingTempUpper(e.target.value)}}></Input>
             </Space>
             <Space>
                 <label>Lower:</label>
-                <Input></Input>
+                <Input value={alertSettingTempLower} onChange={(e)=>{setAlertSettingTempLower(e.target.value)}}></Input>
             </Space>
           </Space>
           <Divider/>
@@ -511,7 +594,7 @@ function ModalCom(props) {
             Voltage:
             <Space>
                 <label>Max:</label>
-                <Input></Input>
+                <Input value={chargeVoltageMax} onChange={(e)=>{setChargeVoltageMax(e.target.value)}}></Input>
             </Space>
           </Space>
         </Space>
@@ -522,11 +605,11 @@ function ModalCom(props) {
             Discharge for current:
             <Space>
                 <label>Upper:</label>
-                <Input></Input>
+                <Input value={dischargeForCurrentUpper} onChange={(e)=>{setDischargeForCurrentUpper(e.target.value)}}></Input>
             </Space>
             <Space>
                 <label>Lower:</label>
-                <Input></Input>
+                <Input value={dischargeForCurrentLower} onChange={(e)=>{setDischargeForCurrentLower(e.target.value)}}></Input>
             </Space>
           </Space>
 
@@ -536,11 +619,11 @@ function ModalCom(props) {
             Temp:
             <Space>
                 <label>Upper:</label>
-                <Input></Input>
+                <Input value={dischargeTempUpper} onChange={(e)=>{setDischargeTempUpper(e.target.value)}}></Input>
             </Space>
             <Space>
                 <label>Lower:</label>
-                <Input></Input>
+                <Input value={dischargeTempLower} onChange={(e)=>{setDischargeTempLower(e.target.value)}}></Input>
             </Space>
           </Space>
           <Divider/>
@@ -548,7 +631,7 @@ function ModalCom(props) {
             Voltage:
             <Space>
                 <label>Max:</label>
-                <Input></Input>
+                <Input value={dischargeVoltageMax} onChange={(e)=>{setDischargeVoltageMax(e.target.value)}}></Input>
             </Space>
           </Space>
         </Space>
