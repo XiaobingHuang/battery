@@ -82,11 +82,11 @@ function TableComp() {
   ];
   const columns: ColumnsType<DataType> = [
     { key: "name", title: "Name", dataIndex: "name", width: 90 },
-    { key: "manufacturer", title: "Manufacturer", width: 130 },
+    { key: "manufacturer", title: "Manufacturer",dataIndex:"manufacturer" ,width: 130 },
     { key: "grid", title: "Grid", dataIndex: "grid", width: 80 },
     { key: "state", title: "State", dataIndex: "state", width: 90 },
     { key: "utility", title: "Utility", dataIndex: "utility", width: 90 },
-    { key: "loadZone", title: "Load Zone", dataIndex: "loadzone", width: 110 },
+    { key: "loadZone", title: "Load Zone", dataIndex: "loadZone", width: 110 },
     { key: "capacity", title: "Capacity", dataIndex: "capacity", width: 105 },
     { key: "cRating", title: "C Rating", dataIndex: "cRating", width: 105 },
     { key: "opMode", title: "OP Mode", dataIndex: "opMode", width: 105 },
