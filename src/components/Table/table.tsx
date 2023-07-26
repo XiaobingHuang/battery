@@ -40,6 +40,7 @@ function TableComp() {
       cycle: "200",
       life: "1",
       certification: "Yes",
+      cod:"11/01/22"
     },
     {
       name: "Battery2",
@@ -57,6 +58,7 @@ function TableComp() {
       cycle: "300",
       life: "3",
       certification: "Yes",
+      cod:"04/19/21"
     },
     {
       name: "Battery3",
@@ -74,6 +76,7 @@ function TableComp() {
       cycle: "500",
       life: "2",
       certification: "Yes",
+      cod:"01/01/20"
     },
   ];
   const columns: ColumnsType<DataType> = [
@@ -100,8 +103,9 @@ function TableComp() {
       key: "certification",
       title: "Certifications",
       dataIndex: "certification",
-      width: 130,
+      width: 100,
     },
+    { key: "cod", title: "COD", dataIndex: "cod", width: 80 },
   ];
 
   const [open, setOpen] = useState(false);
@@ -134,7 +138,9 @@ function TableComp() {
     alert:string, 
     cycle:string, 
     life:string,
-    certification:string) => {
+    certification:string,
+    cod:string
+    ) => {
     console.log("in the parent handleAdd, name is:",name );
     const newData={
       name: name,
@@ -152,8 +158,10 @@ function TableComp() {
       cycle: cycle,
       life: life,
       certification: certification,
+      cod:cod
     }
-    setRawdata([...rawData, newData ])
+    setRawdata([...rawData, newData ]);
+    setOpen(false);
 
   };
 
