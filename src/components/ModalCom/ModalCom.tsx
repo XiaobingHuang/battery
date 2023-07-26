@@ -9,7 +9,6 @@ import {
     Space,
     DatePicker,
     Divider,
-    Dropdown,
     Select,
     TimePicker,
   } from "antd";
@@ -46,7 +45,6 @@ function ModalCom(props) {
 
     {/* ------------------Alarm for exceed Threshold Settings--------------------*/}
 
-    const[] = useState("");
     const[chargeForCurrentUpper, setChargeForCurrentUpper] = useState("");
     const[chargeForCurrentLower, setChargeForCurrentLower] = useState("");
     const[alertSettingTempUpper,setAlertSettingTempUpper] = useState("");
@@ -79,18 +77,36 @@ function ModalCom(props) {
     const dischargeModeChargeScheduleToOnChange = (time:Dayjs, timeString: string) => {
         setDischargeModeChargeScheduleToValue(time);
       };
+
+    const handleAddChild =()=>{
+      props.handleAdd(batteryName,
+        manufacteraerName,
+        grid,
+       state,
+        utility,
+        loadZone,
+        capacity,
+        cRating,
+       "Charging",
+       "50%",
+        "50%",
+        "None",
+       "200/6500",
+        lifeSpan,
+        "yes");
+    }
    
     return (
         <Modal
         open={props.open}
         title="Add battery"
-        onOk={props.handleAdd}
+        onOk={handleAddChild}
         onCancel={props.handleCancel}
         footer={[
           <Button key="back" onClick={props.handleCancel}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={props.handleAdd}>
+          <Button key="submit" type="primary" onClick={handleAddChild}>
             Add
           </Button>,
         ]}
@@ -103,7 +119,7 @@ function ModalCom(props) {
             <label>Name:</label>
             <Input value={batteryName} onChange={(e)=>{setBatteryName(e.target.value)}}></Input>
             <label>COD:</label>
-            <DatePicker onChange={onChangeDate } value={COD}></DatePicker>
+            <DatePicker onChange={onChangeDate} value={COD}></DatePicker>
           </Space>
         </Space>
 

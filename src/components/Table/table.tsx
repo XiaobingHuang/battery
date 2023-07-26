@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { render } from "react-dom";
-import {
-  Table,
-  Button,
-} from "antd";
+import { Table, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import dayjs from "dayjs";
 import ModalCom from "../ModalCom/ModalCom";
 
 interface DataType {
@@ -27,7 +23,7 @@ interface DataType {
 }
 
 function TableComp() {
-  const data: DataType[] = [
+  const data = [
     {
       name: "Battery1",
       manufacturer: "BYD",
@@ -82,7 +78,12 @@ function TableComp() {
   ];
   const columns: ColumnsType<DataType> = [
     { key: "name", title: "Name", dataIndex: "name", width: 90 },
-    { key: "manufacturer", title: "Manufacturer",dataIndex:"manufacturer" ,width: 130 },
+    {
+      key: "manufacturer",
+      title: "Manufacturer",
+      dataIndex: "manufacturer",
+      width: 130,
+    },
     { key: "grid", title: "Grid", dataIndex: "grid", width: 80 },
     { key: "state", title: "State", dataIndex: "state", width: 90 },
     { key: "utility", title: "Utility", dataIndex: "utility", width: 90 },
@@ -105,9 +106,28 @@ function TableComp() {
 
   const [open, setOpen] = useState(false);
   const [rawData, setRawdata] = useState(data);
+  const [addData, setAddData] = useState({
+    name: "",
+    manufacturer: "",
+    grid: "",
+    state: "",
+    utility: "",
+    loadZone: "",
+    capacity: "",
+    cRating: "",
+    opMode: "",
+    soc: "",
+    soh: "",
+    alert: "",
+    cycle: "",
+    life: "",
+    certification: "",
+  });
 
   useEffect(() => {
-    rawData.map((item, index)=>{return localStorage.setItem(`${item.name}`, JSON.stringify(rawData[index])); })
+    rawData.forEach((item, index) => {
+      localStorage.setItem(`${item.name}`, JSON.stringify(rawData[index]));
+    });
   }, [rawData]);
 
   const openModal = () => {
@@ -116,8 +136,42 @@ function TableComp() {
   const handleCancel = () => {
     setOpen(false);
   };
-  const handleAdd = () => {
-    return;
+  const handleAdd = 
+  (name:string,
+    manufacturer:string,
+    grid:string,
+    state:string,
+    utility:string,
+    loadZone:string, 
+    capacity:string, 
+    cRating:string, 
+    opMode:string, 
+    soc:string, 
+    soh:string, 
+    alert:string, 
+    cycle:string, 
+    life:string,
+    certification:string) => {
+    console.log("in the parent handleAdd");
+    setAddData({
+      name: name,
+      manufacturer: manufacturer,
+      grid: grid,
+      state:state,
+      utility: utility,
+      loadZone: loadZone,
+      capacity: capacity,
+      cRating: cRating,
+      opMode: opMode,
+      soc: soc,
+      soh: soh,
+      alert: alert,
+      cycle: cycle,
+      life: life,
+      certification: certification,
+    });
+    setRawdata([...rawData, addData])
+
   };
 
   return (
