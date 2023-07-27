@@ -112,13 +112,24 @@ function TableComp() {
   ];
 
   const [open, setOpen] = useState(false);
-  const [rawData, setRawdata] = useState(data);
+  const [rawData, setRawdata] = useState([]);
+  let batteryStorageKey = "__BATTERIES__"
 
   useEffect(() => {
-    rawData.forEach((item, index) => {
-      localStorage.setItem(`${item.name}`, JSON.stringify(rawData[index]));
-    });
+    if(rawData.length>0){
+      localStorage.setItem(batteryStorageKey, JSON.stringify(rawData));
+    }
   }, [rawData]);
+
+  useEffect(() => {
+    const ls = localStorage.getItem(batteryStorageKey)
+    if(ls){
+      setRawdata(JSON.parse(ls))
+    } else {
+      setRawdata(data)
+    }
+  },[])
+
 
   const openModal = () => {
     setOpen(true);
