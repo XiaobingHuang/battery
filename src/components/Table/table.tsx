@@ -3,6 +3,7 @@ import { render } from "react-dom";
 import { Table, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ModalCom from "../ModalCom/ModalCom";
+import {appBasePath} from "@/app/configs";
 
 interface DataType {
   name: string;
@@ -80,7 +81,9 @@ function TableComp() {
     },
   ];
   const columns: ColumnsType<DataType> = [
-    { key: "name", title: "Name", dataIndex: "name", width: 90 },
+    { key: "name", title: "Name", dataIndex: "name",
+      render: (text) => <a href={"/"+appBasePath + "/battery/1"}>{text}</a>,
+      width: 90 },
     {
       key: "manufacturer",
       title: "Manufacturer",

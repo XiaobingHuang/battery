@@ -7,14 +7,15 @@ import Setting from "./views/settingPage/setting";
 import FinanceReport from "./views/financeReport/financeReport";
 import CarbonReport from "./views/carbonReport/carbonReport";
 import BidAward from "./views/bidAward/bidAward";
+import BatteryDetail from "./views/batteryDetail";
 import TopHeader from "@/components/TopHeader/topHeader";
 
 const { Header, Sider, Content } = Layout;
 
 const BatteryBox = () => {
   return (
-    <div className={"r-arctrade-brand r-bess-app-container"}>
-      <Layout>
+    <div className={"r-bess-app-container"}>
+      <Layout style={{minHeight:"100vh"}}>
         <TopHeader />
         <Content>
         <ErrorBoundary>
@@ -24,6 +25,7 @@ const BatteryBox = () => {
               <Route path="/carbon-report" element={<CarbonReport />} />
               <Route path="/finance-report" element={<FinanceReport />} />
               <Route path="/setting" element={<Setting />} />
+              <Route path="/battery/:batteryId" element={<BatteryDetail />} />
               <Route path="/" element={<Navigate to ="/home" />}/>
               <Route path="*" element={<NoPermission />}/>
             </Routes>

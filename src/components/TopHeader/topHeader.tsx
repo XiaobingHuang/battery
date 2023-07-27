@@ -14,7 +14,7 @@ interface IHeaderMenu{
 const headerMenue=[
   {
     key:"curren_state",
-    label:"Curect State",
+    label:"Current State",
     path:"/home"
   },
   {
@@ -52,7 +52,7 @@ function TopHeader() {
 
   return (
     <div>
-      <Header style={{ padding: "0 16px", background: colorBgContainer, display: 'flex', alignItems: 'center'  }}>
+      <Header style={{ padding:0, background: colorBgContainer, display: 'flex', alignItems: 'center'  }}>
       <Menu
             style={{width:"100%"}}
             theme="dark"
