@@ -27,17 +27,28 @@ const CurrentState = ({data}) => {
                 <CurrentStatus currentPerc={currentSocPerc}/>
             </Card>
         </Col>
+        <Col span={3}>
 
+            <Card  style={{height:"100%"}}>
+                <Statistic
+                    title="Current Charge"
+                    value={data?.currentStateMwh}
+                    precision={2}
+                    suffix="MWh"
+                />
+            </Card>
+        </Col>
         <Col span={3}>
             <Card  style={{height:"100%"}}>
                 <Statistic
-                    title="State: Discharging"
+                    title="State"
                     value={9.3}
                     precision={2}
                     valueStyle={{ color: '#3f8600' }}
                     prefix={<ArrowDownOutlined />}
                     suffix="MW"
                 />
+                <Typography.Text type="success">Discharging</Typography.Text>
             </Card>
         </Col>
         <Col span={3}>
@@ -69,24 +80,11 @@ const CurrentState = ({data}) => {
         <Col span={3}>
             <Card style={{height:"100%"}}>
                 <Statistic
-                    title="Current"
-                    value={5}
+                    title="Current / Voltage"
+                    value={"5A / 57V"}
                     precision={0}
                     // valueStyle={{ color: '#3f8600' }}
                     // prefix={<ArrowDownOutlined />}
-                    suffix="A"
-                />
-            </Card>
-        </Col>
-        <Col span={3}>
-            <Card style={{height:"100%"}}>
-                <Statistic
-                    title="Voltage"
-                    value={57}
-                    precision={0}
-                    // valueStyle={{ color: '#3f8600' }}
-                    // prefix={<ArrowDownOutlined />}
-                    suffix="V"
                 />
             </Card>
         </Col>
