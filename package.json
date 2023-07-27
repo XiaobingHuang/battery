@@ -2,7 +2,7 @@
   "name": "@arctrade/broker",
   "scripts": {
     "start": "webpack serve",
-    "start:standalone": "cross-env REQUEST_MOCk=true MOCK_GRAPH_API=http://localhost:4000  webpack serve --env standalone --port=9234",
+    "start:standalone": "cross-env REQUEST_MOCk=true MOCK_GRAPH_API=http://localhost:4000  --max_old_space_size=4096 webpack serve --env standalone --port=9234",
     "start:standalone-qa": "cross-env MOCK_GRAPH_API=http://qa-app.arctrade.local/ui/graphqlui API_PROXY=http://qa-app.arctrade.local webpack serve --port=2109 --env standalone",
     "start:standalone-mit": "cross-env MOCK_GRAPH_API=http://mit-app.arctrade.local/ui/graphqlui API_PROXY=http://mit-app.arctrade.local LEGACY_URL=http://mit.arctrade.local webpack serve --port=2110 --env standalone",
     "start:standalone-uat": "cross-env MOCK_GRAPH_API=https://uat-app.arctrade.com/ui/graphqlui API_PROXY=https://uat-app.arctrade.com webpack serve --port=2113 --env standalone",

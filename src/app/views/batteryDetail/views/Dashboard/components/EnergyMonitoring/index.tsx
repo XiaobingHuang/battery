@@ -207,7 +207,7 @@ const EnergyMonitoring = ({data}) => {
             <Title  style={{margin:0, padding:0}} level={2}>Energy Monitoring</Title>
         </Col>
         <Col span={12}>
-            <Card>
+            <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
                     <Title level={3} style={{margin: 0,textAlign:"right"}}>Market</Title>
                         <table>
@@ -238,7 +238,7 @@ const EnergyMonitoring = ({data}) => {
             </Card>
         </Col>
         <Col span={12}>
-            <Card>
+            <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
                     <Title level={3} style={{margin: 0,textAlign:"right"}}>Charge</Title>
                         <table>
