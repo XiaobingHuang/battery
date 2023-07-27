@@ -1,4 +1,5 @@
 import {ApolloProvider} from "@apollo/client";
+import { ConfigProvider, theme } from 'antd';
 import BatteryBox from "@/app/batteryBox";
 import {QueryClientProvider} from "react-query";
 import gQueryClient from "@/app/queryClient";
@@ -45,6 +46,13 @@ const App = () => {
 
 const BessApp = () => {
     return (
+        <ConfigProvider
+            theme={{
+                token: {
+                    colorPrimary: '#37002d',
+                },
+            }}
+        >
         <NotificationProvider>
             <BrowserRouter basename={appBasePath}>
                 <ApolloProvider client={gQueryClient}>
@@ -58,6 +66,7 @@ const BessApp = () => {
                 </ApolloProvider>
             </BrowserRouter>
         </NotificationProvider>
+        </ConfigProvider>
     );
 };
 export default BessApp;

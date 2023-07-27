@@ -1,94 +1,14 @@
+import React from "react"
 import Chart from "@/components/Chart";
-import { Tabs,Typography,Col, Row,Space } from 'antd';
+import {Tabs, Typography, Col, Row, Space, Card} from 'antd';
 const { Title, Paragraph, Text, Link } = Typography;
 import moment from "moment";
 import {useMemo} from "react";
 import merge from "lodash/merge"
-function randomIntFromInterval(min, max) {
-    // min and max included
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-const generateDemoData = () => {
-    const start = moment().utcOffset(0).startOf("d");
-    const end = moment().utcOffset(0).endOf("d");
-    const now = moment().utcOffset(0);
-    const current = start.clone();
-    console.log("S", start.toJSON());
-    const buyHours = [
-        [0, 6],
-        [21, 99]
-    ];
-    const sellHours = [
-        [9, 11],
-        [14, 21]
-    ];
-    let totalBoughtPast = 0;
-    let totalBought = 0;
-    let totalSoldPast = 0;
-    let totalSold = 0;
-    const data = [];
-
-    while (current.isSameOrBefore(end)) {
-        const kwhBuyRate = 0.04672;
-        const kwhSellRate = 0.08283;
-        const dataItem = {
-            time: current.toISOString(),
-            buyKwh: 0,
-            sellKwh: 0,
-            forecastBuyKwh: 0
-        };
-        const currenthour = current.hour();
-        let isBuy = false;
-
-        buyHours.forEach((b) => {
-            const [start, end] = b;
-            const v = randomIntFromInterval(120, 130) * kwhBuyRate;
-            if (currenthour >= start && currenthour < end) {
-                totalBought += v;
-                dataItem.buyKwh = v;
-                if(current.isBefore(now)){
-                    totalBoughtPast += v
-                }
-            }
-
-        });
-
-        sellHours.forEach((b) => {
-            const [start, end] = b;
-            const startDate = moment().set("hour",currenthour).startOf("h")
-            debugger
-            const v = randomIntFromInterval(120, 130) * kwhSellRate;
-            if (currenthour >= start && currenthour < end) {
-                totalSold += v;
-                dataItem.sellKwh = v;
-
-                if(current.isBefore(now)){
-                    debugger
-                    totalSoldPast += v
-                }
-            }
+import {formatCurrency, formatNumber} from "@/helpers/formatting";
 
 
-        });
-
-        // if (currenthour >= sellHourStart && currenthour < sellHourEnd) {
-        //   dataItem.forecastBuyKwh = randomIntFromInterval(12, 13) * 0.05372;
-        // }
-        data.push(dataItem);
-        current.add(15, "m");
-    }
-
-    return [data, {
-        totalBought,
-        totalBoughtPast,
-        totalSoldPast,
-        totalSold
-    }];
-};
-
-const EnergyMonitoring = () => {
-    const data:any = generateDemoData()
+const EnergyMonitoring = ({data}) => {
 
     const calcForecastCount = useMemo(() => {
         const now = moment();
@@ -162,7 +82,8 @@ const EnergyMonitoring = () => {
                             offsetY: -10,
                             text: "Forecast"
                         }
-                    }
+                    },
+
                 ]
             },
             xaxis: {
@@ -177,9 +98,7 @@ const EnergyMonitoring = () => {
             yaxis: {
                 tickAmount: 4,
                 floating: false,
-                title: {
-                    text: "$/Sold"
-                },
+
                 labels: {
                     style: {
                         colors: "#8e8da4"
@@ -231,7 +150,7 @@ const EnergyMonitoring = () => {
                     id: "sell",
                 },
                 title: {
-                    text: "Sell"
+                    // text: "Sells"
                 },
                 colors: ["#007d36", "#61ed9e"],
                 forecastDataPoints: {
@@ -240,8 +159,8 @@ const EnergyMonitoring = () => {
             },
             series: [
                 {
-                    name: "Sell",
-                    data: data[0]?.map((d) => [d.time, d.sellKwh])
+                    name: "currentMwh",
+                    data: data.chartData?.map((d) => [d.time, d.currentMwh])
                 }
             ]
         });
@@ -255,17 +174,27 @@ const EnergyMonitoring = () => {
                     id: "buy",
                 },
                 title: {
-                    text: "Buy"
+                    // text: "Market"
                 },
                 forecastDataPoints: {
                     count: calcForecastCount
                 },
-                colors: ["#fc0349", "#de5499"],
+                colors: ["#fc0349", "#007d36"],
+                yaxis:{
+                    title: {
+                        text: "$"
+                    },
+                }
+                // colors: ["#fc0349", "#de5499"],
             },
             series: [
                 {
                     name: "Buy",
-                    data: data[0]?.map((d) => [d.time, d.buyKwh])
+                    data: data.chartData?.map((d) => [d.time, d.buyKwh])
+                },
+                {
+                    name: "Sell",
+                    data: data.chartData?.map((d) => [d.time, d.sellKwh])
                 }
             ]
         });
@@ -273,34 +202,61 @@ const EnergyMonitoring = () => {
 
 
 
-    return <div>
-        <Row gutter={16}>
-            <Col span={12}>
-                <div style={{background:"#fff", padding:"15px", position:"relative"}}>
-                    <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
-                        <Title style={{margin: 0,textAlign:"right"}}>Buy</Title>
-                        <div>
-                            <Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalBought.toFixed(2)}</Title>
-                            <Text style={{textAlign:"right"}}>To Date: ${data[1].totalBoughtPast.toFixed(2)}</Text>
-                        </div>
-                    </div>
-                    <Chart type={"area"}  height={"250px"} options={buyChartConfig.options} series={buyChartConfig.series}/>
+    return <React.Fragment>
+        <Col span={24}>
+            <Title  style={{margin:0, padding:0}} level={2}>Energy Monitoring</Title>
+        </Col>
+        <Col span={12}>
+            <Card>
+                <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
+                    <Title level={3} style={{margin: 0,textAlign:"right"}}>Market</Title>
+                        <table>
+                            <tr>
+                                <td style={{padding:"0px 8px"}}></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}>Bought</td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}>Sold</td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}>Net</td>
+                            </tr>
+                            <tr>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Title level={3} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalBought)}</Title></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Title level={3} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSold)}</Title></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Title level={3} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSold + data.totalBought)}</Title></td>
+                            </tr>
+                            <tr>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}>To Date</td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Text style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalBoughtPast)}</Text></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Text style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSoldPast)}</Text></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Text style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSoldPast + data.totalBoughtPast)}</Text></td>
+                            </tr>
+                        </table>
+                        {/*<Text style={{textAlign:"right", fontSize:'11px'}}>Bought / Sold / Net</Text>*/}
+                        {/*<Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalBought.toFixed(2)} / ${data[1].totalSold.toFixed(2)} / ${(data[1].totalSold + data[1].totalBought).toFixed(2)}</Title>*/}
+                        {/*<Text style={{textAlign:"right"}}>To Date: ${data[1].totalBoughtPast.toFixed(2)} / ${data[1].totalSoldPast.toFixed(2)} / ${(data[1].totalSoldPast + data[1].totalBoughtPast).toFixed(2)}</Text>*/}
                 </div>
-            </Col>
-            <Col style={{background:"#fff"}} span={12}>
-                <div style={{background:"#fff", padding:"15px", position:"relative"}}>
-                    <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
-                        <Title style={{margin: 0,textAlign:"right"}}>Sold</Title>
-                        <div>
-                            <Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalSold.toFixed(2)}</Title>
-                            <Text style={{textAlign:"right"}}>To Date: ${data[1].totalSoldPast.toFixed(2)}</Text>
-                        </div>
-                    </div>
-                    <Chart type={"area"}  height={"250px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
+                <Chart type={"area"}  height={"250px"} options={buyChartConfig.options} series={buyChartConfig.series}/>
+            </Card>
+        </Col>
+        <Col span={12}>
+            <Card>
+                <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
+                    <Title level={3} style={{margin: 0,textAlign:"right"}}>Charge</Title>
+                        <table>
+                            <tr>
+                                <td style={{padding:"0px 8px"}}></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}>Current</td>
+                            </tr>
+                            <tr>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}>
+                                    <Title level={3} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Title></td>
+                            </tr>
+                        </table>
                 </div>
-            </Col>
-        </Row>
+                <Chart type={"area"}  height={"250px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
+            </Card>
+        </Col>
+    </React.Fragment>
 
-    </div>
 }
 export default EnergyMonitoring
