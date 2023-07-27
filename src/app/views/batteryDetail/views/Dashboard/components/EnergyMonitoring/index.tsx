@@ -23,7 +23,9 @@ const generateDemoData = () => {
         [9, 11],
         [14, 21]
     ];
+    let totalBoughtPast = 0;
     let totalBought = 0;
+    let totalSoldPast = 0;
     let totalSold = 0;
     const data = [];
 
@@ -41,20 +43,33 @@ const generateDemoData = () => {
 
         buyHours.forEach((b) => {
             const [start, end] = b;
+            const v = randomIntFromInterval(120, 130) * kwhBuyRate;
             if (currenthour >= start && currenthour < end) {
-                const v = randomIntFromInterval(120, 130) * kwhBuyRate;
                 totalBought += v;
                 dataItem.buyKwh = v;
+                if(current.isBefore(now)){
+                    totalBoughtPast += v
+                }
             }
+
         });
 
         sellHours.forEach((b) => {
             const [start, end] = b;
+            const startDate = moment().set("hour",currenthour).startOf("h")
+            debugger
+            const v = randomIntFromInterval(120, 130) * kwhSellRate;
             if (currenthour >= start && currenthour < end) {
-                const v = randomIntFromInterval(120, 130) * kwhSellRate;
                 totalSold += v;
                 dataItem.sellKwh = v;
+
+                if(current.isBefore(now)){
+                    debugger
+                    totalSoldPast += v
+                }
             }
+
+
         });
 
         // if (currenthour >= sellHourStart && currenthour < sellHourEnd) {
@@ -66,6 +81,8 @@ const generateDemoData = () => {
 
     return [data, {
         totalBought,
+        totalBoughtPast,
+        totalSoldPast,
         totalSold
     }];
 };
@@ -80,6 +97,20 @@ const EnergyMonitoring = () => {
         return Math.round(diff / 15);
     }, []);
 
+
+    console.log(new Date().toISOString())
+    console.log(new Date().getTime())
+    console.log(moment().subtract(4, 'h').toISOString())
+    console.log(new Date().getTimezoneOffset())
+    console.log( new Date("2023-07-27T07:39:00.000Z").getTime())
+    console.log( {
+        x1: moment().subtract(4, "h").toISOString(),
+        x2: moment().utcOffset(0).endOf("d").toISOString(),
+        y:moment().valueOf(),
+        j:new Date().getTime()
+    })
+    // x: new Date().getTime(),
+    // x2: moment().utcOffset(0).endOf("d").valueOf(),
     const chartBaseConfig = {
         options: {
             chart: {
@@ -88,7 +119,14 @@ const EnergyMonitoring = () => {
                 height: 350,
                 toolbar: {
                     show: false
-                }
+                },
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 1000
+                    }
+                },
             },
             dataLabels: {
                 enabled: false
@@ -107,9 +145,11 @@ const EnergyMonitoring = () => {
             annotations: {
                 xaxis: [
                     {
-                        x: new Date().getTime(),
+                        // x: new Date().getTime(),
+                        // x2: new Date("2023-07-27T09:39:00.000Z").getTime(),
+                        x: moment().subtract(4, "h").valueOf(),
                         x2: moment().utcOffset(0).endOf("d").valueOf(),
-                        fillColor: "whitesmoke",
+                        fillColor: "#DCDCDC",
                         borderColor: "red",
                         opacity: 0.4,
                         label: {
@@ -117,7 +157,7 @@ const EnergyMonitoring = () => {
                             style: {
                                 fontSize: "10px",
                                 color: "#fff",
-                                background: "#00E396"
+                                background: "#9A9A9A"
                             },
                             offsetY: -10,
                             text: "Forecast"
@@ -241,7 +281,7 @@ const EnergyMonitoring = () => {
                         <Title style={{margin: 0,textAlign:"right"}}>Buy</Title>
                         <div>
                             <Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalBought.toFixed(2)}</Title>
-                            <Text style={{textAlign:"right"}}>To Date: ${data[1].totalBought.toFixed(2)}</Text>
+                            <Text style={{textAlign:"right"}}>To Date: ${data[1].totalBoughtPast.toFixed(2)}</Text>
                         </div>
                     </div>
                     <Chart type={"area"}  height={"250px"} options={buyChartConfig.options} series={buyChartConfig.series}/>
@@ -253,7 +293,7 @@ const EnergyMonitoring = () => {
                         <Title style={{margin: 0,textAlign:"right"}}>Sold</Title>
                         <div>
                             <Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalSold.toFixed(2)}</Title>
-                            <Text style={{textAlign:"right"}}>To Date: ${data[1].totalSold.toFixed(2)}</Text>
+                            <Text style={{textAlign:"right"}}>To Date: ${data[1].totalSoldPast.toFixed(2)}</Text>
                         </div>
                     </div>
                     <Chart type={"area"}  height={"250px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
