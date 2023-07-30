@@ -14,14 +14,28 @@ import {} from "antd";
 
 const data = [
   {
-    batteryStatus: {},
+    batteryStatus: {
+      "SOC":"87%",
+      "Operating Mode": "Charging",
+      "Power": "10MW",
+      "C-rating": "0.25",
+      "Current":"25A",
+      "Voltage": "400V",
+      "SOH": "400V",
+      "Temp": "117F",
+      "Alarm": "3hr overheat"
+    },
+    parameter:{
+      "Capacity":"100Ah",
+
+    }
   },
 ];
 
 
 const LeftCard = () => {
   return (
-    <Card title="Battery name" >
+<Card title="Battery name"  style={{overflow:'scroll', height:600}} >
         <Card title="Battery Status">
             <p>
                 SOC: 87%
@@ -41,6 +55,67 @@ const LeftCard = () => {
             <p>
                 Voltage: 400V
             </p>
+            <p>
+                SOH: 99%
+            </p>
+            <p>
+                Temp: 99%
+            </p>
+            <p>
+                Alarms: 3hr overheat
+            </p>
+        </Card>
+        <Card title="Parameter">
+            <p>
+                Capacity: 100Ah
+            </p>
+
+          <Card title="Charging">
+            <p>
+                C rating: 0.25C
+            </p>
+            <p>
+                Curent: 25A
+            </p>
+            <p>
+                Threshold: 90%
+            </p>
+            </Card>  
+            <Card title="Discharging">
+            <p>
+                C rating: 0.25C
+            </p>
+            <p>
+                Curent: 25A
+            </p>
+            <p>
+                Threshold: 115%
+            </p>
+            </Card>
+            <Card>
+            <p>
+                Temp: 25-115F
+            </p>
+            <p>
+                Threshold: 120F
+            </p>
+            </Card>
+            <Card>
+            <p>
+                Voltage: 400V
+            </p>
+            <p>
+                Threshold: 110%
+            </p>
+            </Card>
+            <Card>
+            <p>
+                Cycle: 6,000
+            </p>
+            <p>
+                Life: 20
+            </p>
+            </Card>
         </Card>
     </Card>
   );
