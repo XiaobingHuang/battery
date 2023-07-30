@@ -4,7 +4,8 @@ import type { TabsProps } from 'antd';
 const { Title, Paragraph, Text, Link } = Typography;
 import {  } from 'antd';
 
-import BatteryDashboard from "./views/Dashboard"
+import BatteryDashboard from "./views/Dashboard";
+import BatteryMonitor from "./views/BatteryMonitor";
 const BatteryDetail = ( ) =>{
 
 
@@ -21,7 +22,7 @@ const BatteryDetail = ( ) =>{
         {
             key: '2',
             label: `Monitoring`,
-            children: `Content of Tab Pane 2`,
+            children: <BatteryMonitor/>,
         },
         {
             key: '3',
