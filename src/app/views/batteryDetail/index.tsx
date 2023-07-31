@@ -6,23 +6,37 @@ import {  } from 'antd';
 
 import BatteryDashboard from "./views/Dashboard";
 import BatteryMonitor from "./views/BatteryMonitor";
-const BatteryDetail = ( ) =>{
+import {Outlet, useNavigate} from "react-router";
 
+
+interface TabWithPath extends  TabsProps{
+    path: string
+}
+
+const BatteryDetail = ( ) =>{
+    const nav=useNavigate()
+
+    // handleTabClick = key => {
+    //     this.props.history.push(`/${key}`)   // < == router router v4
+    //     browserHistory.push(`/${key}`);      // <== react router v3
+    // }
 
     const onTabChange = (key: string) => {
         console.log(key);
     };
 
-    const tabOptions: TabsProps['items'] = [
+    const tabOptions = [
         {
             key: '1',
+            path:"dashboard",
             label: `Dashboard`,
-            children: <BatteryDashboard/>,
+            // children: <BatteryDashboard/>,
         },
         {
             key: '2',
+            path:"monitoring",
             label: `Monitoring`,
-            children: <BatteryMonitor/>,
+            // children: <BatteryMonitor/>,
         },
         {
             key: '3',
@@ -50,8 +64,16 @@ const BatteryDetail = ( ) =>{
         </Col>
         <Col span={24}>
             <div>
-                <Tabs tabBarStyle={{background:"#fff", padding:"0 15px"}} defaultActiveKey="1" items={tabOptions} onChange={onTabChange} />
+                <Tabs
+                    onTabClick={(a)=>{
+                        const tab = tabOptions.find(t=>t.key ===a)
+                        if(tab){
+                            nav(tab.path)
+                        }
+                    }}
+                    tabBarStyle={{background:"#fff", padding:"0 15px"}} defaultActiveKey="1" items={tabOptions} onChange={onTabChange} />
             </div>
+            <Outlet/>
         </Col>
 
     </Row>

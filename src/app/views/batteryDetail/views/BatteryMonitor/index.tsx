@@ -13,7 +13,9 @@ const  BatteryMonitor=()=>{
                     <LeftCard/>
                 </Col>
                 <Col span={18}>
+                    <Card>
                     <MonitorChart/>
+                    </Card>
                 </Col>
             </Row>
         </Layout>
