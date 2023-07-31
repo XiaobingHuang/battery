@@ -868,43 +868,13 @@ const MonitorChart = () => {
                 axisTicks: {
                   show: true,
                 },
-                // axisBorder: {
-                //   show: true,
-                //   color: "#00E396",
-                // },
-                // labels: {
-                //   style: {
-                //     colors: "#00E396",
-                //   },
-                // },
                 title: {
                   text: "MWh",
-                  style: {
-                    // color:"#00E396",
-                  },
                 },
-                // tooltip: {
-                //   enabled: true,
-                // },
             },
             {
                 seriesName: "Charge - MWh",
                 show: false,
-                // min: -4,
-                // max: 4,
-                // tickAmount: 1,
-                // axisTicks: {
-                //   show: true,
-                // },
-                // axisBorder: {
-                //   show: true,
-                //   color:"#008FFB",
-                // },
-                // labels: {
-                //   style: {
-                //     colors: "#008FFB",
-                //   },
-                // },
                 title: {
                   text: "Discharge",
                   style: {
@@ -920,78 +890,36 @@ const MonitorChart = () => {
                 },
                 axisBorder: {
                   show: true,
-                  // color: "#FEB019",
                 },
                 labels: {
                   style: {
-                    // colors: "#FEB019",
                   },
                 },
                 title: {
                   text: "Price",
                   style: {
-                    // color: "#FEB019",
                   },
                 },
             },
             {
                 seriesName: "$/MWh",
                 show:false,
-                // opposite: true,
-                // axisTicks: {
-                //   show: true,
-                // },
-                // axisBorder: {
-                //   show: true,
-                //   color:"#00E396",
-                // },
-                // labels: {
-                //   style: {
-                //     colors:"#00E396",
-                //   },
-                // },
-                // title: {
-                //   text: "charge trigger price",
-                //   style: {
-                //     color: "#00E396",
-                //   },
-                // },
             },
             {
                 seriesName: "$/MWh",
                 show:false,
-                // opposite: true,
-                // axisTicks: {
-                //   show: true,
-                // },
-                // axisBorder: {
-                //   show: true,
-                //   color: "#008FFB",
-                // },
-                // labels: {
-                //   style: {
-                //     colors:"#008FFB",
-                //   },
-                // },
-                // title: {
-                //   text: "discharge trigger price",
-                //   style: {
-                //     color:"#008FFB",
-                //   },
-                // },
             }
 
         ],
         tooltip: {
             fixed: {
                 enabled: true,
-                position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+                position: "topLeft", 
                 offsetY: 30,
                 offsetX: 60,
             },
         },
         legend: {
-            // horizontalAlign: "left",
             offsetX: 40,
 
         },
