@@ -12,26 +12,6 @@ import type { TabsProps } from "antd";
 const { Title, Paragraph, Text, Link } = Typography;
 import {} from "antd";
 
-const data = [
-  {
-    batteryStatus: {
-      "SOC":"87%",
-      "Operating Mode": "Charging",
-      "Power": "10MW",
-      "C-rating": "0.25",
-      "Current":"25A",
-      "Voltage": "400V",
-      "SOH": "400V",
-      "Temp": "117F",
-      "Alarm": "3hr overheat"
-    },
-    parameter:{
-      "Capacity":"100Ah",
-
-    }
-  },
-];
-
 
 const LeftCard = () => {
   return (

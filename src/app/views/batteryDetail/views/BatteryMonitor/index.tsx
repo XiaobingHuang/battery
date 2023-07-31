@@ -3,6 +3,7 @@ import type { TabsProps } from 'antd';
 const { Title, Paragraph, Text, Link } = Typography;
 import {  } from 'antd';
 import LeftCard from './components/LeftCard';
+import  MonitorChart from "@/app/views/batteryDetail/views/BatteryMonitor/components/MainPage"
 const  BatteryMonitor=()=>{
 
     return(
@@ -11,7 +12,9 @@ const  BatteryMonitor=()=>{
                 <Col span={6}>
                     <LeftCard/>
                 </Col>
-                <Col span={18}></Col>
+                <Col span={18}>
+                    <MonitorChart/>
+                </Col>
             </Row>
         </Layout>
     )
