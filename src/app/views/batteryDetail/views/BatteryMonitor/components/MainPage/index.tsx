@@ -1,7 +1,7 @@
 // import * as chartData from "@/app/views/batteryDetail/views/BatteryMonitor/components/MainPage/data.json";
 import React from "react";
 import Chart from "@/components/Chart";
-import { Tabs, Typography, Col, Row, Space, Card } from "antd";
+import { Tabs, Typography, Col, Row, Space, Card, Table } from "antd";
 const { Title, Paragraph, Text, Link } = Typography;
 import moment from "moment";
 import { useMemo } from "react";
@@ -784,12 +784,12 @@ const MonitorChart = () => {
   const series = [
     {
       name: "MWh/charge",
-      type: "area",
+      type: "bar",
       data: data.map((e) => e.Charge),
     },
     {
       name: "MWH/discharge",
-      type: "area",
+      type: "bar",
       data: data.map((e) => e.Discharge),
     },
     {
@@ -811,7 +811,7 @@ const MonitorChart = () => {
 
   const options = {
     chart: {
-      group: "buy-sell",
+      group: "charge-discharge",
       type: "area",
       height: 350,
       toolbar: {
@@ -829,13 +829,14 @@ const MonitorChart = () => {
       enabled: false,
     },
     stroke: {
-      width: [1, 1, 4],
+      width: [3, 3, 3],
     },
     title: {
       text: "TITLE CHART",
       align: "left",
       offsetX: 110,
     },
+    colors: ["#00E396", "#008FFB",  "#FEB019", "#00E396",  "#008FFB"],
     xaxis: {
       categories: data.map((e) => e.Time),
       type: "datetime",
@@ -844,35 +845,11 @@ const MonitorChart = () => {
       },
       axisTicks: {
           show: false
-      }
+      },
     },
     yaxis: [
       {
         seriesName: "Charge",
-        axisTicks: {
-          show: true,
-        },
-        axisBorder: {
-          show: true,
-          color: "#008FFB",
-        },
-        labels: {
-          style: {
-            colors: "#008FFB",
-          },
-        },
-        title: {
-          text: "Charge",
-          style: {
-            color: "#008FFB",
-          },
-        },
-        tooltip: {
-          enabled: true,
-        },
-      },
-      {
-        seriesName: "Discharge",
         axisTicks: {
           show: true,
         },
@@ -886,9 +863,36 @@ const MonitorChart = () => {
           },
         },
         title: {
+          text: "Charge",
+          style: {
+            color:"#00E396",
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+      {
+        seriesName: "Discharge",
+        // min: -4,
+        // max: 4,
+        // tickAmount: 1,
+        axisTicks: {
+          show: true,
+        },
+        axisBorder: {
+          show: true,
+          color:"#008FFB",
+        },
+        labels: {
+          style: {
+            colors: "#008FFB",
+          },
+        },
+        title: {
           text: "Discharge",
           style: {
-            color: "#00E396",
+            color:"#008FFB",
           },
         },
       },
@@ -922,17 +926,17 @@ const MonitorChart = () => {
         },
         axisBorder: {
           show: true,
-          color: "#FEB019",
+          color:"#00E396",
         },
         labels: {
           style: {
-            colors: "#FEB019",
+            colors:"#00E396",
           },
         },
         title: {
           text: "charge trigger price",
           style: {
-            color: "#FEB019",
+            color: "#00E396",
           },
         },
       },
@@ -944,17 +948,17 @@ const MonitorChart = () => {
         },
         axisBorder: {
           show: true,
-          color: "#FEB019",
+          color: "#008FFB",
         },
         labels: {
           style: {
-            colors: "#FEB019",
+            colors:"#008FFB",
           },
         },
         title: {
           text: "discharge trigger price",
           style: {
-            color: "#FEB019",
+            color:"#008FFB",
           },
         },
       }
@@ -971,11 +975,18 @@ const MonitorChart = () => {
     legend: {
       horizontalAlign: "left",
       offsetX: 40,
+      
     },
+
+
   };
   return(
   <Chart type={"area"}  height={"250px"} options={options} series={series}/>
   )
 };
+
+const MonitorTable=()=>{
+ 
+}
 
 export default MonitorChart
