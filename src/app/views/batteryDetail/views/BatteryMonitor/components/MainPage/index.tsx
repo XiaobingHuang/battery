@@ -784,12 +784,12 @@ const MonitorChart = () => {
   const series = [
     {
       name: "MWh/charge",
-      type: "bar",
+      type: "area",
       data: data.map((e) => e.Charge),
     },
     {
       name: "MWH/discharge",
-      type: "bar",
+      type: "area",
       data: data.map((e) => e.Discharge),
     },
     {
