@@ -8,6 +8,8 @@ import FinanceReport from "./views/financeReport/financeReport";
 import CarbonReport from "./views/carbonReport/carbonReport";
 import BidAward from "./views/bidAward/bidAward";
 import BatteryDetail from "./views/batteryDetail";
+import BatteryDetailDashboard from "./views/batteryDetail/views/Dashboard";
+import BatteryDetailMonitoring from "./views/batteryDetail/views/BatteryMonitor";
 import TopHeader from "@/components/TopHeader/topHeader";
 
 const { Header, Sider, Content } = Layout;
@@ -25,7 +27,11 @@ const BatteryBox = () => {
               <Route path="/carbon-report" element={<CarbonReport />} />
               <Route path="/finance-report" element={<FinanceReport />} />
               <Route path="/setting" element={<Setting />} />
-              <Route path="/battery/:batteryId" element={<BatteryDetail />} />
+              <Route path="/battery/:batteryId" element={<BatteryDetail />}>
+                <Route path="dashboard" element={<BatteryDetailDashboard />}/>
+                <Route path="monitoring" element={<BatteryDetailMonitoring />}/>
+                <Route path="" element={<Navigate to={"dashboard"} />} />
+              </Route>
               <Route path="/" element={<Navigate to ="/home" />}/>
               <Route path="*" element={<NoPermission />}/>
             </Routes>
