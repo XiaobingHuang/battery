@@ -41,7 +41,8 @@ const BatteryDetail = ( ) =>{
         {
             key: '3',
             label: `Control & Settings`,
-            children: `Content of Tab Pane 3`,
+            path:"control-settings",
+            // children: `Content of Tab Pane 3`,
         },
         {
             key: '4',

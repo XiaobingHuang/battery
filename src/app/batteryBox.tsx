@@ -10,6 +10,7 @@ import BidAward from "./views/bidAward/bidAward";
 import BatteryDetail from "./views/batteryDetail";
 import BatteryDetailDashboard from "./views/batteryDetail/views/Dashboard";
 import BatteryDetailMonitoring from "./views/batteryDetail/views/BatteryMonitor";
+import BatteryDetailSetting from "./views/batteryDetail/views/ControlSetting";
 import TopHeader from "@/components/TopHeader/topHeader";
 
 const { Header, Sider, Content } = Layout;
@@ -30,6 +31,7 @@ const BatteryBox = () => {
               <Route path="/battery/:batteryId" element={<BatteryDetail />}>
                 <Route path="dashboard" element={<BatteryDetailDashboard />}/>
                 <Route path="monitoring" element={<BatteryDetailMonitoring />}/>
+                <Route path="control-settings" element={<BatteryDetailSetting />}/>
                 <Route path="" element={<Navigate to={"dashboard"} />} />
               </Route>
               <Route path="/" element={<Navigate to ="/home" />}/>
