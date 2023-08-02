@@ -47,17 +47,17 @@ function ModalCom({handleAdd,handleCancel, open}) {
                         const formElements = event.currentTarget.elements;
                         const data = {
                             name: formElements.name.value,
-                            grid: formElements.grid.value,
-                            utility: formElements.utility.value,
-                            state: formElements.state.value,
-                            loadZone: formElements.loadZone.value,
-                            manufacturerName: formElements.manufacturerName.value,
-                            model: formElements.model.value,
+                            grid: formElements.grid[1].value,
+                            utility: formElements.utility[1].value,
+                            state: formElements.state[1].value,
+                            loadZone: formElements.loadZone[1].value,
+                            manufacturerName: formElements.manufacturerName[1].value,
+                            model: formElements.model[1].value,
                             capacity: formElements.capacity.value,
                             cRating: formElements.cRating.value,
                             lifeCycles: formElements.lifeCycles.value,
                             life: formElements.life.value,
-                            chargeMode: formElements.chargeMode.value,
+                            chargeMode: formElements.chargeMode[1].value,
                             chargePowerLowerLimit: formElements.chargePowerLowerLimit.value,
                             chargePowerUpperLimit: formElements.chargePowerUpperLimit.value,
                             chargeMaxBatteryPerc: formElements.chargeMaxBatteryPerc.value,
@@ -67,7 +67,7 @@ function ModalCom({handleAdd,handleCancel, open}) {
                             alarmChargeTempLower: formElements.alarmChargeTempLower.value,
                             alarmChargeTempUpper: formElements.alarmChargeTempUpper.value,
                             alarmChargeVoltageMaxPerc: formElements.alarmChargeVoltageMaxPerc.value,
-                            dischargeMode: formElements.dischargeMode.value,
+                            dischargeMode: formElements.dischargeMode[1].value,
                             dischargePowerLowerLimit: formElements.dischargePowerLowerLimit.value,
                             dischargePowerUpperLimit: formElements.dischargePowerUpperLimit.value,
                             dischargeMinBatteryPerc: formElements.dischargeMinBatteryPerc.value,
@@ -82,7 +82,9 @@ function ModalCom({handleAdd,handleCancel, open}) {
                     }}
                 >
                     <Box sx={{p: 1,overflow:"auto"}}>
-                        <BatteryConfiguration inEdit initValues={{}} onChange={setBatteryConfig}/>
+                        <BatteryConfiguration inEdit
+                                              initValues={{}}
+                                              onChange={setBatteryConfig}/>
                     </Box>
                     <Box sx={{p:1,py:2, display:'flex', justifyContent:"space-between"}}>
                         <Button

@@ -16,33 +16,20 @@ import {
     Stack
 } from '@mui/joy';
 
-import {
-    Button,
-    Modal,
-    Input as InputDep,
-    Space,
-    DatePicker,
-    Divider as DividerDep,
-    Select as SelectDep,
-    TimePicker,
-    Col,
-    Card as CardDep,
-    Row
-} from "antd";
 
 interface FormElements extends HTMLFormControlsCollection {
     name: HTMLInputElement;
-    grid: HTMLSelectElement;
-    utility: HTMLSelectElement;
-    state: HTMLSelectElement;
-    loadZone: HTMLSelectElement;
-    manufacturerName: HTMLSelectElement;
-    model: HTMLSelectElement;
+    grid: [null,HTMLSelectElement];
+    utility:  [null,HTMLSelectElement];
+    state:  [null,HTMLSelectElement];
+    loadZone: [null,HTMLSelectElement];
+    manufacturerName:[null,HTMLSelectElement];
+    model: [null,HTMLSelectElement];
     capacity: HTMLInputElement;
     cRating: HTMLInputElement;
     lifeCycles: HTMLInputElement;
     life: HTMLInputElement;
-    chargeMode: HTMLSelectElement;
+    chargeMode:[null,HTMLSelectElement];
     chargePowerLowerLimit: HTMLInputElement;
     chargePowerUpperLimit: HTMLInputElement;
     chargeMaxBatteryPerc: HTMLInputElement;
@@ -52,11 +39,11 @@ interface FormElements extends HTMLFormControlsCollection {
     alarmChargeTempLower: HTMLInputElement;
     alarmChargeTempUpper: HTMLInputElement;
     alarmChargeVoltageMaxPerc: HTMLInputElement;
-    dischargeMode: HTMLSelectElement;
+    dischargeMode: [null,HTMLSelectElement];
     dischargePowerLowerLimit: HTMLInputElement;
     dischargePowerUpperLimit: HTMLInputElement;
     dischargeMinBatteryPerc: HTMLInputElement;
-    dischargeCRate: HTMLInputElement;
+    dischargeCRate:HTMLInputElement;
     alarmDischargeCurrentLowerPerc: HTMLInputElement;
     alarmDischargeCurrentUpperPerc: HTMLInputElement;
     alarmDischargeTempLower: HTMLInputElement;

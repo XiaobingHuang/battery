@@ -23,7 +23,7 @@ const  BatteryDetailSetting=()=>{
     const handleChange = () => {
 
     }
-
+    console.log("ASd",batteryData)
     return <Stack spacing={2} sx={{maxWidth: "740px", margin:"0 auto"}}>
         <Box sx={{display:'flex', justifyContent:"flex-end"}}>
             {
@@ -42,7 +42,9 @@ const  BatteryDetailSetting=()=>{
             }
         </Box>
         <Card>
-            <BatteryConfiguration inEdit={inEdit} onChange={handleChange} initValues={batteryData}/>
+            <BatteryConfiguration
+                inEdit={inEdit}
+                onChange={handleChange} initValues={batteryData}/>
         </Card>
     </Stack>
 }
