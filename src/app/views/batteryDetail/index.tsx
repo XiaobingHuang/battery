@@ -6,7 +6,8 @@ import {  } from 'antd';
 
 import BatteryDashboard from "./views/Dashboard";
 import BatteryMonitor from "./views/BatteryMonitor";
-import {Outlet, useNavigate} from "react-router";
+import {Outlet, useNavigate, useParams} from "react-router";
+import {useMemo} from "react";
 
 
 interface TabWithPath extends  TabsProps{
@@ -15,7 +16,15 @@ interface TabWithPath extends  TabsProps{
 
 const BatteryDetail = ( ) =>{
     const nav=useNavigate()
+    const {batteryId} = useParams<{batteryId: string}>()
 
+    const batteryData = useMemo(() => {
+        const batteries =  localStorage.getItem("__BATTERIES__")
+        const batteriesJson = JSON.parse(batteries)
+
+        return batteriesJson.find(b => b.id === batteryId)
+
+    },[])
     // handleTabClick = key => {
     //     this.props.history.push(`/${key}`)   // < == router router v4
     //     browserHistory.push(`/${key}`);      // <== react router v3
@@ -59,8 +68,7 @@ const BatteryDetail = ( ) =>{
     return  <Row>
         <Col style={{background:"#fff"}} span={24}>
             <div style={{background:"#fff",padding:"15px"}}>
-                <Title level={2}>Battery Name 123</Title>
-
+                <Title level={2}>Battery: {batteryData.name}</Title>
             </div>
         </Col>
         <Col span={24}>

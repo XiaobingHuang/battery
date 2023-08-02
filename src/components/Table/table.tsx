@@ -4,8 +4,11 @@ import { Table, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import ModalCom from "../ModalCom/ModalCom";
 import {appBasePath} from "@/app/configs";
+import {Link} from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 interface DataType {
+  id: string;
   name: string;
   manufacturer: string;
   grid: string;
@@ -26,6 +29,7 @@ interface DataType {
 function TableComp() {
   const data = [
     {
+      id:"AB",
       name: "Battery1",
       manufacturer: "BYD",
       grid: "ERCOT",
@@ -44,6 +48,7 @@ function TableComp() {
       cod:"11/01/22"
     },
     {
+      id:"erv",
       name: "Battery2",
       manufacturer: "CATL(NingDe)",
       grid: "PJM",
@@ -62,6 +67,7 @@ function TableComp() {
       cod:"04/19/21"
     },
     {
+      id:"4g3",
       name: "Battery3",
       manufacturer: "Tesla",
       grid: "NYISO",
@@ -82,7 +88,9 @@ function TableComp() {
   ];
   const columns: ColumnsType<DataType> = [
     { key: "name", title: "Name", dataIndex: "name",
-      render: (text) => <a href={"/"+appBasePath + "/battery/1"}>{text}</a>,
+      render: (text,d) => {
+        return <Link to={"/battery/" + d.id}>{text}</Link>
+      },
       width: 90 },
     {
       key: "manufacturer",
@@ -137,46 +145,20 @@ function TableComp() {
   const handleCancel = () => {
     setOpen(false);
   };
-  const handleAdd = 
-  async (name:string,
-    manufacturer:string,
-    grid:string,
-    state:string,
-    utility:string,
-    loadZone:string, 
-    capacity:string, 
-    cRating:string, 
-    opMode:string, 
-    soc:string, 
-    soh:string, 
-    alert:string, 
-    cycle:string, 
-    life:string,
-    certification:string,
-    cod:string
-    ) => {
-    console.log("in the parent handleAdd, name is:",name );
+  const handleAdd = (data) => {
+    console.log("in the parent handleAdd, name is:",data.name );
     const newData={
-      name: name,
-      manufacturer: manufacturer,
-      grid: grid,
-      state:state,
-      utility: utility,
-      loadZone: loadZone,
-      capacity: capacity,
-      cRating: cRating,
-      opMode: opMode,
-      soc: soc,
-      soh: soh,
-      alert: alert,
-      cycle: cycle,
-      life: life,
-      certification: certification,
-      cod:cod
+      ...data,
+      id: uuidv4(),
+      opMode: "Idle",
+      soc: null,
+      soh: null,
+      alert: null,
+      cycle: 0,
+      life: 0,
     }
     setRawdata([...rawData, newData ]);
     setOpen(false);
-
   };
 
   return (
