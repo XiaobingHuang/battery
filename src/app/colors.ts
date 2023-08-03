@@ -2,7 +2,9 @@
 
 
 const colors = {
-    blue:"#324bc7",
+    gray: "#d9d9d9",
+    darkGray: "#adadad",
+    blue:"#3B00E1",
     lighterBlue: "#84aefa",
     green: "#16a155",
     lighterGreen:"#4ddb8d",
