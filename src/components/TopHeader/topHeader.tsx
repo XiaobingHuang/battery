@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {Link } from "react-router-dom";
 import { Layout, Menu, theme } from 'antd';
 import type { MenuProps } from 'antd';
+import "./styles.scss"
 
 const { Header } = Layout;
 interface IHeaderMenu{
@@ -14,7 +15,7 @@ interface IHeaderMenu{
 const headerMenue=[
   {
     key:"curren_state",
-    label:"Current State",
+    label:"Portfolio",
     path:"/home"
   },
   {

@@ -1299,7 +1299,7 @@ const BatteryAlarmNotifications = () => {
                 show: false,
             },
         },
-        colors: [colors.gray, colors.blue],
+        colors: [colors.gray, colors.green],
         dataLabels: {
             enabled: false
         },
@@ -1380,7 +1380,7 @@ const BatteryAlarmNotifications = () => {
                 show: false,
             },
         },
-        colors: [colors.gray, colors.blue],
+        colors: [colors.gray, colors.green],
         dataLabels: {
             enabled: false
         },
@@ -1462,7 +1462,7 @@ const BatteryAlarmNotifications = () => {
         dataLabels: {
             enabled: false,
         },
-        colors: [colors.darkGray, colors.blue],
+        colors: [colors.darkGray, colors.green],
         stroke: {
             width: [1.5,1.5],
         },
@@ -1551,7 +1551,7 @@ const BatteryAlarmNotifications = () => {
         dataLabels: {
             enabled: false,
         },
-        colors: [colors.darkGray, colors.blue],
+        colors: [colors.darkGray, colors.green],
         stroke: {
             width: [1.5,1.5],
         },
@@ -1694,7 +1694,7 @@ const BatteryAlarmNotifications = () => {
                 </Card>
             </Box>
             <Grid container spacing={2} sx={{flexGrow: 1, p: 2}}>
-                
+
                 <Grid xs={6}>
                     <Card>
                         <Typography level={"h3"}>Temperature</Typography>

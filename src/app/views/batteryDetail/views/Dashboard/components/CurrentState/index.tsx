@@ -1,8 +1,11 @@
 import { ArrowDownOutlined,WarningOutlined, ArrowUpOutlined } from '@ant-design/icons';
-import {Card, Col, Row, Typography, Statistic, Button} from 'antd';
-const { Title } = Typography;
+import {Card, Col, Row, Statistic, Button} from 'antd';
+import {Typography} from "@mui/joy";
 import React from "react"
 import {formatPerc} from "@/helpers/formatting";
+import ReactApexChart from "react-apexcharts";
+import {ApexOptions} from "apexcharts";
+import colors from "@/app/colors";
 
 const CurrentStatus = ({currentPerc}) => {
     const barStyle ={
@@ -17,14 +20,56 @@ const CurrentStatus = ({currentPerc}) => {
 const CurrentState = ({data}) => {
     const currentSocPerc = data.currentSoc * 100
 
+
+    const socOptions: ApexOptions ={
+        chart: {
+            type: 'radialBar',
+            offsetY: -20,
+            sparkline: {
+                enabled: true
+            }
+        },
+        plotOptions: {
+            radialBar: {
+                startAngle: -90,
+                endAngle: 90,
+                track: {
+                    background: "#e7e7e7",
+                    strokeWidth: '97%',
+                    margin: 5, // margin is in pixels
+                },
+                dataLabels: {
+                    name: {
+                        show: false
+                    },
+                    value: {
+                        offsetY: -2,
+                        fontSize: '22px'
+                    }
+                }
+            }
+        },
+        grid: {
+            padding: {
+                top: -10
+            }
+        },
+        fill: {
+            colors:[colors.blue]
+        },
+        labels: ['SOC'],
+    };
+
+    const socSeries = [parseFloat(currentSocPerc.toFixed(2))]
+
     return <React.Fragment>
         <Col span={24}>
-            <Title  style={{margin:0, padding:0}} level={2}>Status</Title>
+            <Typography level={"h3"}>Status</Typography>
         </Col>
         <Col span={9}>
             <Card  style={{height:"100%"}} bordered={false}>
-                <Title  style={{margin:0, padding:0}} level={3}>SOC: {formatPerc(data?.currentSoc)}</Title>
-                <CurrentStatus currentPerc={currentSocPerc}/>
+                <div className={"ant-statistic-title"}>SOC</div>
+                <ReactApexChart  height={"250px"} type="radialBar" series={socSeries} options={socOptions}/>
             </Card>
         </Col>
         <Col span={3}>
@@ -36,6 +81,7 @@ const CurrentState = ({data}) => {
                     precision={2}
                     suffix="MWh"
                 />
+                <Typography level={"body-sm"}>55 MWh Capacity</Typography>
             </Card>
         </Col>
         <Col span={3}>
@@ -48,7 +94,7 @@ const CurrentState = ({data}) => {
                     prefix={<ArrowDownOutlined />}
                     suffix="MW"
                 />
-                <Typography.Text type="success">Discharging</Typography.Text>
+                <Typography color={"success"} level={"body-sm"}>Discharging</Typography>
             </Card>
         </Col>
         <Col span={3}>
@@ -74,7 +120,7 @@ const CurrentState = ({data}) => {
                     prefix={<WarningOutlined />}
                     suffix="F"
                 />
-                <Typography.Text type="danger">Overheat for 0.5hrs</Typography.Text>
+                <Typography color={"danger"} level={"body-sm"}>Overheat for 0.5hrs</Typography>
             </Card>
         </Col>
         <Col span={3}>
