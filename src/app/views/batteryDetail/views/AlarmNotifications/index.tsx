@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReactApexChart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
+import { ApexOptions  } from "apexcharts";
 import { Row, Col, Grid, Table, Space } from "antd";
 // import "@/app/views/batteryDetail/views/AlarmNotifications/data.json"
 // import data from "@/app/views/batteryDetail/views/AlarmNotifications/data"
@@ -1248,87 +1248,74 @@ const BatteryAlarmNotifications = () => {
   const currentData = data.map((e) => [e.Current, e.CurrentMin, e.CurrentMax]);
 
   const set = data.map((e) => {
-    return { x: e.Timestamp, y: [26, 100] };
+    return { x: e.Timestamp, y: [e.TempMin,e.TempMax] };
+  });
+  const set2 = data.map((e) => {
+    return { x: e.Timestamp, y: e.Temp };
   });
   console.log(set);
 
+  
   const series = [
     {
-      name: "New York Temperature",
-      type: "line",
-      //   data: [
-      //     {
-      //       x: 'Jan',
-      //       y: [-2, 4]
-      //     },
-      //     {
-      //       x: 'Feb',
-      //       y: [-1, 6]
-      //     },
-      //     {
-      //       x: 'Mar',
-      //       y: [3, 10]
-      //     },
-      //     {
-      //       x: 'Apr',
-      //       y: [8, 16]
-      //     },
-      //     {
-      //       x: 'May',
-      //       y: [13, 22]
-      //     },
-      //     {
-      //       x: 'Jun',
-      //       y: [18, 26]
-      //     },
-      //     {
-      //       x: 'Jul',
-      //       y: [21, 29]
-      //     },
-      //     {
-      //       x: 'Aug',
-      //       y: [21, 28]
-      //     },
-      //     {
-      //       x: 'Sep',
-      //       y: [17, 24]
-      //     },
-      //     {
-      //       x: 'Oct',
-      //       y: [11, 18]
-      //     },
-      //     {
-      //       x: 'Nov',
-      //       y: [6, 12]
-      //     },
-      //     {
-      //       x: 'Dec',
-      //       y: [1, 7]
-      //     }
-      //   ]
-      data: [...set],
+        type: 'rangeArea',
+        name: 'Team B Range',
+        data: set
     },
-  ];
+    {
+        type: 'line',
+        name: 'Team B Median',
+        data: set2
+    },
+
+]
   const options: ApexOptions = {
     chart: {
-      height: 350,
-      type: "line",
+        height: 200,
+            type: 'rangeArea',
+            animations: {
+            speed: 500
+        }
+    },
+    colors: ['#d4526e', '#33b2df', '#d4526e', '#33b2df'],
+        dataLabels: {
+        enabled: false
+    },
+    fill: {
+        opacity: [1,1, 1, 1]
+    },
+    forecastDataPoints: {
+        count: 2
     },
     stroke: {
-      curve: "straight",
+        curve: 'straight',
+            width: [1, 1, 2, 2]
+    },
+    legend: {
+        show: true,
+            customLegendItems: ['Team B', 'Team A'],
+            inverseOrder: true
     },
     title: {
-      text: "New York Temperature (all year round)",
+        text: 'Range Area with Forecast Line (Combo)'
     },
     markers: {
-      hover: {
-        sizeOffset: 5,
-      },
+        hover: {
+            sizeOffset: 5
+        }
     },
-    dataLabels: {
-      enabled: false,
+    xaxis: {
+      // categories: time,
+      type: "datetime",
     },
-  };
+
+    
+}
+
+
+
+
+
 
   const series_current = [
     {
@@ -1682,7 +1669,7 @@ const BatteryAlarmNotifications = () => {
         </Row>
         <Row>
           <Col>
-            <ReactApexChart options={options} series={series} />
+<ReactApexChart type={"rangeArea"} height={"200px"} options={options} series={series}/>
           </Col>
 
           <Col>
