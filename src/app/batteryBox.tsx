@@ -12,6 +12,7 @@ import BatteryDetailDashboard from "./views/batteryDetail/views/Dashboard";
 import BatteryDetailMonitoring from "./views/batteryDetail/views/BatteryMonitor";
 import BatteryDetailSetting from "./views/batteryDetail/views/ControlSetting";
 import TopHeader from "@/components/TopHeader/topHeader";
+import BatteryDetailEnergy from "./views/batteryDetail/views/EnergyStatistics";
 
 const { Header, Sider, Content } = Layout;
 
@@ -32,6 +33,7 @@ const BatteryBox = () => {
                 <Route path="dashboard" element={<BatteryDetailDashboard />}/>
                 <Route path="monitoring" element={<BatteryDetailMonitoring />}/>
                 <Route path="control-settings" element={<BatteryDetailSetting />}/>
+                <Route path="energy-statistics" element={<BatteryDetailEnergy />}/>
                 <Route path="" element={<Navigate to={"dashboard"} />} />
               </Route>
               <Route path="/" element={<Navigate to ="/home" />}/>

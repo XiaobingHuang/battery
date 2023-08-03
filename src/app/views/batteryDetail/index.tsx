@@ -56,7 +56,8 @@ const BatteryDetail = ( ) =>{
         {
             key: '4',
             label: `Energy Analytics`,
-            children: `Content of Tab Pane 3`,
+            path:"energy-statistics",
+            //children: `Content of Tab Pane 3`,
         },
         {
             key: '5',
