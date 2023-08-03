@@ -1,134 +1,1719 @@
 import React, { Component } from "react";
-import Chart from "react-apexcharts";
-import { Row, Col, Grid} from 'antd';
-import "@/app/views/batteryDetail/views/AlarmNotifications/data.json"
-import data from "@/app/views/batteryDetail/views/AlarmNotifications/data"
-const BatteryAlarmNotifications =() => {
-    const time = data.map(e=>{e.Timestamp})
-    const tempData = data.map(e=>[e.Temp,e.TempMax,e.TempMin]);
-    const voltageData = data.map(e=>[e.Voltage,e.VoltageMax]);
-    const currentData = data.map(e=>[e.Current, e.CurrentMin, e.CurrentMax])
+import ReactApexChart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
+import { Row, Col, Grid, Table, Space } from "antd";
+// import "@/app/views/batteryDetail/views/AlarmNotifications/data.json"
+// import data from "@/app/views/batteryDetail/views/AlarmNotifications/data"
+const data = [
+  {
+    Timestamp: "1/1/23 0:15",
+    Temp: 70,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 0:30",
+    Temp: 69,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 0:45",
+    Temp: 69.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 1:00",
+    Temp: 69,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 1:15",
+    Temp: 69.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 1:30",
+    Temp: 69.7,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 1:45",
+    Temp: 69.9,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 2:00",
+    Temp: 69.9,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 2:15",
+    Temp: 69.1,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 2:30",
+    Temp: 69.2,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 2:45",
+    Temp: 69.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 3:00",
+    Temp: 69.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 3:15",
+    Temp: 69.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 3:30",
+    Temp: 69.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 3:45",
+    Temp: 69.1,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 4:00",
+    Temp: 69.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 4:15",
+    Temp: 69.9,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 4:30",
+    Temp: 69.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 4:45",
+    Temp: 69.5,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 5:00",
+    Temp: 69.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 5:15",
+    Temp: 69.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 5:30",
+    Temp: 69.5,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 5:45",
+    Temp: 69,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 6:00",
+    Temp: 69.5,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 6:15",
+    Temp: 69.9,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 6:30",
+    Temp: 69.7,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 6:45",
+    Temp: 69.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 7:00",
+    Temp: 69.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 7:15",
+    Temp: 75.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 7:30",
+    Temp: 74.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 7:45",
+    Temp: 71.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 8:00",
+    Temp: 75.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 8:15",
+    Temp: 72.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 8:30",
+    Temp: 71.7,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.89,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 8:45",
+    Temp: 75.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.84,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 9:00",
+    Temp: 73.2,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.79,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 9:15",
+    Temp: 73.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.74,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 9:30",
+    Temp: 75.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.69,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 9:45",
+    Temp: 75.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.63,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 10:00",
+    Temp: 80.2,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.58,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 10:15",
+    Temp: 87.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.53,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 10:30",
+    Temp: 99.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.48,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 10:45",
+    Temp: 97.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.43,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 11:00",
+    Temp: 95.7,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.38,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 11:15",
+    Temp: 98.5,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.33,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 11:30",
+    Temp: 97,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.28,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 11:45",
+    Temp: 96.1,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.23,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 12:00",
+    Temp: 114.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.17,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 12:15",
+    Temp: 115,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 12:30",
+    Temp: 112.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.07,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 12:45",
+    Temp: 110.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.02,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 13:00",
+    Temp: 73.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.02,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 13:15",
+    Temp: 77,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.02,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 13:30",
+    Temp: 76,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.02,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 13:45",
+    Temp: 77.2,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.02,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 14:00",
+    Temp: 77.5,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.02,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 14:15",
+    Temp: 87.9,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.07,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 14:30",
+    Temp: 85.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 14:45",
+    Temp: 76.9,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 15:00",
+    Temp: 76.7,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 15:15",
+    Temp: 72.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 15:30",
+    Temp: 82.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 15:45",
+    Temp: 82.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 16:00",
+    Temp: 68.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 16:15",
+    Temp: 68.7,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 16:30",
+    Temp: 69.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 16:45",
+    Temp: 68.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 17:00",
+    Temp: 68.9,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 17:15",
+    Temp: 68.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 17:30",
+    Temp: 69.1,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 17:45",
+    Temp: 68.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 18:00",
+    Temp: 68.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 18:15",
+    Temp: 68.5,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 18:30",
+    Temp: 68.1,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 18:45",
+    Temp: 68.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 19:00",
+    Temp: 68,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 19:15",
+    Temp: 68.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 19:30",
+    Temp: 67.9,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 19:45",
+    Temp: 67.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 20:00",
+    Temp: 67.2,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 20:15",
+    Temp: 67.1,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 20:30",
+    Temp: 67.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 20:45",
+    Temp: 67.5,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 21:00",
+    Temp: 66.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 21:15",
+    Temp: 67.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 21:30",
+    Temp: 67,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 21:45",
+    Temp: 67,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.12,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 22:00",
+    Temp: 66.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.17,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 22:15",
+    Temp: 80,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.22,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 22:30",
+    Temp: 79.8,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.28,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 22:45",
+    Temp: 79.4,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.33,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 23:00",
+    Temp: 79.3,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.38,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 23:15",
+    Temp: 79.7,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.43,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 23:30",
+    Temp: 79.6,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.48,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+  {
+    Timestamp: "1/1/23 23:45",
+    Temp: 79,
+    TempMin: 43,
+    TempMax: 108,
+    Voltage: 240,
+    VoltageMax: 300,
+    SOC: 0.53,
+    SOCMin: 0.04,
+    Current: 12,
+    CurrentMin: 5,
+    CurrentMax: 20,
+  },
+];
+const BatteryAlarmNotifications = () => {
+  const time = data.map((e) => e.Timestamp);
+  const tempData = data.map((e) => [e.Temp, e.TempMax, e.TempMin]);
+  const voltageData = data.map((e) => [e.Voltage, e.VoltageMax]);
+  const currentData = data.map((e) => [e.Current, e.CurrentMin, e.CurrentMax]);
 
-    const series_temp = [
-        {
-            name: "temp",
-            type: "line",
-            data: tempData.map((e) => e[0]),
+  const set = data.map((e) => {
+    return { x: e.Timestamp, y: [26, 100] };
+  });
+  console.log(set);
+
+  const series = [
+    {
+      name: "New York Temperature",
+      type: "line",
+      //   data: [
+      //     {
+      //       x: 'Jan',
+      //       y: [-2, 4]
+      //     },
+      //     {
+      //       x: 'Feb',
+      //       y: [-1, 6]
+      //     },
+      //     {
+      //       x: 'Mar',
+      //       y: [3, 10]
+      //     },
+      //     {
+      //       x: 'Apr',
+      //       y: [8, 16]
+      //     },
+      //     {
+      //       x: 'May',
+      //       y: [13, 22]
+      //     },
+      //     {
+      //       x: 'Jun',
+      //       y: [18, 26]
+      //     },
+      //     {
+      //       x: 'Jul',
+      //       y: [21, 29]
+      //     },
+      //     {
+      //       x: 'Aug',
+      //       y: [21, 28]
+      //     },
+      //     {
+      //       x: 'Sep',
+      //       y: [17, 24]
+      //     },
+      //     {
+      //       x: 'Oct',
+      //       y: [11, 18]
+      //     },
+      //     {
+      //       x: 'Nov',
+      //       y: [6, 12]
+      //     },
+      //     {
+      //       x: 'Dec',
+      //       y: [1, 7]
+      //     }
+      //   ]
+      data: [...set],
+    },
+  ];
+  const options: ApexOptions = {
+    chart: {
+      height: 350,
+      type: "line",
+    },
+    stroke: {
+      curve: "straight",
+    },
+    title: {
+      text: "New York Temperature (all year round)",
+    },
+    markers: {
+      hover: {
+        sizeOffset: 5,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+  };
+
+  const series_current = [
+    {
+      name: "current",
+      type: "line",
+      data: data.map((e) => e.Current),
+    },
+    {
+      name: "currentMax",
+      type: "line",
+      data: data.map((e) => e.CurrentMax),
+    },
+    {
+      name: "currentMin",
+      type: "line",
+      data: data.map((e) => e.CurrentMin),
+    },
+  ];
+
+  const options_current: ApexOptions = {
+    chart: {
+      group: "current",
+      type: "line",
+      height: 200,
+      toolbar: {
+        show: false,
+      },
+      animations: {
+        enabled: true,
+        easing: "linear",
+        dynamicAnimation: {
+          speed: 1000,
         },
-        {
-            name: "temMax",
-            type: "line",
-            data: tempData.map((e) => e[1]),
+      },
+    },
+    grid: {
+      xaxis: {
+        lines: {
+          show: true,
         },
-        {
-            name: "tempMin",
-            type: "line",
-            data: tempData.map((e) => e[2]),
+      },
+      yaxis: {
+        lines: {
+          show: false,
         },
-    ];
-    const options_temp = {
-        chart: {
-            group: "temp",
-            type: "line",
-            height: 200,
-            toolbar: {
-                show: false,
-            },
-            animations: {
-                enabled: true,
-                easing: "linear",
-                dynamicAnimation: {
-                    speed: 1000,
-                },
-            },
-        },
-        grid: {
-            xaxis: {
-                lines: {
-                    show: true
-                }
-            },
-            yaxis: {
-                lines: {
-                    show: false
-                }
-            }
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            width: [3, 3, 3,9,9],
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      width: [3, 3, 3],
+    },
+    title: {
+      text: "Current alert",
+      align: "left",
+      offsetX: 110,
+    },
+    xaxis: {
+      categories: time,
+      type: "datetime",
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: [
+      {
+        seriesName: "current",
+        axisTicks: {
+          show: true,
         },
         title: {
-            text: "Temp alart",
-            align: "left",
-            offsetX: 110,
+          text: "current",
         },
-        xaxis: {
-            categories: time,
-            type: "datetime",
-            axisBorder: {
-                show: false
-            },
-            axisTicks: {
-                show: false
-            },
+      },
+      {
+        seriesName: "current",
+        show: false,
+        title: {
+          text: "current max",
         },
-        yaxis: [
-            {
-                seriesName: "temp",
-                axisTicks: {
-                  show: true,
-                },
-                title: {
-                  text: "temp",
-                },
-            },
-            {
-                seriesName: "temp",
-                show: false,
-                title: {
-                  text: "temp max",
-                },
-            },
-            {
-                seriesName: "temp",
-                show: false,
-                title: {
-                  text: "temp min",
-                },
-            },
-        ],
-        tooltip: {
-            fixed: {
-                enabled: true,
-                position: "topLeft", 
-                offsetY: 30,
-                offsetX: 60,
-            },
+      },
+      {
+        seriesName: "current",
+        show: false,
+        title: {
+          text: "current min",
         },
-        legend: {
-            offsetX: 40,
+      },
+    ],
+    tooltip: {
+      fixed: {
+        enabled: true,
+        position: "topLeft",
+        offsetY: 30,
+        offsetX: 60,
+      },
+    },
+    legend: {
+      offsetX: 40,
+    },
+  };
 
-        }
-    }
+  const series_voltage = [
+    {
+      name: "voltage",
+      type: "line",
+      data: data.map((e) => e.Voltage),
+    },
+    {
+      name: "voltage_max",
+      type: "line",
+      data: data.map((e) => e.VoltageMax),
+    },
+  ];
 
-    return(
-        <div>
-           <Row>
-            <Col>
-            <Chart type={"line"} height={"200px"} options={options_temp} series={series}/>
-            </Col>
+  const options_voltage: ApexOptions = {
+    chart: {
+      group: "voltage",
+      type: "area",
+      height: 200,
+      toolbar: {
+        show: false,
+      },
+      animations: {
+        enabled: true,
+        easing: "linear",
+        dynamicAnimation: {
+          speed: 1000,
+        },
+      },
+    },
+    grid: {
+      xaxis: {
+        lines: {
+          show: true,
+        },
+      },
+      yaxis: {
+        lines: {
+          show: false,
+        },
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      width: [3, 3, 3],
+    },
+    title: {
+      text: "Voltage alart",
+      align: "left",
+      offsetX: 110,
+    },
+    xaxis: {
+      categories: time,
+      type: "datetime",
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: [
+      {
+        seriesName: "voltage",
+        axisTicks: {
+          show: true,
+        },
+        title: {
+          text: "temp",
+        },
+      },
+      {
+        seriesName: "voltage",
+        show: false,
+        title: {
+          text: "temp max",
+        },
+      },
+    ],
+    tooltip: {
+      fixed: {
+        enabled: true,
+        position: "topLeft",
+        offsetY: 30,
+        offsetX: 60,
+      },
+    },
+    legend: {
+      offsetX: 40,
+    },
+  };
 
-            <Col></Col>
-           </Row>
-           <Row>
-           <Col></Col>
-           <Col></Col>
-           </Row>
-        </div>
-    )
+  const series_soc = [
+    {
+      name: "soc",
+      type: "line",
+      data: data.map((e) => e.SOC),
+    },
+    {
+      name: "soc_min",
+      type: "line",
+      data: data.map((e) => e.SOCMin),
+    },
+  ];
 
-}
-export default BatteryAlarmNotifications
+  const options_soc: ApexOptions = {
+    chart: {
+      group: "soc",
+      type: "area",
+      height: 200,
+      toolbar: {
+        show: false,
+      },
+      animations: {
+        enabled: true,
+        easing: "linear",
+        dynamicAnimation: {
+          speed: 1000,
+        },
+      },
+    },
+    grid: {
+      xaxis: {
+        lines: {
+          show: true,
+        },
+      },
+      yaxis: {
+        lines: {
+          show: false,
+        },
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      width: [3, 3, 3],
+    },
+    title: {
+      text: "SOC alert",
+      align: "left",
+      offsetX: 110,
+    },
+    xaxis: {
+      categories: time,
+      type: "datetime",
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: [
+      {
+        seriesName: "soc",
+        axisTicks: {
+          show: true,
+        },
+        title: {
+          text: "SOC",
+        },
+      },
+      {
+        seriesName: "soc",
+        show: false,
+        title: {
+          text: "SOC Min",
+        },
+      },
+    ],
+    tooltip: {
+      fixed: {
+        enabled: true,
+        position: "topLeft",
+        offsetY: 30,
+        offsetX: 60,
+      },
+    },
+    legend: {
+      offsetX: 40,
+    },
+  };
+
+  const dataSource = [
+    {
+      key: "1",
+      type: "temp",
+      details: "",
+      timestamps: "",
+      status: "",
+      addNotoes: "",
+    },
+    {
+      key: "2",
+      type: "temp",
+      details: "",
+      timestamps: "",
+      status: "",
+      addNotoes: "",
+    },
+  ];
+
+  const columns = [
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "Details",
+      dataIndex: "details",
+      key: "details",
+    },
+    {
+      title: "Timestamps",
+      dataIndex: "timestamps",
+      key: "timestamps",
+    },
+    {
+      title: "status",
+      key: "status",
+      dataIndex: "status",
+    },
+    {
+      title: "Add notes",
+      key: "addNotoes",
+      dataIndex: "addNotoes",
+    },
+  ];
+
+  return (
+    <div>
+      <Space direction="vertical">
+        <Row>
+          <Space direction="vertical">
+          <label style={{color:"red"}}> Active Alert</label>
+          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          </Space>
+        </Row>
+        <Row>
+        <Table dataSource={dataSource} columns={columns}  pagination={false}/>
+        </Row>
+        <Row>
+          <Col>
+            <ReactApexChart options={options} series={series} />
+          </Col>
+
+          <Col>
+            <ReactApexChart
+              type={"line"}
+              height={"200px"}
+              options={options_current}
+              series={series_current}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <ReactApexChart
+              type={"line"}
+              height={"200px"}
+              options={options_voltage}
+              series={series_voltage}
+            />
+          </Col>
+          <Col>
+            <ReactApexChart
+              type={"line"}
+              height={"200px"}
+              options={options_soc}
+              series={series_soc}
+            />
+          </Col>
+        </Row>
+      </Space>
+    </div>
+  );
+};
+export default BatteryAlarmNotifications;
