@@ -1,12 +1,12 @@
 import React from "react"
 import Chart from "@/components/Chart";
-import {Tabs, Typography, Col, Row, Space, Card} from 'antd';
-const { Title, Paragraph, Text, Link } = Typography;
+import {Tabs, Col, Row, Space, Card} from 'antd';
 import moment from "moment";
 import {useMemo} from "react";
 import merge from "lodash/merge"
 import {formatCurrency, formatNumber} from "@/helpers/formatting";
-
+import {Typography} from "@mui/joy";
+import colors from "@/app/colors";
 
 const EnergyMonitoring = ({data}) => {
 
@@ -52,8 +52,8 @@ const EnergyMonitoring = ({data}) => {
                 enabled: false
             },
             stroke: {
-                width: 3,
-                curve: "smooth"
+                width: 1.5,
+                curve: "straight"
             },
 
             title: {
@@ -73,7 +73,6 @@ const EnergyMonitoring = ({data}) => {
                         borderColor: "red",
                         opacity: 0.4,
                         label: {
-                            borderColor: "#B3F7CA",
                             style: {
                                 fontSize: "10px",
                                 color: "#fff",
@@ -152,7 +151,7 @@ const EnergyMonitoring = ({data}) => {
                 title: {
                     // text: "Sells"
                 },
-                colors: ["#007d36", "#61ed9e"],
+                colors: [ colors.green],
                 forecastDataPoints: {
                     count: calcForecastCount
                 },
@@ -179,7 +178,7 @@ const EnergyMonitoring = ({data}) => {
                 forecastDataPoints: {
                     count: calcForecastCount
                 },
-                colors: ["#fc0349", "#007d36"],
+                colors: [colors.red, colors.green],
                 yaxis:{
                     title: {
                         text: "$"
@@ -204,12 +203,12 @@ const EnergyMonitoring = ({data}) => {
 
     return <React.Fragment>
         <Col span={24}>
-            <Title  style={{margin:0, padding:0}} level={2}>Energy Monitoring</Title>
+            <Typography level={"h3"}>Monitoring</Typography>
         </Col>
         <Col span={12}>
             <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
-                    <Title level={3} style={{margin: 0,textAlign:"right"}}>Market</Title>
+                    <Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Market</Typography>
                         <table>
                             <tr>
                                 <td style={{padding:"0px 8px"}}></td>
@@ -219,15 +218,15 @@ const EnergyMonitoring = ({data}) => {
                             </tr>
                             <tr>
                                 <td style={{padding:"0px 8px", textAlign:"right"}}></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Title level={3} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalBought)}</Title></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Title level={3} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSold)}</Title></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Title level={3} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSold + data.totalBought)}</Title></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalBought)}</Typography></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSold)}</Typography></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSold + data.totalBought)}</Typography></td>
                             </tr>
                             <tr>
                                 <td style={{padding:"0px 8px", textAlign:"right"}}>To Date</td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Text style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalBoughtPast)}</Text></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Text style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSoldPast)}</Text></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Text style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSoldPast + data.totalBoughtPast)}</Text></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"body-sm"}  style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalBoughtPast)}</Typography></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"body-sm"}  style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSoldPast)}</Typography></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"body-sm"}  style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSoldPast + data.totalBoughtPast)}</Typography></td>
                             </tr>
                         </table>
                         {/*<Text style={{textAlign:"right", fontSize:'11px'}}>Bought / Sold / Net</Text>*/}
@@ -240,7 +239,7 @@ const EnergyMonitoring = ({data}) => {
         <Col span={12}>
             <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
-                    <Title level={3} style={{margin: 0,textAlign:"right"}}>Charge</Title>
+                    <Typography level={"h3"} style={{margin: 0,textAlign:"right"}}>Charge</Typography>
                         <table>
                             <tr>
                                 <td style={{padding:"0px 8px"}}></td>
@@ -249,7 +248,7 @@ const EnergyMonitoring = ({data}) => {
                             <tr>
                                 <td style={{padding:"0px 8px", textAlign:"right"}}></td>
                                 <td style={{padding:"0px 8px", textAlign:"right"}}>
-                                    <Title level={3} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Title></td>
+                                    <Typography level={"h3"} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Typography></td>
                             </tr>
                         </table>
                 </div>
