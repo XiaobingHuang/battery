@@ -1,6 +1,11 @@
 import React, { useMemo, useState } from "react";
-import type { Dayjs } from "dayjs";
-import dayjs from "dayjs";
+import ReactApexChart from "react-apexcharts";
+import { sankey as Sankey } from "d3-sankey";
+import * as d3 from "d3";
+import { ResponsiveSankey } from '@nivo/sankey'
+import { ApexOptions } from "apexcharts";
+import colors from "@/app/colors";
+import { Chart } from "react-google-charts";
 import {
   Box,
   Card,
@@ -1252,11 +1257,930 @@ const socData = [
     CurrentMax: 20,
   },
 ];
+const chargeDischargedata =[
+  {
+    "Time": "1/1/23 0:00",
+    "Charge": 2.11,
+    "Discharge": 0,
+    "MWh Price": 48.99,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 0:15",
+    "Charge": 2.09,
+    "Discharge": 0,
+    "MWh Price": 49.87,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 0:30",
+    "Charge": 2.16,
+    "Discharge": 0,
+    "MWh Price": 49.81,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 0:45",
+    "Charge": 2.14,
+    "Discharge": 0,
+    "MWh Price": 48.07,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 1:00",
+    "Charge": 2.56,
+    "Discharge": 0,
+    "MWh Price": 49.1,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 1:15",
+    "Charge": 2.08,
+    "Discharge": 0,
+    "MWh Price": 48.33,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 1:30",
+    "Charge": 2.48,
+    "Discharge": 0,
+    "MWh Price": 49.82,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 1:45",
+    "Charge": 2.03,
+    "Discharge": 0,
+    "MWh Price": 49.31,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 2:00",
+    "Charge": 2.95,
+    "Discharge": 0,
+    "MWh Price": 49.45,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 2:15",
+    "Charge": 2.34,
+    "Discharge": 0,
+    "MWh Price": 48.33,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 2:30",
+    "Charge": 2.99,
+    "Discharge": 0,
+    "MWh Price": 48.01,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 2:45",
+    "Charge": 2.78,
+    "Discharge": 0,
+    "MWh Price": 48.28,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 3:00",
+    "Charge": 2.87,
+    "Discharge": 0,
+    "MWh Price": 48.57,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 3:15",
+    "Charge": 2.12,
+    "Discharge": 0,
+    "MWh Price": 48.2,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 3:30",
+    "Charge": 2.49,
+    "Discharge": 0,
+    "MWh Price": 49.59,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 50
+  },
+  {
+    "Time": "1/1/23 3:45",
+    "Charge": 2.01,
+    "Discharge": 0,
+    "MWh Price": 49.35,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 4:00",
+    "Charge": 2.74,
+    "Discharge": 0,
+    "MWh Price": 48.17,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 4:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 49.72,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 4:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 49.6,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 4:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 49.72,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 5:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 48.42,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 5:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 48.19,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 5:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 48.81,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 5:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 49.43,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 6:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 49.16,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 6:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 48.76,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 6:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 56.91,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 6:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 57.33,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 7:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 58.07,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 7:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 58.92,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 7:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 56.7,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 7:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 56.34,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 8:00",
+    "Charge": 0,
+    "Discharge": -2.85,
+    "MWh Price": 55.23,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 8:15",
+    "Charge": 0,
+    "Discharge": -2.23,
+    "MWh Price": 55.32,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 8:30",
+    "Charge": 0,
+    "Discharge": -2.86,
+    "MWh Price": 56.76,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 8:45",
+    "Charge": 0,
+    "Discharge": -2.32,
+    "MWh Price": 55.02,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 9:00",
+    "Charge": 0,
+    "Discharge": -2.79,
+    "MWh Price": 56.51,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 9:15",
+    "Charge": 0,
+    "Discharge": -2.58,
+    "MWh Price": 55.73,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 9:30",
+    "Charge": 0,
+    "Discharge": -2.16,
+    "MWh Price": 55.93,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 9:45",
+    "Charge": 0,
+    "Discharge": -2.92,
+    "MWh Price": 57.05,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 10:00",
+    "Charge": 0,
+    "Discharge": -2.59,
+    "MWh Price": 56.18,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 10:15",
+    "Charge": 0,
+    "Discharge": -2.85,
+    "MWh Price": 51.25,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 10:30",
+    "Charge": 0,
+    "Discharge": -2.79,
+    "MWh Price": 53.63,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 10:45",
+    "Charge": 0,
+    "Discharge": -2.81,
+    "MWh Price": 51.07,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 11:00",
+    "Charge": 0,
+    "Discharge": -2.13,
+    "MWh Price": 52.65,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 11:15",
+    "Charge": 0,
+    "Discharge": -2.93,
+    "MWh Price": 52.42,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 11:30",
+    "Charge": 0,
+    "Discharge": -2.36,
+    "MWh Price": 61.61,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 11:45",
+    "Charge": 0,
+    "Discharge": -2.48,
+    "MWh Price": 62.95,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 12:00",
+    "Charge": 0,
+    "Discharge": -2.17,
+    "MWh Price": 64.15,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 12:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 63.02,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 12:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 66.35,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 12:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 63.99,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 13:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 63.19,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 13:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 67.09,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 13:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 65.73,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 13:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 63.62,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 14:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 64.58,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 14:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 66.63,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 14:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 66.01,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 14:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 65.01,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 15:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 65.19,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 15:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 65.71,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 15:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 67.72,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 15:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 69.23,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 16:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 70.89,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 16:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 71.26,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 16:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 72.23,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 16:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 69.92,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 17:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 71.12,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 17:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 69.71,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 17:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 71.41,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 17:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 70.41,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 18:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 71.45,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 18:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 72.84,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 18:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 72.25,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 18:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 52.12,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 19:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 53.57,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 19:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 55.32,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 19:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 54.24,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 19:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 52.63,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 20:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 52.06,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 20:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 52.36,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 20:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 53.93,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 20:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 53.5,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 21:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 54,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 21:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 52.1,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 21:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 52.14,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 21:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 52.38,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 22:00",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 54.5,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 22:15",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 54.15,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 22:30",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 49.78,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 22:45",
+    "Charge": 0,
+    "Discharge": 0,
+    "MWh Price": 47.61,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 23:00",
+    "Charge": 2.62,
+    "Discharge": 0,
+    "MWh Price": 44.49,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 23:15",
+    "Charge": 2.7,
+    "Discharge": 0,
+    "MWh Price": 49.67,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 23:30",
+    "Charge": 2.02,
+    "Discharge": 0,
+    "MWh Price": 45.78,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  },
+  {
+    "Time": "1/1/23 23:45",
+    "Charge": 2.75,
+    "Discharge": 0,
+    "MWh Price": 46.04,
+    "DischargePriceTrigger": 55,
+    "ChargePriceTrigger": 49
+  }
+]
+const series_soc = [
+  {
+    name: "SOC",
+    data: socData.map((e) => e.SOC),
+  },
+];
+const options_soc: ApexOptions = {
+  chart: {
+    height: 350,
+    type: "line",
+    zoom: {
+      enabled: false,
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: "straight",
+  },
+  title: {
+    text: "SOC Chart",
+    align: "left",
+  },
+  grid: {
+    row: {
+      colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+      opacity: 0.5,
+    },
+  },
+  xaxis: {
+    categories: socData.map((e) => e.Timestamp),
+    type: "datetime",
+  },
+};
+
+const data = [
+  ["From", "To", "Weight"],
+  ["Brazil", "Portugal", 5],
+  ["Brazil", "France", 1],
+  ["Brazil", "Spain", 1],
+  ["Brazil", "England", 1],
+  ["Canada", "Portugal", 1],
+  ["Canada", "France", 5],
+  ["Canada", "England", 1],
+  ["Mexico", "Portugal", 1],
+  ["Mexico", "France", 1],
+  ["Mexico", "Spain", 5],
+  ["Mexico", "England", 1],
+  ["USA", "Portugal", 1],
+  ["USA", "France", 1],
+  ["USA", "Spain", 1],
+  ["USA", "England", 5],
+  ["Portugal", "Angola", 2],
+  ["Portugal", "Senegal", 1],
+  ["Portugal", "Morocco", 1],
+  ["Portugal", "South Africa", 3],
+  ["France", "Angola", 1],
+  ["France", "Senegal", 3],
+  ["France", "Mali", 3],
+  ["France", "Morocco", 3],
+  ["France", "South Africa", 1],
+  ["Spain", "Senegal", 1],
+  ["Spain", "Morocco", 3],
+  ["Spain", "South Africa", 1],
+  ["England", "Angola", 1],
+  ["England", "Senegal", 1],
+  ["England", "Morocco", 2],
+  ["England", "South Africa", 7],
+  ["South Africa", "China", 5],
+  ["South Africa", "India", 1],
+  ["South Africa", "Japan", 3],
+  ["Angola", "China", 5],
+  ["Angola", "India", 1],
+  ["Angola", "Japan", 3],
+  ["Senegal", "China", 5],
+  ["Senegal", "India", 1],
+  ["Senegal", "Japan", 3],
+  ["Mali", "China", 5],
+  ["Mali", "India", 1],
+  ["Mali", "Japan", 3],
+  ["Morocco", "China", 5],
+  ["Morocco", "India", 1],
+  ["Morocco", "Japan", 3],
+];
+
+const options = {
+  sankey: {
+    link: { color: { fill: "#d799ae" } },
+    node: {
+      colors: ["#a61d4c"],
+      label: { color: "#871b47" },
+    },
+  },
+};
+
+const charge_discharge_series=[{
+  name: 'charge',
+  data: chargeDischargedata.map(e=>(Number(e.Charge)))
+},
+{
+  name: 'discharge',
+  data: chargeDischargedata.map(e=>(Number(e.Discharge)))
+}
+]
+console.log(chargeDischargedata.map(e=>(Number(e.Discharge))))
+console.log(chargeDischargedata.map(e=>(Number(e.Charge))))
+
+const charge_discharge_options:ApexOptions = {
+  chart: {
+    type: 'bar',
+    stacked: true
+  },
+  colors: [colors.green,colors.red],
+  plotOptions: {
+    bar: {
+      horizontal: false,
+    },
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    width: [3,3],
+    colors: [colors.green,colors.red]
+  },
+  
+  grid: {
+    xaxis: {
+      lines: {
+        show: false
+      }
+    }
+  },
+  yaxis: {
+    min: -5,
+    max:5,
+    title: {
+      // text: 'Age',
+    },
+  },
+  title: {
+    text: 'Charge and Discharge Cycle'
+  },
+  xaxis: {
+    categories: chargeDischargedata.map(e=>e.Time),
+    type: "datetime",
+  },
+}
 
 const BatteryDetailEnergy = () => {
   return (
     <div>
-        <Typography level="h2">Energy Monitoring and Analytics</Typography>
+      <Typography level="h2">Energy Monitoring and Analytics</Typography>
       <Stack>
         <Typography
           id="Energy Comsumption"
@@ -1269,7 +2193,7 @@ const BatteryDetailEnergy = () => {
           <ListItem>Today: 12.5 kWh</ListItem>
           <ListItem>Yesterday: 10.8 kWh</ListItem>
         </List>
-        <Divider/>
+        <Divider />
         <Typography
           id="Energy Production"
           textTransform="uppercase"
@@ -1281,7 +2205,30 @@ const BatteryDetailEnergy = () => {
           <ListItem>Solar: 5.2 kWh</ListItem>
           <ListItem>Wind: 3.6 kWh</ListItem>
         </List>
+        <Divider />
+        <Grid >
+          <ReactApexChart
+            width={500}
+            height={300}
+            series={series_soc}
+            options={options_soc}
+          />
+          <Chart
+            chartType="Sankey"
+            width="500px"
+            height="300px"
+            data={data}
+            options={options}
+          />
+          <ReactApexChart
+            width={500}
+            height={300}
+            type="bar"
+            series={charge_discharge_series}
+            options={charge_discharge_options}
+          />
 
+        </Grid>
       </Stack>
     </div>
   );
