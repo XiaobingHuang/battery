@@ -837,8 +837,8 @@ const ChargeDischargeCycle=()=>{
      return(
         <div>
            <ReactApexChart
-            width={450}
-            height={300}
+            width={1000}
+            height={400}
             type="bar"
             series={charge_discharge_series}
             options={charge_discharge_options}

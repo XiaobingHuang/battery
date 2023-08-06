@@ -1285,8 +1285,8 @@ const SOCChart=()=>{
      return(
         <div>
             <ReactApexChart
-            width={450}
-            height={300}
+            width={1000}
+            height={400}
             series={series_soc}
             options={options_soc}
           />
