@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from "react";
 import ReactApexChart from "react-apexcharts";
-import { sankey as Sankey } from "d3-sankey";
 import * as d3 from "d3";
 import { ResponsiveSankey } from '@nivo/sankey'
 import { ApexOptions } from "apexcharts";
@@ -17,8 +16,11 @@ import {
   ListItem,
   Divider,
 } from "@mui/joy";
+import {Sankey} from "@/components/Sankey";
+
 import BatteryConfiguration from "@/components/BatteryConfiguration/BatteryConfiguration";
 import { useParams } from "react-router";
+
 
 const socData = [
   {
@@ -2065,62 +2067,21 @@ const options_soc: ApexOptions = {
 
 const data = [
   ["From", "To", "Weight"],
-  ["Brazil", "Portugal", 5],
-  ["Brazil", "France", 1],
-  ["Brazil", "Spain", 1],
-  ["Brazil", "England", 1],
-  ["Canada", "Portugal", 1],
-  ["Canada", "France", 5],
-  ["Canada", "England", 1],
-  ["Mexico", "Portugal", 1],
-  ["Mexico", "France", 1],
-  ["Mexico", "Spain", 5],
-  ["Mexico", "England", 1],
-  ["USA", "Portugal", 1],
-  ["USA", "France", 1],
-  ["USA", "Spain", 1],
-  ["USA", "England", 5],
-  ["Portugal", "Angola", 2],
-  ["Portugal", "Senegal", 1],
-  ["Portugal", "Morocco", 1],
-  ["Portugal", "South Africa", 3],
-  ["France", "Angola", 1],
-  ["France", "Senegal", 3],
-  ["France", "Mali", 3],
-  ["France", "Morocco", 3],
-  ["France", "South Africa", 1],
-  ["Spain", "Senegal", 1],
-  ["Spain", "Morocco", 3],
-  ["Spain", "South Africa", 1],
-  ["England", "Angola", 1],
-  ["England", "Senegal", 1],
-  ["England", "Morocco", 2],
-  ["England", "South Africa", 7],
-  ["South Africa", "China", 5],
-  ["South Africa", "India", 1],
-  ["South Africa", "Japan", 3],
-  ["Angola", "China", 5],
-  ["Angola", "India", 1],
-  ["Angola", "Japan", 3],
-  ["Senegal", "China", 5],
-  ["Senegal", "India", 1],
-  ["Senegal", "Japan", 3],
-  ["Mali", "China", 5],
-  ["Mali", "India", 1],
-  ["Mali", "Japan", 3],
-  ["Morocco", "China", 5],
-  ["Morocco", "India", 1],
-  ["Morocco", "Japan", 3],
+  ["A", "X", 5],
+  ["A", "Y", 7],
+  ["A", "Z", 6],
+  ["B", "X", 2],
+  ["B", "Y", 9],
+  ["B", "Z", 4],
 ];
-
 const options = {
-  sankey: {
-    link: { color: { fill: "#d799ae" } },
-    node: {
-      colors: ["#a61d4c"],
-      label: { color: "#871b47" },
-    },
-  },
+  // sankey: {
+  //   link: { color: { fill: "#d799ae" } },
+  //   node: {
+  //     colors: ["#a61d4c"],
+  //     label: { color: "#871b47" },
+  //   },
+  // },
 };
 
 const charge_discharge_series=[{
@@ -2213,12 +2174,45 @@ const BatteryDetailEnergy = () => {
             series={series_soc}
             options={options_soc}
           />
+          <Sankey width={600} height={220} data={
+            {
+              "nodes": [
+                { id: "grid-in", title:"Grid" },
+                { id: "solar-in" , title:"Solar"},
+                { id: "battery", title:"Battery" },
+                { id: "facility-out", title:"Facility" },
+                { id: "grid-out", title:"Grid" }
+              ],
+              "links": [
+                { source: "grid-in", target: "battery", value: 200 },
+                { source: "solar-in", target: "battery", value: 40 },
+                { source: "battery", target: "facility-out", value: 40 },
+                { source: "battery", target: "grid-out", value: 180 },
+              ]
+            }
+          }/>
           <Chart
-            chartType="Sankey"
-            width="500px"
-            height="300px"
-            data={data}
-            options={options}
+              chartType="Sankey"
+              width="40%"
+              height="200px"
+              data={data}
+              options={options}
+          />
+          <Chart
+              width={700}
+              height={'350px'}
+              chartType="Sankey"
+              loader={<div>Loading Chart</div>}
+              data={[
+                ['From', 'To', 'Weight'],
+                ['A', 'X', 5],
+                ['A', 'Y', 7],
+                ['A', 'Z', 6],
+                ['B', 'X', 2],
+                ['B', 'Y', 9],
+                ['B', 'Z', 4],
+              ]}
+              rootProps={{ 'data-testid': '1' }}
           />
           <ReactApexChart
             width={500}

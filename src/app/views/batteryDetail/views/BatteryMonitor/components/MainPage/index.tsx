@@ -847,7 +847,6 @@ const MonitorChart = () => {
             width: [3, 3, 3,9,9],
         },
         title: {
-            text: "TITLE CHART",
             align: "left",
             offsetX: 110,
         },

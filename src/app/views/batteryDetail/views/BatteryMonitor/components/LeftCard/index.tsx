@@ -15,7 +15,14 @@ import {} from "antd";
 const LeftCard = () => {
   return (
     <Card title="Battery name" style={{ overflow: "scroll", height: 600 }}>
+
+      <table>
+        <tr><th>SOC</th><td>87%</td></tr>
+        <tr><th>Operating Mode</th><td>Charging</td></tr>
+        <tr><th>Power</th><td>10 MW</td></tr>
+      </table>
       <Card title="Battery Status">
+
         <p>SOC: 87%</p>
         <p>Operating Mode: Charging</p>
         <p>Power: 10MW</p>
@@ -32,6 +39,9 @@ const LeftCard = () => {
         </Card>
 
         <Card title="Charging">
+          <table>
+            <tr><th>C Rating</th><td>0.25C</td></tr>
+          </table>
           <p>C rating: 0.25C</p>
           <p>Curent: 25A</p>
           <p>Threshold: 90%</p>
