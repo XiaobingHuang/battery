@@ -13,8 +13,13 @@ import BatteryDetailMonitoring from "./views/batteryDetail/views/BatteryMonitor"
 import BatteryDetailSetting from "./views/batteryDetail/views/ControlSetting";
 import TopHeader from "@/components/TopHeader/topHeader";
 import BatteryDetailEnergy from "./views/batteryDetail/views/EnergyStatistics";
-import BatteryEnergyAnalystics from "./views/batteryDetail/views/EnergyAnalystics"
 import BatteryAlarmNotifications from "./views/batteryDetail/views/AlarmNotifications";
+import { FormItemPrefixContext } from "antd/es/form/context";
+import SOCChart from "./views/batteryDetail/views/EnergyStatistics/SOCChart";
+import ChargeDischargeCycle from "./views/batteryDetail/views/EnergyStatistics/ChargeDischargeCycle";
+import EnergyTable from "./views/batteryDetail/views/EnergyStatistics/EnergyTable";
+import BatteryUsageChart from "./views/batteryDetail/views/EnergyStatistics/BatteryUsageChart/BatteryUsageChart";
+
 
 const { Header, Sider, Content } = Layout;
 
@@ -35,8 +40,12 @@ const BatteryBox = () => {
                 <Route path="dashboard" element={<BatteryDetailDashboard />}/>
                 <Route path="monitoring" element={<BatteryDetailMonitoring />}/>
                 <Route path="control-settings" element={<BatteryDetailSetting />}/>
-                <Route path="energy-statistics" element={<BatteryDetailEnergy />}/>
-                <Route path="energy-analystics" element={<BatteryEnergyAnalystics />}/>
+                <Route path="energy-statistics" element={<BatteryDetailEnergy />}>
+                  <Route path="soc-monitoring" element={<SOCChart />}/>
+                  <Route path="charge-discharge-cycle" element={<ChargeDischargeCycle />}/>
+                  <Route path="energy-statistics-table" element={<EnergyTable/>}/>
+                  <Route path="battery-usage" element={<BatteryUsageChart/>}/>
+                </Route>
                 <Route path="alarm-notifications" element={<BatteryAlarmNotifications />}/>
                 <Route path="" element={<Navigate to={"dashboard"} />} />
               </Route>
