@@ -1262,6 +1262,7 @@ const data = [
 ];
 const BatteryAlarmNotifications = () => {
     const vm = useRef(new BatteryAlarmNotificationsVM()).current;
+    const[showTempAlarmModal,setShowTempAlarmModal] = useState(false)
 
   const time = data.map((e) => e.Timestamp);
 
@@ -1321,7 +1322,7 @@ const BatteryAlarmNotifications = () => {
           fillColor: colors.red,
           opacity: 0.2,
           label: {
-            click:()=>{vm.handleOnClick();console.log(vm.showTempAlarmModal)},
+            click:()=>setShowTempAlarmModal(true),
             
             borderColor: colors.red,
             style: {
@@ -1573,7 +1574,7 @@ const BatteryAlarmNotifications = () => {
           fillColor: colors.red,
           opacity: 0.2,
           label: {
-            click: ()=>{console.log("AAA")},
+            click: ()=>{setShowTempAlarmModal(true)},
             borderColor: colors.red,
             style: {
               fontSize: "10px",
@@ -1764,8 +1765,8 @@ const BatteryAlarmNotifications = () => {
       {console.log(vm.showTempAlarmModal)}
 
       <Modal
-        open={vm.showTempAlarmModal}
-        onClose={vm.handleShowTempAlarmModal}
+        open={showTempAlarmModal}
+        onClose={()=>setShowTempAlarmModal(false)}
       >
         <ModalDialog sx={{ maxWidth: "350px" }}>
           <ModalClose />
