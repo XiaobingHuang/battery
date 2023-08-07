@@ -3,6 +3,7 @@ import {Link } from "react-router-dom";
 import { Layout, Menu, theme } from 'antd';
 import type { MenuProps } from 'antd';
 import "./styles.scss"
+import {useLocation} from "react-router";
 
 const { Header } = Layout;
 interface IHeaderMenu{
@@ -50,7 +51,7 @@ function TopHeader() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
+  const location = useLocation()
   return (
     <div>
       <Header style={{ padding:0, background: colorBgContainer, display: 'flex', alignItems: 'center'  }}>
@@ -58,7 +59,7 @@ function TopHeader() {
             style={{width:"100%"}}
             theme="dark"
             mode="horizontal"
-            defaultSelectedKeys={["curren_state"]}
+            defaultSelectedKeys={[headerMenue.find(h => h.path === location.pathname)?.key ]}
             items={headerMenue.map((item) => {
             return {
               key: item.key,

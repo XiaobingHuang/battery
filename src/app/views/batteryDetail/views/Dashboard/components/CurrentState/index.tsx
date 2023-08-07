@@ -6,14 +6,9 @@ import {formatPerc} from "@/helpers/formatting";
 import ReactApexChart from "react-apexcharts";
 import {ApexOptions} from "apexcharts";
 import colors from "@/app/colors";
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
-const CurrentStatus = ({currentPerc}) => {
-    const barStyle ={
-        width: (currentPerc) + "%",
-        height: "100%",
-        background: "#009f61"
-    }
-
+const CurrentStatus = ({current,total,state}) => {
     const remain = parseFloat((total - current).toFixed(1))
     const curr = parseFloat((current).toFixed(1))
     const perc = parseFloat((current / total * 100).toFixed(1))
@@ -116,8 +111,7 @@ const CurrentState = ({data}) => {
                 <CurrentStatus
                     state={"DISCHARGE"}
                     total={data.maxMWh}
-                    current={data.currentStateMwh}
-                    currentPerc={currentSocPerc}/>
+                    current={data.currentStateMwh}/>
                 {/*<CurrentStatus*/}
                 {/*    state={"CHARGE"}*/}
                 {/*    total={data.maxMWh}*/}
