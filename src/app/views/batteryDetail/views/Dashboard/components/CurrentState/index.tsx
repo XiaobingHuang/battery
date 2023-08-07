@@ -13,8 +13,53 @@ const CurrentStatus = ({currentPerc}) => {
         height: "100%",
         background: "#009f61"
     }
-    return <div style={{background:"#f3f3f3",padding:"3px", width:'100%', height:"25px", border: "1px solid #c5c5c5"}}>
-        <div style={barStyle}/>
+
+    const remain = parseFloat((total - current).toFixed(1))
+    const curr = parseFloat((current).toFixed(1))
+    const perc = parseFloat((current / total * 100).toFixed(1))
+    return <div>
+        <div className={"ant-statistic-title"}>SOC</div>
+        <div style={{display: "flex"}}>
+            <div style={{width: '100%', paddingTop: "6px"}}>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end"
+                }}>
+                    <div style={{
+                        padding: "0 8px",
+                        fontSize: "18px",
+                        fontWeight: 600
+                    }}>{state === "DISCHARGE" ? "Discharging" : "Charging"} (9.4MW)</div>
+                    <div style={{fontSize: "12px", textAlign: "right"}}>Cap: {total} MWh</div>
+                </div>
+                {
+                    state === "DISCHARGE"
+                        ? <React.Fragment>
+                            <ProgressBar>
+                                <ProgressBar variant={state === "DISCHARGE" ? "success" : "danger"} label={`${curr} MWh`}
+                                             animated key={1} now={perc}/>
+                                {/*<ProgressBar animated label={"Remaining - 12MWh"} variant="warning" now={20} key={2} />*/}
+                            </ProgressBar>
+                            <div style={{fontSize: "12px", width: "100%", textAlign: "right"}}>{remain} MWh - Discharged
+                            </div>
+                        </React.Fragment>
+                        : <React.Fragment>
+                            <ProgressBar>
+                                <ProgressBar variant={"danger"} label={`${curr} MWh`} animated key={1} now={perc}/>
+                            </ProgressBar>
+                            <div style={{fontSize: "12px", width: "100%", textAlign: "right"}}>{remain} MWh - Remaining to
+                                Charge
+                            </div>
+                        </React.Fragment>
+                }
+
+
+            </div>
+            <div style={{padding: "27px 8px", fontSize: "18px", fontWeight: 600}}>
+                {perc}%
+            </div>
+        </div>
     </div>
 }
 const CurrentState = ({data}) => {
@@ -62,43 +107,27 @@ const CurrentState = ({data}) => {
 
     const socSeries = [parseFloat(currentSocPerc.toFixed(2))]
 
-    return <React.Fragment>
+    return <Row gutter={[16, 16]}>
+            <Col span={24}>
+                <Typography level={"h3"}>Status</Typography>
+            </Col>
         <Col span={24}>
-            <Typography level={"h3"}>Status</Typography>
-        </Col>
-        <Col span={9}>
-            <Card  style={{height:"100%"}} bordered={false}>
-                <div className={"ant-statistic-title"}>SOC</div>
-                <ReactApexChart  height={"250px"} type="radialBar" series={socSeries} options={socOptions}/>
+            <Card bordered={false}>
+                <CurrentStatus
+                    state={"DISCHARGE"}
+                    total={data.maxMWh}
+                    current={data.currentStateMwh}
+                    currentPerc={currentSocPerc}/>
+                {/*<CurrentStatus*/}
+                {/*    state={"CHARGE"}*/}
+                {/*    total={data.maxMWh}*/}
+                {/*    current={data.currentStateMwh}*/}
+                {/*    currentPerc={currentSocPerc}/>*/}
+                {/*<ReactApexChart  height={"250px"} type="radialBar" series={socSeries} options={socOptions}/>*/}
             </Card>
         </Col>
-        <Col span={3}>
-
-            <Card  style={{height:"100%"}}>
-                <Statistic
-                    title="Current Charge"
-                    value={data?.currentStateMwh}
-                    precision={2}
-                    suffix="MWh"
-                />
-                <Typography level={"body-sm"}>55 MWh Capacity</Typography>
-            </Card>
-        </Col>
-        <Col span={3}>
-            <Card  style={{height:"100%"}}>
-                <Statistic
-                    title="State"
-                    value={9.3}
-                    precision={2}
-                    valueStyle={{ color: '#3f8600' }}
-                    prefix={<ArrowDownOutlined />}
-                    suffix="MW"
-                />
-                <Typography color={"success"} level={"body-sm"}>Discharging</Typography>
-            </Card>
-        </Col>
-        <Col span={3}>
-            <Card style={{height:"100%"}}>
+        <Col span={24}>
+            <Card>
                 <Statistic
                     title="Charge Rate"
                     value={0.25}
@@ -110,8 +139,8 @@ const CurrentState = ({data}) => {
                 </Button>
             </Card>
         </Col>
-        <Col span={3}>
-            <Card style={{height:"100%"}}>
+        <Col span={24}>
+            <Card>
                 <Statistic
                     title="Temp"
                     value={117}
@@ -123,18 +152,16 @@ const CurrentState = ({data}) => {
                 <Typography color={"danger"} level={"body-sm"}>Overheat for 0.5hrs</Typography>
             </Card>
         </Col>
-        <Col span={3}>
-            <Card style={{height:"100%"}}>
-                <Statistic
-                    title="Current / Voltage"
-                    value={"5A / 57V"}
-                    precision={0}
-                    // valueStyle={{ color: '#3f8600' }}
-                    // prefix={<ArrowDownOutlined />}
-                />
-            </Card>
+        <Col span={24}>
+            <Statistic
+                title="Current / Voltage"
+                value={"5A / 57V"}
+                precision={0}
+                // valueStyle={{ color: '#3f8600' }}
+                // prefix={<ArrowDownOutlined />}
+            />
         </Col>
-    </React.Fragment>
+    </Row>
 }
 
 export default CurrentState

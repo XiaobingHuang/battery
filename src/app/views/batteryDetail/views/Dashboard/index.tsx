@@ -1,4 +1,4 @@
-import { Row,Divider} from 'antd';
+import {Row, Col, Divider} from 'antd';
 import EnergyMonitoring from "@/app/views/batteryDetail/views/Dashboard/components/EnergyMonitoring";
 import CurrentState from "@/app/views/batteryDetail/views/Dashboard/components/CurrentState";
 import moment from "moment";
@@ -31,13 +31,13 @@ const generateDemoData = () => {
     })
     const buyHours = [
         [2, 4],
-        [14,16]
+        [14, 16]
     ];
     const sellHours = [
-        [now.hour()+4, now.hour()+6],
+        [now.hour() + 4, now.hour() + 6],
         [19, 21]
     ];
-    let state= "Idle"
+    let state = "Idle"
     let totalBoughtPast = 0;
     let totalBought = 0;
     let totalSoldPast = 0;
@@ -69,22 +69,22 @@ const generateDemoData = () => {
 
         buyHours.forEach((b) => {
             const [start, end] = b;
-            let mwhBought = energyCapacity / ((60 /intervalMin) * chargeTime)
+            let mwhBought = energyCapacity / ((60 / intervalMin) * chargeTime)
             let rand = randomRange(0.01, 0.05)
-            if(Math.random() <0.5){
+            if (Math.random() < 0.5) {
                 rand * -1
             }
             mwhBought = mwhBought + (mwhBought * rand)
             const v = mwhBought * mwhBuyRate;
             if (currenthour >= start && currenthour < end) {
-                console.log("mwhBought",mwhBought)
-                if(currentMwh < energyCapacity){
-                    currentMwh +=mwhBought
+                console.log("mwhBought", mwhBought)
+                if (currentMwh < energyCapacity) {
+                    currentMwh += mwhBought
                     totalBought += v;
                     dataItem.buyKwh = v;
                     dataItem.currentMwh = currentMwh;
                     dataItem.mwhBought = mwhBought;
-                    if(current.isBefore(now)){
+                    if (current.isBefore(now)) {
                         totalBoughtPast += v
                     }
                 }
@@ -95,29 +95,29 @@ const generateDemoData = () => {
 
         sellHours.forEach((b) => {
             const [start, end] = b;
-            let mwhSold = energyCapacity / ((60 /intervalMin) * chargeTime)
+            let mwhSold = energyCapacity / ((60 / intervalMin) * chargeTime)
             let rand = randomRange(0.01, 0.05)
-            if(Math.random() <0.5){
+            if (Math.random() < 0.5) {
                 rand * -1
             }
             mwhSold = Math.min(mwhSold + (mwhSold * rand), currentMwh)
             const v = mwhSold * mwhSellRate
             if (currenthour >= start && currenthour < end) {
-                if(currentMwh > 0){
+                if (currentMwh > 0) {
                     currentMwh -= mwhSold
                     totalSold += v;
                     dataItem.sellKwh = v;
                     dataItem.currentMwh = currentMwh;
                     dataItem.mwhSold = mwhSold;
-                    if(current.isBefore(now)){
+                    if (current.isBefore(now)) {
                         totalSoldPast += v
                     }
                 }
 
             }
 
-            if(now15.isSame(current)){
-                currentSoc = currentMwh/ energyCapacity
+            if (now15.isSame(current)) {
+                currentSoc = currentMwh / energyCapacity
                 currentStateMwh = currentMwh
             }
 
@@ -144,14 +144,16 @@ const generateDemoData = () => {
 };
 
 
-
-const BatteryDashboard =() => {
+const BatteryDashboard = () => {
     const data = generateDemoData()
-    console.log("DATA",data)
-    return <Row gutter={[16, 16]} style={{padding:'30px'}}>
-        <CurrentState data={data}/>
-        <Divider style={{margin: "12px 0"}} />
-       <EnergyMonitoring data={data}/>
+    console.log("DATA", data)
+    return <Row gutter={[16, 16]} style={{padding: '0 30px'}}>
+        <Col span={6}>
+            <CurrentState data={data}/>
+        </Col>
+        <Col span={18}>
+            <EnergyMonitoring data={data}/>
+        </Col>
     </Row>
 
 }

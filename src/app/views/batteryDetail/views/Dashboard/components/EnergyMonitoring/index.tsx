@@ -201,11 +201,11 @@ const EnergyMonitoring = ({data}) => {
 
 
 
-    return <React.Fragment>
+    return <Row gutter={[16, 16]} >
         <Col span={24}>
             <Typography level={"h3"}>Monitoring</Typography>
         </Col>
-        <Col span={12}>
+        <Col span={24}>
             <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
                     <Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Market</Typography>
@@ -233,13 +233,13 @@ const EnergyMonitoring = ({data}) => {
                         {/*<Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalBought.toFixed(2)} / ${data[1].totalSold.toFixed(2)} / ${(data[1].totalSold + data[1].totalBought).toFixed(2)}</Title>*/}
                         {/*<Text style={{textAlign:"right"}}>To Date: ${data[1].totalBoughtPast.toFixed(2)} / ${data[1].totalSoldPast.toFixed(2)} / ${(data[1].totalSoldPast + data[1].totalBoughtPast).toFixed(2)}</Text>*/}
                 </div>
-                <Chart type={"area"}  height={"250px"} options={buyChartConfig.options} series={buyChartConfig.series}/>
+                <Chart type={"area"}  height={"220px"} options={buyChartConfig.options} series={buyChartConfig.series}/>
             </Card>
         </Col>
-        <Col span={12}>
+        <Col span={24}>
             <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
-                    <Typography level={"h3"} style={{margin: 0,textAlign:"right"}}>Charge</Typography>
+                    <Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Charge</Typography>
                         <table>
                             <tr>
                                 <td style={{padding:"0px 8px"}}></td>
@@ -252,10 +252,10 @@ const EnergyMonitoring = ({data}) => {
                             </tr>
                         </table>
                 </div>
-                <Chart type={"area"}  height={"250px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
+                <Chart type={"area"}  height={"220px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
             </Card>
         </Col>
-    </React.Fragment>
+    </Row>
 
 }
 export default EnergyMonitoring
