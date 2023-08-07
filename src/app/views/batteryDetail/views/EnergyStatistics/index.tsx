@@ -123,6 +123,11 @@ const tabOptions = [
     label: "Battery Usage Statistics",
     path: "battery-usage",
   },
+  {
+    key: "5",
+    label: "Battery Modules Statistics",
+    path: "battery-modules",
+  },
 ];
 const BatteryDetailEnergy = () => {
   const nav = useNavigate();

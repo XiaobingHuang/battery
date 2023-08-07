@@ -19,6 +19,7 @@ import SOCChart from "./views/batteryDetail/views/EnergyStatistics/SOCChart";
 import ChargeDischargeCycle from "./views/batteryDetail/views/EnergyStatistics/ChargeDischargeCycle";
 import EnergyTable from "./views/batteryDetail/views/EnergyStatistics/EnergyTable";
 import BatteryUsageChart from "./views/batteryDetail/views/EnergyStatistics/BatteryUsageChart/BatteryUsageChart";
+import ModuleCharts from "./views/batteryDetail/views/EnergyStatistics/ModuleAnalysis";
 
 
 const { Header, Sider, Content } = Layout;
@@ -45,6 +46,7 @@ const BatteryBox = () => {
                   <Route path="charge-discharge-cycle" element={<ChargeDischargeCycle />}/>
                   <Route path="energy-statistics-table" element={<EnergyTable/>}/>
                   <Route path="battery-usage" element={<BatteryUsageChart/>}/>
+                  <Route path="battery-modules" element={<ModuleCharts/>}/>
                 </Route>
                 <Route path="alarm-notifications" element={<BatteryAlarmNotifications />}/>
                 <Route path="" element={<Navigate to={"dashboard"} />} />
