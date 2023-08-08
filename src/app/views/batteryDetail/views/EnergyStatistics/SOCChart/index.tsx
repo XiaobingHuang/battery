@@ -5,6 +5,8 @@ import { ApexOptions } from "apexcharts";
 import colors from "@/app/colors";
 import { Chart } from "react-google-charts";
 import { Row, Col, Space, Table, Tabs } from "antd";
+import {generateChargeDischargeDemoData, getDailyChargeDischargeCycles} from "@/mock/chargeDischargeDemoData";
+import moment from "moment";
 
 const socData = [
     {
@@ -1244,16 +1246,10 @@ const socData = [
     },
   ];
 
-const series_soc = [
-    {
-      name: "SOC",
-      data: socData.map((e) => e.SOC),
-    },
-  ];
   const options_soc: ApexOptions = {
     chart: {
       height: 350,
-      type: "line",
+      type: "area",
       zoom: {
         enabled: false,
       },
@@ -1266,13 +1262,28 @@ const series_soc = [
       width: [3],
     },
     title: {
-      text: "SOC Chart",
+      // text: "SOC Chart",
       align: "left",
     },
     grid: {
       row: {
         colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
         opacity: 0.5,
+      },
+    },
+    yaxis: {
+      tickAmount: 4,
+      floating: false,
+      min: 0,
+      labels: {
+        style: {
+          colors: "#8e8da4"
+        },
+        offsetY: -7,
+        offsetX: 0,
+        formatter: function (value) {
+          return value.toFixed(2);
+        }
       },
     },
     xaxis: {
@@ -1282,11 +1293,23 @@ const series_soc = [
   };
 
 const SOCChart=()=>{
+
+    const data =generateChargeDischargeDemoData(moment("2021-08-01"), moment("2021-08-08"))
+
+
+  const series_soc = [
+    {
+      name: "SOC",
+      data: data?.chartData?.map((e) => [e.time,e.currentSoc]),
+    },
+  ];
+
+    console.log("asd",series_soc)
      return(
         <div>
             <ReactApexChart
-            width={1000}
             height={400}
+            type={"area"}
             series={series_soc}
             options={options_soc}
           />

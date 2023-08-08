@@ -1,6 +1,6 @@
 import { ArrowDownOutlined,WarningOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import {Card, Col, Row, Statistic, Button} from 'antd';
-import {Typography} from "@mui/joy";
+import {Box, Typography} from "@mui/joy";
 import React from "react"
 import {formatPerc} from "@/helpers/formatting";
 import ReactApexChart from "react-apexcharts";
@@ -117,7 +117,7 @@ const CurrentState = ({data}) => {
         <Col span={24}>
             <Card bordered={false}>
                 <CurrentStatus
-                    state={"IDLE"}
+                    state={"DISCHARGE"}
                     total={data.capMwh}
                     current={data.actualMwh}/>
                 {/*<CurrentStatus*/}
@@ -130,38 +130,54 @@ const CurrentState = ({data}) => {
         </Col>
         <Col span={24}>
             <Card>
-                <Statistic
-                    title="Charge Rate"
-                    value={0.25}
-                    precision={2}
-                    suffix="C"
-                />
-                <Button style={{ marginTop: 16 }} size={"small"} type="default">
-                    Reset
-                </Button>
+                <Typography fontWeight={"500"} level={"h3"}>Discharge</Typography>
+                <Box sx={{display:'flex', justifyContent: 'space-between'}}>
+                    <Box>
+                        <Statistic
+                            title="Rate"
+                            value={0.25}
+                            precision={2}
+                            suffix="C"
+                        />
+                        <Button style={{ marginTop: 16 }} size={"small"} type="default">
+                            Reset
+                        </Button>
+                    </Box>
+                    <Box>
+                        <Statistic
+                            title="Flow"
+                            value={10}
+                            precision={1}
+                            suffix="MW"
+                        />
+                    </Box>
+                </Box>
+
             </Card>
         </Col>
         <Col span={24}>
             <Card>
+                <Typography fontWeight={"500"} level={"h3"}>Temperature</Typography>
                 <Statistic
-                    title="Temp"
-                    value={117}
+                    title="Actual / Min / Max"
+                    value={"98F / 34F / 130F"}
                     precision={0}
-                    valueStyle={{ color: 'red' }}
-                    prefix={<WarningOutlined />}
-                    suffix="F"
+                    // valueStyle={{ color: '#3f8600' }}
+                    // prefix={<ArrowDownOutlined />}
                 />
-                <Typography color={"danger"} level={"body-sm"}>Overheat for 0.5hrs</Typography>
             </Card>
         </Col>
         <Col span={24}>
+            <Card>
+            <Typography fontWeight={"500"} level={"h3"}>Current</Typography>
             <Statistic
-                title="Current / Voltage"
-                value={"5A / 57V"}
+                title="Actual / Min / Max"
+                value={"5A / 1A / 120A"}
                 precision={0}
                 // valueStyle={{ color: '#3f8600' }}
                 // prefix={<ArrowDownOutlined />}
             />
+            </Card>
         </Col>
     </Row>
 }

@@ -43,8 +43,8 @@ const BatteryDetail = ( ) =>{
         },
         {
             key: '2',
-            path:"monitoring",
-            label: `Monitoring`,
+            path:"energy-statistics",
+            label: `Monitoring & Analytics`,
             // children: <BatteryMonitor/>,
         },
         {
@@ -53,12 +53,12 @@ const BatteryDetail = ( ) =>{
             path:"control-settings",
             // children: `Content of Tab Pane 3`,
         },
-        {
-            key: '4',
-            label: `Energy Analytics`,
-            path:"energy-statistics",
-            //children: `Content of Tab Pane 3`,
-        },
+        // {
+        //     key: '4',
+        //     label: `Energy Analytics`,
+        //     path:"energy-statistics",
+        //     //children: `Content of Tab Pane 3`,
+        // },
         {
             key: '5',
             label: `Alarm & Notifications`,

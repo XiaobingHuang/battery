@@ -1,7 +1,7 @@
 import moment from "moment";
 import {useMemo} from "react";
 
-const data =[
+const data = [
     {
         "Delivery Date": "6/1/21",
         "Hour Ending": "01:00",
@@ -83407,7 +83407,7 @@ const startOf = (m, n, unit) => {
     return m;
 };
 
-export const generateChargeDischargeDemoData = (start,end) =>{
+export const generateChargeDischargeDemoData = (start, end) => {
     const d = []
     let totalMWhCharged = 0
     let totalMWhDischarged = 0
@@ -83424,21 +83424,20 @@ export const generateChargeDischargeDemoData = (start,end) =>{
     const chargeTime = 4
     const now = startOf(moment(), intervalMin, 'minute');
     console.log("NOW", now.format("MM/DD/yy HH:mm"))
-    const startIdx = data.map(d => moment( d["Delivery Date"]).format("MM_DD")).indexOf(moment(start).format("MM_DD"))
-    const endIdx = data.map(d => moment( `${d["Delivery Date"]} ${d["Hour Ending"]}`).format("MM_DD HH:mm")).indexOf(moment(end).format("MM_DD HH:mm")) - 1
+    const startIdx = data.map(d => moment(d["Delivery Date"]).format("MM_DD")).indexOf(moment(start).format("MM_DD"))
+    const endIdx = data.map(d => moment(`${d["Delivery Date"]} ${d["Hour Ending"]}`).format("MM_DD HH:mm")).indexOf(moment(end).format("MM_DD HH:mm")) - 1
     let currIdx = startIdx
     let cycleCount = 0
     let isCharge = false
     let isDischarge = false
-    const  m = moment
+    const m = moment
 
-    const forecastPoints = parseInt(Math.max(end.diff(moment(), "m") / intervalMin,0).toFixed(0))
-
-    while(currIdx <= endIdx){
+    const forecastPoints = parseInt(Math.max(end.diff(moment(), "m") / intervalMin, 0).toFixed(0))
+    while (currIdx <= endIdx) {
         const item = data[currIdx]
         for (let i = 0; i <= subCountInt; i++) {
             const time = moment(`${item["Delivery Date"]} ${item["Hour Ending"]}`)
-            time.add(intervalMin*i, "m")
+            time.add(intervalMin * i, "m")
             time.set('year', start.year())
 
             let qty = capMwh / ((60 / intervalMin) * chargeTime)
@@ -83450,16 +83449,16 @@ export const generateChargeDischargeDemoData = (start,end) =>{
             let amtSold = 0
 
 
-            if(currentMwh <= capMwh && (item["RT Decision"] === 1 ||isCharge)){
-                isCharge=true
-                mwhBought =  Math.min(qty, capMwh - currentMwh)
+            if (currentMwh <= capMwh && (item["RT Decision"] === 1 || isCharge)) {
+                isCharge = true
+                mwhBought = Math.min(qty, capMwh - currentMwh)
                 // @ts-ignore
                 amtBought = mwhBought * item["RT Energy Price ($/MWh)"] * -1
                 totalMWhBought += amtBought
                 currentMwh = currentMwh + mwhBought
-            } else if(currentMwh >= 2 && (item["RT Decision"] === "(1)"|| isDischarge)){
-                isDischarge=true
-                mwhSold =  Math.min(qty  ,currentMwh)* -1
+            } else if (currentMwh >= 2 && (item["RT Decision"] === "(1)" || isDischarge)) {
+                isDischarge = true
+                mwhSold = Math.min(qty, currentMwh) * -1
                 // @ts-ignore
                 amtSold = mwhSold * item["RT Energy Price ($/MWh)"] * -1
                 totalMWhSold += amtSold
@@ -83478,18 +83477,19 @@ export const generateChargeDischargeDemoData = (start,end) =>{
                 mwhSold,
                 amtBought,
                 amtSold,
+                currentSoc: currentMwh / capMwh * 100,
                 totalMWhNet: totalMWhBought + totalMWhSold
             }
 
             d.push(dataItem)
-            if(cycleCount === 4){
-                cycleCount=0
+            if (cycleCount === 4) {
+                cycleCount = 0
                 isCharge = false
                 isDischarge = false
             }
 
-            if(now.format("MM/DD/yy HH:mm") === time.format("MM/DD/yy HH:mm")){
-                currentSoc = currentMwh /capMwh
+            if (now.format("MM/DD/yy HH:mm") === time.format("MM/DD/yy HH:mm")) {
+                currentSoc = currentMwh / capMwh
                 actualMwh = currentMwh
             }
         }
@@ -83510,4 +83510,103 @@ export const generateChargeDischargeDemoData = (start,end) =>{
         actualMwh,
         capMwh
     }
+}
+
+export const getDailyChargeDischargeCycles = (start, end) => {
+
+    const startIdx = data.map(d => moment(d["Delivery Date"]).format("MM_DD")).indexOf(moment(start).format("MM_DD"))
+    const endIdx = data.map(d => moment(`${d["Delivery Date"]} ${d["Hour Ending"]}`).format("MM_DD")).indexOf(moment(end).format("MM_DD")) - 1
+
+    const startTime = moment(`${data[startIdx]["Delivery Date"]}`)
+    const endTime = moment(`${data[endIdx]["Delivery Date"]}`)
+
+    const startTimeMonth = parseInt(endTime.format("MM"))
+    const startTimeDay = parseInt(startTime.format("DD"))
+    const endTimeMonth = parseInt(endTime.format("MM"))
+    const endTimeDay = parseInt(endTime.format("DD"))
+
+    const dates = data.filter((d) => {
+        const time = moment(`${d["Delivery Date"]}`)
+
+
+        const timeMonth = parseInt(time.format("MM"))
+        const timeDay = parseInt(time.format("DD"))
+
+
+        return (timeMonth >= startTimeMonth && timeMonth <= endTimeMonth)
+            && (timeDay >= endTimeDay && timeDay <= endTimeDay)
+
+        console.log(time.format("MM/DD/yy HH:MM"), startTime.format("MM/DD/yy HH:MM"), endTime.format("MM/DD/yy HH:MM"), time.isSameOrBefore(endTime), time.isSameOrAfter(startTime))
+        return time.isSameOrBefore(endTime) && time.isSameOrAfter(startTime)
+    })
+
+   let date = moment().subtract(6,"month")
+    let endDate = moment()
+    const d = []
+   while(date.isBefore(endDate)){
+       let dataItem = {
+           time: date.clone(),
+           totalCharge: Math.floor(Math.random() * (2 - 0 + 1) + 0),
+           totalDischarge:Math.floor(Math.random() * (2 - 0 + 1) + 0) * -1,
+       }
+       d.push(dataItem)
+
+        date.add(1, "d")
+   }
+
+    console.log("d", d)
+
+   return d
+    return dates.reduce((t, c) => {
+        const cIdex = t.map(t => moment(`${t["Delivery Date"]}`).format("MM_DD")).indexOf(moment(`${c["Delivery Date"]}`).format("MM_DD"))
+        let dataItem = {
+            time: moment(`${c["Delivery Date"]}`),
+            totalCharge: 0,
+            totalDischarge: 0
+        }
+        if (cIdex !== -1) {
+            dataItem = t[cIdex]
+        }
+        if (c["RT Decision"] === 1) {
+            dataItem.totalCharge = dataItem.totalCharge + 1
+        }
+
+        if (c["RT Decision"] === "(1)") {
+            dataItem.totalCharge = dataItem.totalDischarge - 1
+        }
+        if (cIdex !== -1) {
+            t[cIdex] = dataItem
+        } else {
+            t.push(dataItem)
+        }
+        return t
+
+    }, [])
+}
+
+
+export const batteryLife = () => {
+
+
+    let date = moment().subtract(3,"y")
+    let endDate = moment()
+    const d = []
+    let life = 1
+    while(date.isBefore(endDate)){
+        const deg = (Math.random() * (0.003 - 0.002) + 0.002)
+        life = life -deg
+        let dataItem = {
+            time: date.clone(),
+            life,
+            deg
+        }
+        d.push(dataItem)
+
+        date.add(1, "M")
+    }
+
+    console.log("d", d)
+
+    return d
+
 }

@@ -359,17 +359,17 @@ const EnergyMonitoring = ({data}) => {
             <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
                     <Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Charge</Typography>
-                        <table>
-                            <tr>
-                                <td style={{padding:"0px 8px"}}></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}>Current</td>
-                            </tr>
-                            <tr>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}>
-                                    <Typography level={"h3"} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Typography></td>
-                            </tr>
-                        </table>
+                        {/*<table>*/}
+                        {/*    <tr>*/}
+                        {/*        <td style={{padding:"0px 8px"}}></td>*/}
+                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}>Current</td>*/}
+                        {/*    </tr>*/}
+                        {/*    <tr>*/}
+                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}></td>*/}
+                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}>*/}
+                        {/*            <Typography level={"h3"} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Typography></td>*/}
+                        {/*    </tr>*/}
+                        {/*</table>*/}
                 </div>
                 <Chart type={"area"}  height={"220px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
             </Card>

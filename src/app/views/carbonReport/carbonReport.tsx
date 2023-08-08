@@ -14,16 +14,55 @@ dayjs.extend(isSameOrBefore)
 
 const generateDemoData =(comp, start,end, interval, intervalType) => {
     const data =[ ]
-    comp.forEach(c => {
+
+    const ghg = [
+        {
+            name: "MWh Bought",
+            type: "MWH",
+            min: 800,
+            max: 900,
+            factor: 1,
+            unit: "MWh"
+        },
+        {
+            name: "MWh Sold",
+            type: "MWH",
+            min: 800,
+            max: 900,
+            factor: -1,
+            unit: "MWh"
+        },
+        {
+            name: "GHG Produced",
+            type: "GHG",
+            min: 800 * 1.5624,
+            max: 900 * 1.5624,
+            factor: 1,
+            unit: "lbs CO2 (1000)"
+        },
+        {
+            name: "GHG Consumed",
+            type: "GHG",
+            min: 800 * 1.5624,
+            max: 900 * 1.5624,
+            factor: -1,
+            unit: "lbs CO2 (1000)"
+        },
+    ]
+
+    ghg.forEach(c => {
         const mStart = moment(start,)
         const mEnd = moment(end)
         let current = dayjs(start.valueOf())
         const dataItem = {
-            comp:c.name
+            comp:c.name,
+                ...c
         }
         // @ts-ignore
         while (current.isSameOrBefore(mEnd)){
-            dataItem[current.format("YYYY_MM_DD")] = Math.floor(Math.random() * (c.max - c.min + 1) +  c.min)
+            let val = Math.floor(Math.random() * (c.max - c.min + 1) +  c.min) *c.factor
+
+            dataItem[current.format("YYYY_MM_DD")] = val
             current = current.add(interval,intervalType)
         }
         data.push(dataItem)
@@ -58,6 +97,13 @@ export default function CarbonReport() {
                 fixed: 'left',
                 width: 130,
             },
+            {
+                key: "unit",
+                title: "Unit",
+                dataIndex: "unit",
+                fixed: 'left',
+                width: 130,
+            },
         ]
 
         const mStart = dateVal[0]
@@ -71,6 +117,8 @@ export default function CarbonReport() {
                 dataIndex: current.format("YYYY_MM_DD"),
                 align:"right",
                 render: (text,d) => {
+                    // debugger
+                   return  text?.toLocaleString('en-US')
                     return formatCurrency(text || 0, 0)
                 },
                 width: 90,
@@ -185,16 +233,20 @@ export default function CarbonReport() {
                 }
 
                 const d = {
-                    name: c.comp,
-                    data: _data
+                    name: c.name,
+                    data: _data,
+                    dataType: c.type
                 }
                 t.push(d)
                 return t
-            }, [])
+            }, []).filter(d => {
+                return d.dataType ==="GHG"
+            })
         }
         return []
     }, [data,dateVal])
 
+    console.log(chartData)
     const chartConfig = useMemo(() => {
         return merge({},chartBaseConfig, {
             options: {
@@ -209,8 +261,6 @@ export default function CarbonReport() {
             series: chartData
         });
     }, [chartData, chartBaseConfig]);
-
-    console.log("ASD",chartConfig)
 
     return (
     <Grid container gap={1} rowSpacing={1} sx={{p:2}}>
