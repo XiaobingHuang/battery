@@ -1,9 +1,12 @@
 
 export class BatteryAlarmNotificationsVM{
-    note : string | number | readonly string[]= undefined;
+    note :any= undefined;
+    EditMode:boolean= false;
     showTempAlarmModal:boolean = false;
     handleOnchange(event){
+        console.log("handleOnchange: ", event.target.value );
         this.note =  event.target.value;
+        console.log("Note: ", this.note );
     }
     handleShowTempAlarmModal(){
         this.showTempAlarmModal=true
@@ -11,5 +14,6 @@ export class BatteryAlarmNotificationsVM{
     handleOnClick(){
         this.showTempAlarmModal=true
     }
+    
 
 }

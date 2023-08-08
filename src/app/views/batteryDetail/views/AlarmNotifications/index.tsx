@@ -1,4 +1,4 @@
-import React, { Component, useRef, useState, useEffect } from "react";
+import React, { Component, useRef, useState, useEffect, useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Row, Col, Table, Space } from "antd";
@@ -1261,8 +1261,17 @@ const data = [
   },
 ];
 const BatteryAlarmNotifications = () => {
-    const vm = useRef(new BatteryAlarmNotificationsVM()).current;
-    const[showTempAlarmModal,setShowTempAlarmModal] = useState(false)
+  const vm = useRef(new BatteryAlarmNotificationsVM()).current;
+  const [showTempAlarmModal, setShowTempAlarmModal] = useState(false);
+  const [editMode, seteditMode] = useState(false);
+  const [notesContent, setNotesContent] = useState("");
+  const [copyNotes, setCopyNotes] = useState(notesContent);
+  useEffect(()=>{
+    if(editMode){
+      vm.note=notesContent;
+    }
+  },[editMode])
+
 
   const time = data.map((e) => e.Timestamp);
 
@@ -1287,7 +1296,91 @@ const BatteryAlarmNotifications = () => {
     return { x: e.Timestamp, y: e.Temp };
   });
   console.log(set);
+  const tempChartConfrig: { series: any[]; options: ApexOptions } =
+    useMemo(() => {
+      return {
+        series: [
+          {
+            type: "rangeArea",
+            name: "Acceptable Range",
+            data: set,
+          },
+          {
+            type: "line",
+            name: "Battery Temp",
+            data: set2,
+          },
+        ],
+        options: {
+          chart: {
+            type: "rangeArea",
+            animations: {
+              speed: 500,
+            },
+            toolbar: {
+              show: false,
+            },
+          },
+          colors: [colors.gray, colors.green],
+          dataLabels: {
+            enabled: false,
+          },
+          annotations: {
+            xaxis: [
+              {
+                x: new Date("1/1/23 12:00").getTime(),
+                x2: new Date("1/1/23 12:45").getTime(),
+                fillColor: colors.red,
+                opacity: 0.2,
+                label: {
+                  click: () => setShowTempAlarmModal(true),
 
+                  borderColor: colors.red,
+                  style: {
+                    fontSize: "10px",
+                    color: "#fff",
+                    background: colors.red,
+                  },
+                  offsetY: -10,
+                  text: "Alarm",
+                },
+              },
+            ],
+          },
+          grid: {
+            xaxis: {
+              lines: {
+                show: true,
+              },
+            },
+            yaxis: {
+              lines: {
+                show: false,
+              },
+            },
+          },
+          fill: {
+            opacity: [0.5, 1],
+          },
+          stroke: {
+            curve: "straight",
+            width: [0, 1.5],
+          },
+          legend: {
+            show: true,
+          },
+          markers: {
+            hover: {
+              sizeOffset: 5,
+            },
+          },
+          xaxis: {
+            // categories: time,
+            type: "datetime",
+          },
+        },
+      };
+    }, []);
   const series = [
     {
       type: "rangeArea",
@@ -1322,8 +1415,8 @@ const BatteryAlarmNotifications = () => {
           fillColor: colors.red,
           opacity: 0.2,
           label: {
-            click:()=>setShowTempAlarmModal(true),
-            
+            click: () => setShowTempAlarmModal(true),
+
             borderColor: colors.red,
             style: {
               fontSize: "10px",
@@ -1574,7 +1667,9 @@ const BatteryAlarmNotifications = () => {
           fillColor: colors.red,
           opacity: 0.2,
           label: {
-            click: ()=>{setShowTempAlarmModal(true)},
+            click: () => {
+              setShowTempAlarmModal(true);
+            },
             borderColor: colors.red,
             style: {
               fontSize: "10px",
@@ -1672,7 +1767,7 @@ const BatteryAlarmNotifications = () => {
   ];
 
   const chartHeights = "250px";
-  
+
   return (
     <Box>
       <Box sx={{ maxWidth: "800px", margin: "0 auto" }}>
@@ -1723,8 +1818,8 @@ const BatteryAlarmNotifications = () => {
             <ReactApexChart
               type={"rangeArea"}
               height={chartHeights}
-              options={options}
-              series={series}
+              options={tempChartConfrig.options}
+              series={tempChartConfrig.series}
             />
           </Card>
         </Grid>
@@ -1766,7 +1861,7 @@ const BatteryAlarmNotifications = () => {
 
       <Modal
         open={showTempAlarmModal}
-        onClose={()=>setShowTempAlarmModal(false)}
+        onClose={() => setShowTempAlarmModal(false)}
       >
         <ModalDialog sx={{ maxWidth: "350px" }}>
           <ModalClose />
@@ -1800,33 +1895,36 @@ const BatteryAlarmNotifications = () => {
             </Grid>
             <Divider />
             <Grid xs={12}>
-              <FormControl>
-                <Typography level={"body-sm"}>Notes</Typography>
+              <Typography level={"body-sm"}>Notes</Typography>
+
+              {editMode ? (
                 <Textarea
                   placeholder="Type notes here…"
                   minRows={3}
-                  value={vm.note}
-                  onChange={vm.handleOnchange}
-                  endDecorator={
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: "var(--Textarea-paddingBlock)",
-                        pt: "var(--Textarea-paddingBlock)",
-                        borderTop: "1px solid",
-                        borderColor: "divider",
-                        flex: "auto",
-                      }}
-                    >
-                    </Box>
-                  }
+                  value={notesContent}
+                  onChange={(event)=>{setNotesContent(event.target.value)}}
                   sx={{
                     minWidth: 300,
                     fontWeight: "normal",
                     fontStyle: "initial",
                   }}
                 />
-              </FormControl>
+              ) : (
+                <Card variant="outlined" sx={{ maxWidth: 400 }}>
+                  <Typography>{notesContent}</Typography>
+                </Card>
+              )}
+
+              {editMode ? (
+                <Space style={{ padding: 10 }}>
+                  <Button onClick={()=>seteditMode(false)}>Save</Button>
+                  <Button onClick={()=>{seteditMode(false);setNotesContent(vm.note)}}>Cancel</Button>
+                </Space>
+              ) : (
+                <Space style={{ padding: 10 }}>
+                  <Button onClick={()=>seteditMode(true)}>Edit</Button>
+                </Space>
+              )}
             </Grid>
           </Grid>
         </ModalDialog>

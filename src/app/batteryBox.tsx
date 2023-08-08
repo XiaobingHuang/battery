@@ -47,6 +47,7 @@ const BatteryBox = () => {
                   <Route path="energy-statistics-table" element={<EnergyTable/>}/>
                   <Route path="battery-usage" element={<BatteryUsageChart/>}/>
                   <Route path="battery-modules" element={<ModuleCharts/>}/>
+                  <Route path="" element={<Navigate to={"soc-monitoring"} />} />
                 </Route>
                 <Route path="alarm-notifications" element={<BatteryAlarmNotifications />}/>
                 <Route path="" element={<Navigate to={"dashboard"} />} />
