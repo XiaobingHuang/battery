@@ -2,6 +2,8 @@ import {Row, Col, Divider} from 'antd';
 import EnergyMonitoring from "@/app/views/batteryDetail/views/Dashboard/components/EnergyMonitoring";
 import CurrentState from "@/app/views/batteryDetail/views/Dashboard/components/CurrentState";
 import moment from "moment";
+import {generateChargeDischargeDemoData} from "@/mock/chargeDischargeDemoData";
+import {useMemo} from "react";
 
 function randomIntFromInterval(min, max) {
     // min and max included
@@ -146,13 +148,24 @@ const generateDemoData = () => {
 
 const BatteryDashboard = () => {
     const data = generateDemoData()
-    console.log("DATA", data)
+    const end = moment().endOf("d").add(1,"m")
+    const start = end.clone().subtract(24, "h") || "2021-06-01"
+    const x = generateChargeDischargeDemoData(start,end)
+    var offset = moment().utcOffset();
+    let UTC = moment.utc()
+    let local = moment(UTC).local()
+    let localStart = moment(start).local()
+    let localEnd = moment(end).local()
+    console.log("DATA", x)
+
+
+
     return <Row gutter={[16, 16]} style={{padding: '0 30px'}}>
         <Col span={6}>
-            <CurrentState data={data}/>
+            <CurrentState data={x}/>
         </Col>
         <Col span={18}>
-            <EnergyMonitoring data={data}/>
+            <EnergyMonitoring data={x}/>
         </Col>
     </Row>
 

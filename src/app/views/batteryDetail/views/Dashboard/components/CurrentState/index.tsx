@@ -12,6 +12,8 @@ const CurrentStatus = ({current,total,state}) => {
     const remain = parseFloat((total - current).toFixed(1))
     const curr = parseFloat((current).toFixed(1))
     const perc = parseFloat((current / total * 100).toFixed(1))
+
+
     return <div>
         <div className={"ant-statistic-title"}>SOC</div>
         <div style={{display: "flex"}}>
@@ -25,7 +27,7 @@ const CurrentStatus = ({current,total,state}) => {
                         padding: "0 8px",
                         fontSize: "18px",
                         fontWeight: 600
-                    }}>{state === "DISCHARGE" ? "Discharging" : "Charging"} (9.4MW)</div>
+                    }}>{state === "DISCHARGE" ? "Discharging"  :  state === "CHARGING" ? "Charging" :"Idle"}</div>
                     <div style={{fontSize: "12px", textAlign: "right"}}>Cap: {total} MWh</div>
                 </div>
                 {
@@ -39,7 +41,8 @@ const CurrentStatus = ({current,total,state}) => {
                             <div style={{fontSize: "12px", width: "100%", textAlign: "right"}}>{remain} MWh - Discharged
                             </div>
                         </React.Fragment>
-                        : <React.Fragment>
+                        :   state === "CHARGING"
+                        ?<React.Fragment>
                             <ProgressBar>
                                 <ProgressBar variant={"danger"} label={`${curr} MWh`} animated key={1} now={perc}/>
                             </ProgressBar>
@@ -47,6 +50,11 @@ const CurrentStatus = ({current,total,state}) => {
                                 Charge
                             </div>
                         </React.Fragment>
+                        :<React.Fragment>
+                                <ProgressBar>
+                                    <ProgressBar variant={"neutral"} label={`${curr} MWh`} key={1} now={perc}/>
+                                </ProgressBar>
+                            </React.Fragment>
                 }
 
 
@@ -109,10 +117,9 @@ const CurrentState = ({data}) => {
         <Col span={24}>
             <Card bordered={false}>
                 <CurrentStatus
-                    state={"DISCHARGE"}
-                    total={data.maxMWh}
-                    current={data.currentStateMwh}
-                    currentPerc={currentSocPerc}/>
+                    state={"IDLE"}
+                    total={data.capMwh}
+                    current={data.actualMwh}/>
                 {/*<CurrentStatus*/}
                 {/*    state={"CHARGE"}*/}
                 {/*    total={data.maxMWh}*/}
