@@ -111,7 +111,8 @@ const CurrentState = ({data}) => {
                 <CurrentStatus
                     state={"DISCHARGE"}
                     total={data.maxMWh}
-                    current={data.currentStateMwh}/>
+                    current={data.currentStateMwh}
+                    currentPerc={currentSocPerc}/>
                 {/*<CurrentStatus*/}
                 {/*    state={"CHARGE"}*/}
                 {/*    total={data.maxMWh}*/}
