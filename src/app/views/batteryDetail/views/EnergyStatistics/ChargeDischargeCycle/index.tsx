@@ -5,6 +5,7 @@ import { ApexOptions } from "apexcharts";
 import colors from "@/app/colors";
 import { Chart } from "react-google-charts";
 import { Row, Col, Space, Table, Tabs } from "antd";
+import {getDailyChargeDischargeCycles} from "@/mock/chargeDischargeDemoData";
 
 const chargeDischargedata = [
     {
@@ -806,14 +807,16 @@ const chargeDischargedata = [
   
   
 
+const data = getDailyChargeDischargeCycles("2021-06-01", "2022-12-29")
+// console.log("Data,",data)
 const charge_discharge_series = [
     {
       name: "charge",
-      data: chargeDischargedata.map((e) => Number(e.Charge)),
+      data: data.map((e) => [e.time, e.totalCharge]),
     },
     {
       name: "discharge",
-      data: chargeDischargedata.map((e) => Number(e.Discharge)),
+      data: data.map((e) =>[e.time, e.totalDischarge]),
     },
   ];
   const charge_discharge_options: ApexOptions = {
@@ -846,16 +849,24 @@ const charge_discharge_series = [
         opacity: 0.5,
       },
     },
-    yaxis: {
-      min: -5,
-      max: 5,
-      title: {
-        // text: 'Age',
-      },
-    },
     title: {
-      text: "Charge and Discharge Cycle",
+      // text: "Charge and Discharge Cycle",
     },
+      yaxis: {
+          tickAmount: 4,
+          floating: false,
+          min: 0,
+          labels: {
+              style: {
+                  colors: "#8e8da4"
+              },
+              offsetY: -7,
+              offsetX: 0,
+              formatter: function (value) {
+                  return value.toFixed(2);
+              }
+          },
+      },
     xaxis: {
       categories: dateArray,
       type: "datetime",
@@ -866,7 +877,7 @@ const ChargeDischargeCycle=()=>{
      return(
         <div>
            <ReactApexChart
-            width={1000}
+            width={"100%"}
             height={400}
             type="bar"
             series={charge_discharge_series}

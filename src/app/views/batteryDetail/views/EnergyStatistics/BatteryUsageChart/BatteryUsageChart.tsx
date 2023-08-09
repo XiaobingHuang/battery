@@ -5,6 +5,7 @@ import { ApexOptions } from "apexcharts";
 import colors from "@/app/colors";
 import { Chart } from "react-google-charts";
 import { Row, Col, Space, Table, Tabs, Divider } from "antd";
+import {batteryLife} from "@/mock/chargeDischargeDemoData";
 
 const chargeDischargedata = [
   {
@@ -777,23 +778,6 @@ const chargeDischargedata = [
   },
 ];
 
-const battery_life_series = [
-  {
-    name: "Battery Life",
-    data: [
-      89.97, 89.92, 89.86, 89.8, 89.74, 89.69, 89.67, 89.62, 89.59, 89.55,
-      89.53, 89.52, 89.47, 89.43, 89.41, 89.33, 89.27, 89.26, 89.22, 89.2,
-      89.13, 89.1, 89.03, 89.01, 88.97, 88.95, 88.94, 88.92, 88.9, 88.89, 88.82,
-      88.78, 88.74, 88.68, 88.63, 88.6, 88.54, 88.49, 88.47, 88.41, 88.33,
-      88.26, 88.19, 88.12, 88.05, 87.98, 87.94, 87.89, 87.85, 87.83, 87.82,
-      87.75, 87.68, 87.66, 87.59, 87.52, 87.48, 87.44, 87.41, 87.36, 87.34,
-      87.28, 87.27, 87.21, 87.15, 87.12, 87.08, 87.02, 86.96, 86.9, 86.84,
-      86.81, 86.73, 86.67, 86.62, 86.56, 86.49, 86.46, 86.42, 86.37, 86.36,
-      86.32, 86.28, 86.27, 86.24, 86.22, 86.18, 86.1, 86.09, 86.05, 86.01,
-      85.96, 85.92, 85.85, 85.77, 85.71,
-    ],
-  },
-];
 
 const battery_life_options: ApexOptions = {
   chart: {
@@ -814,6 +798,21 @@ const battery_life_options: ApexOptions = {
     text: "Battery Life",
     align: "left",
   },
+  yaxis: {
+      tickAmount: 4,
+      floating: false,
+      min: 0,
+      labels: {
+          style: {
+              colors: "#8e8da4"
+          },
+          offsetY: -7,
+          offsetX: 0,
+          formatter: function (value) {
+              return value.toFixed(2);
+          }
+      },
+  },
   xaxis: {
     categories: chargeDischargedata.map((e) => e.Time),
     type: "datetime",
@@ -821,14 +820,14 @@ const battery_life_options: ApexOptions = {
   colors: [colors.green],
 };
 
-const series_battery = [85.77, 100 - 85.77];
+
 const options_battery: ApexOptions = {
   chart: {
     width: 380,
     type: "pie",
   },
-  labels: ["Battery Maximum Capacity", "Battery Consumption Usage"],
-  colors: [colors.green, colors.gray],
+  labels: ["Battery Life Used", "Battery Life Remaining"],
+  colors: [colors.gray,colors.green ],
   responsive: [
     {
       breakpoint: 480,
@@ -845,6 +844,16 @@ const options_battery: ApexOptions = {
 };
 
 const BatteryUsageChart = () => {
+
+  const data =batteryLife()
+  const remaining = data[data.length -1].life
+  const series_battery = [remaining, 100 - remaining];
+  const battery_life_series = [
+    {
+      name: "Battery Life",
+      data: data.map( d => [d.time,d.life *100])
+    },
+  ];
   return (
     <div>
       <Space>

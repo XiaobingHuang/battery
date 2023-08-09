@@ -44,7 +44,7 @@ const EnergyMonitoring = ({data}) => {
                     enabled: true,
                     easing: 'linear',
                     dynamicAnimation: {
-                        speed: 1000
+                        speed: 200
                     }
                 },
             },
@@ -65,10 +65,8 @@ const EnergyMonitoring = ({data}) => {
             annotations: {
                 xaxis: [
                     {
-                        // x: new Date().getTime(),
-                        // x2: new Date("2023-07-27T09:39:00.000Z").getTime(),
-                        x: moment().subtract(4, "h").valueOf(),
-                        x2: moment().utcOffset(0).endOf("d").valueOf(),
+                        x: moment().valueOf(),
+                        x2: moment().endOf("d").valueOf(),
                         fillColor: "#DCDCDC",
                         borderColor: "red",
                         opacity: 0.4,
@@ -116,11 +114,12 @@ const EnergyMonitoring = ({data}) => {
                 }
             },
             fill: {
-                opacity: 0.5
+                opacity: 1,
+                type:["solid", "solid","gradient"]
             },
             tooltip: {
                 x: {
-                    format: "HH:mm"
+                    format: "MM/dd/yy HH:mm"
                 },
                 fixed: {
                     enabled: false,
@@ -151,16 +150,86 @@ const EnergyMonitoring = ({data}) => {
                 title: {
                     // text: "Sells"
                 },
-                colors: [ colors.green],
-                forecastDataPoints: {
-                    count: calcForecastCount
+                // colors: [ colors.green],
+                // forecastDataPoints: {
+                //     count: calcForecastCount
+                // },
+                tooltip: {
+                    enabled: true,
+                    y: {
+                        enabled: true,
+                    }
                 },
+                xaxis: {
+                    labels: {
+                        datetimeUTC: false
+                    }
+                },
+                colors: [colors.red, colors.green,colors.blue,],
+                yaxis:[
+
+                    {
+                        seriesName: 'MWh - Bought',
+                        opposite: true,
+                        labels: {
+                            style: {
+                                colors: "#8e8da4"
+                            },
+                            offsetY: -7,
+                            offsetX: 0,
+                            formatter: function (value) {
+                                return value.toFixed(2);
+                            }
+                        },
+                    },
+                    {
+                        seriesName: 'MWh - Bought',
+                        show: false,
+                        opposite: true,
+                        labels: {
+                            style: {
+                                colors: "#8e8da4"
+                            },
+                            offsetY: -7,
+                            offsetX: 0,
+                            formatter: function (value) {
+                                return value.toFixed(2);
+                            }
+                        },
+                    },
+                    {
+                        seriesName: 'State of Charge',
+                        labels: {
+                            style: {
+                                colors: "#8e8da4"
+                            },
+                            offsetY: -7,
+                            offsetX: 0,
+                            formatter: function (value) {
+                                return value.toFixed(2);
+                            }
+                        },
+                    },
+                ]
             },
             series: [
+
                 {
-                    name: "currentMwh",
+                    name: "MWh - Bought",
+                    type:"bar",
+                    data: data.chartData?.map((d) => [d.time, d.mwhBought])
+                },
+                {
+                    name: "MWh - Sold",
+                    type:"bar",
+                    data: data.chartData?.map((d) => [d.time, d.mwhSold])
+                },
+                {
+                    name: "State of Charge",
+                    type:"area",
                     data: data.chartData?.map((d) => [d.time, d.currentMwh])
-                }
+                },
+
             ]
         });
     }, [data, chartBaseConfig]);
@@ -175,25 +244,80 @@ const EnergyMonitoring = ({data}) => {
                 title: {
                     // text: "Market"
                 },
-                forecastDataPoints: {
-                    count: calcForecastCount
+                stroke: {
+                    colors:  [colors.red, colors.green,colors.blue,],
+                    width: [0,0,3]
                 },
-                colors: [colors.red, colors.green],
-                yaxis:{
-                    title: {
-                        text: "$"
+                forecastDataPoints: {
+                    // count: data.forecastPoints
+                },
+                xaxis: {
+                    labels: {
+                        datetimeUTC: false
+                    }
+                },
+                colors: [colors.red, colors.green,colors.blue,],
+                yaxis: [
+                    {
+                        seriesName: 'Buy',
+                        labels: {
+                            style: {
+                                colors: "#8e8da4"
+                            },
+                            offsetY: -7,
+                            offsetX: 0,
+                            formatter: function (value) {
+                                return value.toFixed(2);
+                            }
+                        },
                     },
-                }
+                    {
+                        seriesName: 'Buy',
+                        show: false,
+                        labels: {
+                            style: {
+                                colors: "#8e8da4"
+                            },
+                            offsetY: -7,
+                            offsetX: 0,
+                            formatter: function (value) {
+                                return value.toFixed(2);
+                            }
+                        },
+                    },
+                    {
+                        seriesName: 'Net',
+                        opposite: true,
+                        labels: {
+                            style: {
+                                colors: "#8e8da4"
+                            },
+                            offsetY: -7,
+                            offsetX: 0,
+                            formatter: function (value) {
+                                return value.toFixed(2);
+                            }
+                        },
+                    },
+                ],
                 // colors: ["#fc0349", "#de5499"],
             },
+
             series: [
                 {
                     name: "Buy",
-                    data: data.chartData?.map((d) => [d.time, d.buyKwh])
+                    type:"bar",
+                    data: data.chartData?.map((d) => [d.time, d.amtBought])
                 },
                 {
                     name: "Sell",
-                    data: data.chartData?.map((d) => [d.time, d.sellKwh])
+                    type:"bar",
+                    data: data.chartData?.map((d) => [d.time, d.amtSold])
+                },
+                {
+                    name: "Net",
+                    type:"area",
+                    data: data.chartData?.map((d) => [d.time, d.totalMWhNet])
                 }
             ]
         });
@@ -218,16 +342,11 @@ const EnergyMonitoring = ({data}) => {
                             </tr>
                             <tr>
                                 <td style={{padding:"0px 8px", textAlign:"right"}}></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalBought)}</Typography></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSold)}</Typography></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSold + data.totalBought)}</Typography></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhBought)}</Typography></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhSold)}</Typography></td>
+                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhSold + data.totalMWhBought)}</Typography></td>
                             </tr>
-                            <tr>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}>To Date</td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"body-sm"}  style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalBoughtPast)}</Typography></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"body-sm"}  style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSoldPast)}</Typography></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"body-sm"}  style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalSoldPast + data.totalBoughtPast)}</Typography></td>
-                            </tr>
+
                         </table>
                         {/*<Text style={{textAlign:"right", fontSize:'11px'}}>Bought / Sold / Net</Text>*/}
                         {/*<Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalBought.toFixed(2)} / ${data[1].totalSold.toFixed(2)} / ${(data[1].totalSold + data[1].totalBought).toFixed(2)}</Title>*/}
@@ -240,17 +359,17 @@ const EnergyMonitoring = ({data}) => {
             <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
                     <Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Charge</Typography>
-                        <table>
-                            <tr>
-                                <td style={{padding:"0px 8px"}}></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}>Current</td>
-                            </tr>
-                            <tr>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}>
-                                    <Typography level={"h3"} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Typography></td>
-                            </tr>
-                        </table>
+                        {/*<table>*/}
+                        {/*    <tr>*/}
+                        {/*        <td style={{padding:"0px 8px"}}></td>*/}
+                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}>Current</td>*/}
+                        {/*    </tr>*/}
+                        {/*    <tr>*/}
+                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}></td>*/}
+                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}>*/}
+                        {/*            <Typography level={"h3"} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Typography></td>*/}
+                        {/*    </tr>*/}
+                        {/*</table>*/}
                 </div>
                 <Chart type={"area"}  height={"220px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
             </Card>

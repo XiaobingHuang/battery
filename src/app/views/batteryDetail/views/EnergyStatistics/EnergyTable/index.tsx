@@ -5,6 +5,8 @@ import { ApexOptions } from "apexcharts";
 import colors from "@/app/colors";
 import { Chart } from "react-google-charts";
 import { Row, Col, Space, Table, Tabs } from "antd";
+import {formatCurrency} from "@/helpers/formatting";
+import moment from "moment";
 
 const socData = [
     {
@@ -1253,6 +1255,15 @@ const dataSource = socData.map((e,index)=>{return{
 ;
 
 const columns = [
+    {
+      title: 'Timestamp',
+      dataIndex: 'Timestamp',
+      key: 'Timestamp',
+      render: (text,d) => {
+        return moment(text).format("MM/DD/yy HH:mm")
+      },
+      width: 120
+    },
     {
       title: 'SOC',
       dataIndex: 'SOC',

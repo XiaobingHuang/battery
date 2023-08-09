@@ -133,47 +133,125 @@ const BatteryDetailEnergy = () => {
   const nav = useNavigate();
   // console.log(nav);
   return (
-    <Row>
+    <Row style={{padding:"0 16px"}} gutter={[16,16]}>
       <Col span={6}>
-        <Typography
-          id="Energy Comsumption"
-          textTransform="uppercase"
-          fontWeight="lg"
-        >
-          Energy Comsumption
-        </Typography>
-        <List aria-labelledby="Energy Comsumption">
-          <ListItem>Today: 12.5 kWh</ListItem>
-          <ListItem>Yesterday: 10.8 kWh</ListItem>
-        </List>
-        <Divider/>
-        <Typography
-          id="Energy Production"
-          textTransform="uppercase"
-          fontWeight="lg"
-        >
-          Energy Production
-        </Typography>
-        <List aria-labelledby="Energy Production">
-          <ListItem>Solar: 5.2 kWh</ListItem>
-          <ListItem>Wind: 3.6 kWh</ListItem>
-        </List>
-        <Divider/>
-        <Typography
-          id="Cost Ananlysis"
-          textTransform="uppercase"
-          fontWeight="lg"
-        >
-          Cost Ananlysis
-        </Typography>
-        <List aria-labelledby="Cost Ananlysis">
-          <ListItem>Cost saving: $200</ListItem>
-          <ListItem>ROI: 15%</ListItem>
-        </List>
+        <Card>
+          <Typography level={"h3"}>Battery Status</Typography>
+          <table>
+            <tr><th>SOC</th><td>87%</td></tr>
+            <tr><th>Operating Mode</th><td>Charging</td></tr>
+            <tr><th>Power</th><td>10 MW</td></tr>
+            <tr><th>C-Rating</th><td>0.25C</td></tr>
+            <tr><th>Current</th><td>25A</td></tr>
+            <tr><th>Voltage</th><td>400V</td></tr>
+            <tr><th>SOH</th><td>97.3%</td></tr>
+            <tr><th>Temp</th><td>117F | 47C</td></tr>
+          </table>
+
+        </Card>
+        {/*<Card title="Parameter">*/}
+        {/*  <Card>*/}
+        {/*    <p>Capacity: 100Ah</p>*/}
+        {/*  </Card>*/}
+
+        {/*  <Card title="Charging">*/}
+        {/*    <table>*/}
+        {/*      <tr><th>C Rating</th><td>0.25C</td></tr>*/}
+        {/*    </table>*/}
+        {/*    <p>C rating: 0.25C</p>*/}
+        {/*    <p>Curent: 25A</p>*/}
+        {/*    <p>Threshold: 90%</p>*/}
+        {/*  </Card>*/}
+        {/*  <Card title="Discharging">*/}
+        {/*    <p>C rating: 0.25C</p>*/}
+        {/*    <p>Curent: 25A</p>*/}
+        {/*    <p>Threshold: 115%</p>*/}
+        {/*  </Card>*/}
+        {/*  <Card>*/}
+        {/*    <p>Temp: 25-115F</p>*/}
+        {/*    <p>Threshold: 120F</p>*/}
+        {/*  </Card>*/}
+        {/*  <Card>*/}
+        {/*    <p>Voltage: 400V</p>*/}
+        {/*    <p>Threshold: 110%</p>*/}
+        {/*  </Card>*/}
+        {/*  <Card>*/}
+        {/*    <p>Cycle: 6,000</p>*/}
+        {/*    <p>Life: 20</p>*/}
+        {/*  </Card>*/}
+        {/*</Card>*/}
+
         <Divider/>
       </Col>
       <Col span={18}>
-        <div>
+        <Card title="Battery name" style={{ overflow: "scroll" }}>
+          <Row>
+            <Col span={8}>
+              <Typography
+                  textAlign={"center"}
+                  id="Energy Consumption"
+                  textTransform="uppercase"
+              >
+                Energy Consumption
+              </Typography>
+              <Typography
+                  textAlign={"center"}
+                  level={"h3"}
+              >
+                Today: 32.5 MWh
+              </Typography>
+              <Typography
+                  textAlign={"center"}
+                  level={"h3"}
+              >
+                Yesterday: 29.8 MWh
+              </Typography>
+            </Col>
+            <Col span={8}>
+              <Typography
+                  id="Energy Production"
+                  textTransform="uppercase"
+                  textAlign={"center"}
+              >
+                Energy Production
+              </Typography>
+              <Typography
+                  textAlign={"center"}
+                  level={"h3"}
+              >
+                Today: 42.3  MWh
+              </Typography>
+              <Typography
+                  textAlign={"center"}
+                  level={"h3"}
+              >
+                Yesterday: 47.1 MWh
+              </Typography>
+            </Col>
+            <Col span={8}>
+              <Typography
+                  id="Cost Ananlysis"
+                  textTransform="uppercase"
+                  textAlign={"center"}
+              >
+                Net Revenue
+              </Typography>
+              <Typography
+                  textAlign={"center"}
+                  level={"h3"}
+              >
+                Today: $1,240.32
+              </Typography>
+              <Typography
+                  textAlign={"center"}
+                  level={"h3"}
+              >
+                Yesterday: $1,541.88
+              </Typography>
+            </Col>
+          </Row>
+        </Card>
+        <Card>
           <Tabs
             onTabClick={(a) => {
               const tab = tabOptions.find((t) => t.key === a);
@@ -185,8 +263,8 @@ const BatteryDetailEnergy = () => {
             defaultActiveKey="1"
             items={tabOptions}
           />
-        </div>
-        <Outlet />
+          <Outlet />
+        </Card>
       </Col>
     </Row>
   );

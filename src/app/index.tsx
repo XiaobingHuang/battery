@@ -5,6 +5,7 @@ import {QueryClientProvider} from "react-query";
 import gQueryClient from "@/app/queryClient";
 import {rQueryClient} from "@/app/queryClient";
 import 'react-loading-skeleton/dist/skeleton.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "@arctrade/relay/dist/index.css";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -32,6 +33,7 @@ const screenSizeConfig = {
         sm: 600,
         md: 1000,
         lg: 1400,
+
         xl: 1600,
     },
 };

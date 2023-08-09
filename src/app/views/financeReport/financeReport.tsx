@@ -249,7 +249,9 @@ export default function CarbonReport() {
                 }
                 t.push(d)
                 return t
-            }, [])
+            }, []).filter(t => {
+              return  revenueComponents.map(x => x.name).indexOf(t.name) !== -1
+            })
         }
         return []
     }, [data,dateVal])
