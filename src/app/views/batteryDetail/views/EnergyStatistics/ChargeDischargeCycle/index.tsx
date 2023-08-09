@@ -776,6 +776,35 @@ const chargeDischargedata = [
       ChargePriceTrigger: 49,
     },
   ];
+ 
+  function generateDateArray(startDate, numDays) {
+    const dateArray = [];
+    const currentDate = new Date(startDate);
+  
+    for (let i = 0; i < numDays; i++) {
+      const month = currentDate.getMonth() + 1; // Months are 0-indexed
+      const day = currentDate.getDate();
+      const year = currentDate.getFullYear();
+  
+      dateArray.push(`${month}/${day}/${year}`);
+  
+      currentDate.setDate(currentDate.getDate() + 1); // Increment the date by 1 day
+    }
+  
+    return dateArray;
+  }
+  
+  const startDate = new Date(2023, 0, 1); // January is month 0
+  const numDays = 96;
+  const dateArray = generateDateArray(startDate, numDays);
+  
+  console.log(dateArray);
+  
+  
+  
+  
+  
+  
 
 const charge_discharge_series = [
     {
@@ -828,7 +857,7 @@ const charge_discharge_series = [
       text: "Charge and Discharge Cycle",
     },
     xaxis: {
-      categories: chargeDischargedata.map((e) => e.Time),
+      categories: dateArray,
       type: "datetime",
     },
   };
