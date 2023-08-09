@@ -32,19 +32,12 @@ const generateDemoData =(comp, start,end, interval, intervalType) => {
             factor: -1,
             unit: "MWh"
         },
+
         {
-            name: "GHG Produced",
+            name: "GHG - Mitigated",
             type: "GHG",
-            min: 800 * 1.5624,
-            max: 900 * 1.5624,
-            factor: 1,
-            unit: "lbs CO2 (1000)"
-        },
-        {
-            name: "GHG Consumed",
-            type: "GHG",
-            min: 800 * 1.5624,
-            max: 900 * 1.5624,
+            min: 100 * 1.5624,
+            max: 200 * 1.5624,
             factor: -1,
             unit: "lbs CO2 (1000)"
         },

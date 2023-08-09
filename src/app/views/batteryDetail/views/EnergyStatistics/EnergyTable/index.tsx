@@ -1250,7 +1250,8 @@ const dataSource = socData.map((e,index)=>{return{
     SOC:e.SOC,
     Current:e.Current,
     Temp:e.Temp,
-    Voltage:e.Voltage
+    Voltage:e.Voltage,
+  Timestamp:e.Timestamp
   }})
 ;
 
@@ -1260,6 +1261,7 @@ const columns = [
       dataIndex: 'Timestamp',
       key: 'Timestamp',
       render: (text,d) => {
+        debugger
         return moment(text).format("MM/DD/yy HH:mm")
       },
       width: 120

@@ -83477,6 +83477,7 @@ export const generateChargeDischargeDemoData = (start, end) => {
                 mwhSold,
                 amtBought,
                 amtSold,
+                price: item["RT Energy Price ($/MWh)"],
                 currentSoc: currentMwh / capMwh * 100,
                 totalMWhNet: totalMWhBought + totalMWhSold
             }
@@ -83540,18 +83541,19 @@ export const getDailyChargeDischargeCycles = (start, end) => {
         return time.isSameOrBefore(endTime) && time.isSameOrAfter(startTime)
     })
 
-   let date = moment().subtract(6,"month")
+   let date = moment().subtract(1,"y")
     let endDate = moment()
     const d = []
    while(date.isBefore(endDate)){
+        const x =  Math.floor(Math.random() * (2 - 0 + 1) + 1) * 30
        let dataItem = {
            time: date.clone(),
-           totalCharge: Math.floor(Math.random() * (2 - 0 + 1) + 0),
-           totalDischarge:Math.floor(Math.random() * (2 - 0 + 1) + 0) * -1,
+           totalCharge: x,
+           totalDischarge: x*-1
        }
        d.push(dataItem)
 
-        date.add(1, "d")
+        date.add(1, "M")
    }
 
     console.log("d", d)

@@ -1,12 +1,14 @@
-import React from "react"
+import React, {useState} from "react"
 import Chart from "@/components/Chart";
-import {Tabs, Col, Row, Space, Card} from 'antd';
+import {Tabs, Col, Row, Space, DatePicker,Card, Statistic} from 'antd';
 import moment from "moment";
 import {useMemo} from "react";
 import merge from "lodash/merge"
 import {formatCurrency, formatNumber} from "@/helpers/formatting";
 import {Typography} from "@mui/joy";
 import colors from "@/app/colors";
+import dayjs, {Dayjs} from "dayjs";
+const { RangePicker } = DatePicker;
 
 const EnergyMonitoring = ({data}) => {
 
@@ -53,7 +55,7 @@ const EnergyMonitoring = ({data}) => {
             },
             stroke: {
                 width: 1.5,
-                curve: "straight"
+                curve: "smooth"
             },
 
             title: {
@@ -115,7 +117,7 @@ const EnergyMonitoring = ({data}) => {
             },
             fill: {
                 opacity: 1,
-                type:["solid", "solid","gradient"]
+                type:["gradient", "gradient","solid"]
             },
             tooltip: {
                 x: {
@@ -166,11 +168,15 @@ const EnergyMonitoring = ({data}) => {
                     }
                 },
                 colors: [colors.red, colors.green,colors.blue,],
+                stroke: {
+                    colors: [colors.red, colors.green,colors.blue,],
+                    curve: 'smooth',
+                },
                 yaxis:[
 
                     {
                         seriesName: 'MWh - Bought',
-                        opposite: true,
+
                         labels: {
                             style: {
                                 colors: "#8e8da4"
@@ -185,7 +191,7 @@ const EnergyMonitoring = ({data}) => {
                     {
                         seriesName: 'MWh - Bought',
                         show: false,
-                        opposite: true,
+
                         labels: {
                             style: {
                                 colors: "#8e8da4"
@@ -198,7 +204,8 @@ const EnergyMonitoring = ({data}) => {
                         },
                     },
                     {
-                        seriesName: 'State of Charge',
+                        seriesName: 'MWh Price',
+                        opposite: true,
                         labels: {
                             style: {
                                 colors: "#8e8da4"
@@ -216,18 +223,18 @@ const EnergyMonitoring = ({data}) => {
 
                 {
                     name: "MWh - Bought",
-                    type:"bar",
-                    data: data.chartData?.map((d) => [d.time, d.mwhBought])
+                    type:"area",
+                    data: data.chartData?.map((d) => [d.time, d.mwhBought*-1])
                 },
                 {
                     name: "MWh - Sold",
-                    type:"bar",
-                    data: data.chartData?.map((d) => [d.time, d.mwhSold])
+                    type:"area",
+                    data: data.chartData?.map((d) => [d.time, d.mwhSold*-1])
                 },
                 {
-                    name: "State of Charge",
-                    type:"area",
-                    data: data.chartData?.map((d) => [d.time, d.currentMwh])
+                    name: "MWh Price",
+                    type:"line",
+                    data: data.chartData?.map((d) => [d.time, d.price])
                 },
 
             ]
@@ -323,57 +330,83 @@ const EnergyMonitoring = ({data}) => {
         });
     }, [data, chartBaseConfig]);
 
-
+    const [dateVal,setDateVal] = useState<Dayjs>(     dayjs())
 
     return <Row gutter={[16, 16]} >
-        <Col span={24}>
+        <Col span={24} style={{display:'flex'}}>
             <Typography level={"h3"}>Monitoring</Typography>
+            <DatePicker
+                style={{marginLeft:"20px"}}
+                picker={"date"}
+                onChange={(e) => {
+                    // setDateVal(e)
+                }}
+                value={dateVal} />
+        </Col>
+        <Col span={8}>
+            <Card>
+                <Typography fontWeight={"500"} level={"body-sm"}>Bought</Typography>
+                <Typography fontWeight={"500"} level={"h1"}>{formatCurrency(data.totalMWhBought,0)}</Typography>
+            </Card>
+        </Col>
+        <Col span={8}>
+            <Card>
+                <Typography fontWeight={"500"} level={"body-sm"}>Sold</Typography>
+                <Typography fontWeight={"500"} level={"h1"}>{formatCurrency(data.totalMWhSold, 0)}</Typography>
+            </Card>
+        </Col>
+        <Col span={8}>
+            <Card>
+                <Typography fontWeight={"500"} level={"body-sm"}>Net</Typography>
+                <Typography fontWeight={"500"} level={"h1"}>{formatCurrency(data.totalMWhBought+data.totalMWhSold,0)}</Typography>
+            </Card>
         </Col>
         <Col span={24}>
             <Card style={{height:"100%"}}>
                 <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
-                    <Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Market</Typography>
-                        <table>
-                            <tr>
-                                <td style={{padding:"0px 8px"}}></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}>Bought</td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}>Sold</td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}>Net</td>
-                            </tr>
-                            <tr>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhBought)}</Typography></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhSold)}</Typography></td>
-                                <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhSold + data.totalMWhBought)}</Typography></td>
-                            </tr>
+                    {/*<Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Charge</Typography>*/}
+                    {/*<table>*/}
+                    {/*    <tr>*/}
+                    {/*        <td style={{padding:"0px 8px"}}></td>*/}
+                    {/*        <td style={{padding:"0px 8px", textAlign:"right"}}>Current</td>*/}
+                    {/*    </tr>*/}
+                    {/*    <tr>*/}
+                    {/*        <td style={{padding:"0px 8px", textAlign:"right"}}></td>*/}
+                    {/*        <td style={{padding:"0px 8px", textAlign:"right"}}>*/}
+                    {/*            <Typography level={"h3"} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Typography></td>*/}
+                    {/*    </tr>*/}
+                    {/*</table>*/}
+                </div>
+                <Chart type={"area"}  height={"465px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
+            </Card>
+        </Col>
+        {/*<Col span={24}>*/}
+        {/*    <Card style={{height:"100%"}}>*/}
+        {/*        <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>*/}
+        {/*            <Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Market</Typography>*/}
+        {/*                <table>*/}
+        {/*                    <tr>*/}
+        {/*                        <td style={{padding:"0px 8px"}}></td>*/}
+        {/*                        <td style={{padding:"0px 8px", textAlign:"right"}}>Bought</td>*/}
+        {/*                        <td style={{padding:"0px 8px", textAlign:"right"}}>Sold</td>*/}
+        {/*                        <td style={{padding:"0px 8px", textAlign:"right"}}>Net</td>*/}
+        {/*                    </tr>*/}
+        {/*                    <tr>*/}
+        {/*                        <td style={{padding:"0px 8px", textAlign:"right"}}></td>*/}
+        {/*                        <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhBought)}</Typography></td>*/}
+        {/*                        <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhSold)}</Typography></td>*/}
+        {/*                        <td style={{padding:"0px 8px", textAlign:"right"}}> <Typography level={"h4"} style={{margin: "2px 0",textAlign:"right"}}>{formatCurrency(data.totalMWhSold + data.totalMWhBought)}</Typography></td>*/}
+        {/*                    </tr>*/}
 
-                        </table>
-                        {/*<Text style={{textAlign:"right", fontSize:'11px'}}>Bought / Sold / Net</Text>*/}
-                        {/*<Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalBought.toFixed(2)} / ${data[1].totalSold.toFixed(2)} / ${(data[1].totalSold + data[1].totalBought).toFixed(2)}</Title>*/}
-                        {/*<Text style={{textAlign:"right"}}>To Date: ${data[1].totalBoughtPast.toFixed(2)} / ${data[1].totalSoldPast.toFixed(2)} / ${(data[1].totalSoldPast + data[1].totalBoughtPast).toFixed(2)}</Text>*/}
-                </div>
-                <Chart type={"area"}  height={"220px"} options={buyChartConfig.options} series={buyChartConfig.series}/>
-            </Card>
-        </Col>
-        <Col span={24}>
-            <Card style={{height:"100%"}}>
-                <div style={{display:"flex", alignItems:"flex-start", justifyContent:"space-between"}}>
-                    <Typography level={"h4"} style={{margin: 0,textAlign:"right"}}>Charge</Typography>
-                        {/*<table>*/}
-                        {/*    <tr>*/}
-                        {/*        <td style={{padding:"0px 8px"}}></td>*/}
-                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}>Current</td>*/}
-                        {/*    </tr>*/}
-                        {/*    <tr>*/}
-                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}></td>*/}
-                        {/*        <td style={{padding:"0px 8px", textAlign:"right"}}>*/}
-                        {/*            <Typography level={"h3"} style={{margin: "2px 0",textAlign:"right"}}>{formatNumber(data?.currentStateMwh, 2)}MWh</Typography></td>*/}
-                        {/*    </tr>*/}
-                        {/*</table>*/}
-                </div>
-                <Chart type={"area"}  height={"220px"} options={sellChartConfig.options} series={sellChartConfig.series}/>
-            </Card>
-        </Col>
+        {/*                </table>*/}
+        {/*                /!*<Text style={{textAlign:"right", fontSize:'11px'}}>Bought / Sold / Net</Text>*!/*/}
+        {/*                /!*<Title style={{margin: "2px 0",textAlign:"right"}}>${data[1].totalBought.toFixed(2)} / ${data[1].totalSold.toFixed(2)} / ${(data[1].totalSold + data[1].totalBought).toFixed(2)}</Title>*!/*/}
+        {/*                /!*<Text style={{textAlign:"right"}}>To Date: ${data[1].totalBoughtPast.toFixed(2)} / ${data[1].totalSoldPast.toFixed(2)} / ${(data[1].totalSoldPast + data[1].totalBoughtPast).toFixed(2)}</Text>*!/*/}
+        {/*        </div>*/}
+        {/*        <Chart type={"area"}  height={"120px"} options={buyChartConfig.options} series={buyChartConfig.series}/>*/}
+        {/*    </Card>*/}
+        {/*</Col>*/}
+
     </Row>
 
 }

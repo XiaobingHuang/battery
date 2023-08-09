@@ -778,8 +778,9 @@ const chargeDischargedata = [
     },
   ];
 
-const data = getDailyChargeDischargeCycles("2021-06-01", "2022-12-29")
-// console.log("Data,",data)
+const data = getDailyChargeDischargeCycles("2021-07-08", "2021-08-08")
+console.log("Data,",data)
+
 const charge_discharge_series = [
     {
       name: "charge",
@@ -816,7 +817,7 @@ const charge_discharge_series = [
         },
       },
       row: {
-        colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+        colors: ["#f3f3f3"], // takes an array which will be repeated on columns
         opacity: 0.5,
       },
     },
@@ -826,7 +827,6 @@ const charge_discharge_series = [
       yaxis: {
           tickAmount: 4,
           floating: false,
-          min: 0,
           labels: {
               style: {
                   colors: "#8e8da4"
@@ -839,7 +839,7 @@ const charge_discharge_series = [
           },
       },
     xaxis: {
-      categories: chargeDischargedata.map((e) => e.Time),
+      // categories: chargeDischargedata.map((e) => e.Time),
       type: "datetime",
     },
   };
@@ -849,7 +849,7 @@ const ChargeDischargeCycle=()=>{
         <div>
            <ReactApexChart
             width={"100%"}
-            height={400}
+            height={500}
             type="bar"
             series={charge_discharge_series}
             options={charge_discharge_options}
